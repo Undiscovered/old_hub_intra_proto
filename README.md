@@ -2,10 +2,10 @@
 
 ## Page d'ajout de projet
 
-Nom du projet
-Liste des étudiants (login + promotion)
-Court descriptif
-Nom du manageur assigné
+Nom du projet  
+Liste des étudiants (login + promotion)  
+Court descriptif  
+Nom du manageur assigné  
 
 ## Page de modification de projet
 
