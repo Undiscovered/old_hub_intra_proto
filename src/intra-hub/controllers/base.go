@@ -12,14 +12,14 @@ type NestedPreparer interface{
     NestedPrepare()
 }
 
-type BaseRouter struct {
+type BaseController struct {
 	beego.Controller
 
 	user    *models.User
 	isLogin bool
 }
 
-func (c *BaseRouter) Prepare() {
+func (c *BaseController) Prepare() {
     // Get the user from the session.
     if user := c.GetSession(sessionUserKey); user != nil {
         c.user = user.(*models.User)
@@ -34,6 +34,6 @@ func (c *BaseRouter) Prepare() {
     }
 }
 
-func (c *BaseRouter) SetUser(user *models.User) {
+func (c *BaseController) SetUser(user *models.User) {
     c.SetSession(sessionUserKey, user)
 }
