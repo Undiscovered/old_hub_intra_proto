@@ -9,6 +9,13 @@ func init() {
 }
 
 type User struct {
-	Id    int
-	Login string
+	Id        int
+	Login     string
+	Promotion string
+}
+
+func (u *User) TableIndex() [][]string {
+    return [][]string{
+        []string{"Id", "Login"},
+    }
 }
