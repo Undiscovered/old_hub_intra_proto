@@ -22,6 +22,9 @@ const (
 )
 
 func main() {
+    // Set session on
+    beego.SessionOn = true
+
     // Serve static files
     beego.SetStaticPath("/css", "static/css")
     beego.SetStaticPath("/js", "static/js")
