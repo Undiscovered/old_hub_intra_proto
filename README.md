@@ -13,7 +13,7 @@ go get github.com/beego/bee
 
 .
 
-# Features
+# Next features
 
 ## Page d'ajout de projet
 
@@ -31,6 +31,7 @@ R.A.S
 Tri par : Promotion(s) impliqué(s), étudiant, état d'avancement, thémes, techno, manageur assigné
 
 
-# Database
+# Database, backlog & documentation
 
-A venir : Modélisation de la BDD. A faire en amont si la techno est séléctionnée.
+https://drive.google.com/drive/u/0/folders/0B_SWVXj-Hf43fmlXX0VhV2QxTVA3U2NCX0RSYmJRblgtXzdkTkJnWWNQY21IT1lQWExiY0E
+
