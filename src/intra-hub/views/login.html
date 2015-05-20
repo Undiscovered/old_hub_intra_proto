@@ -8,10 +8,11 @@
 
 <form method="post" action="/login">
     <label for="login">Login</label>
-    <input id="login" type="text">
+    <input id="login" name="login" type="text">
     <label for="password">Password (Unix)</label>
-    <input id="password" type="password">
+    <input id="password" name="password" type="password">
     <button type="submit">Login</button>
 </form>
+{{ .flash.error }}
 </body>
 </html>
