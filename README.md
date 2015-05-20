@@ -1,3 +1,6 @@
+# Installation
+
+
 # Fonctionnalités
 
 ## Page d'ajout de projet
@@ -18,4 +21,4 @@ Tri par : Promotion(s) impliqué(s), étudiant, état d'avancement, thémes, tec
 
 # BDD
 
-A venir
+A venir : Modélisation de la BDD. A faire en amont si la techno est séléctionnée.
