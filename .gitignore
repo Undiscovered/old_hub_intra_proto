@@ -1,7 +1,6 @@
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Go template
-=======
 
 # Compiled Object files, Static and Dynamic libs (Shared Objects)
 *.o
@@ -80,5 +79,3 @@ crashlytics-build.properties
 
 src/intra-hub/intra-hub
 src/intra-hub/logs/test.log
-=======
->>>>>>> master
