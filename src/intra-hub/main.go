@@ -1,11 +1,12 @@
 package main
 
 import (
-	_ "intra-hub/routers"
 	"github.com/astaxie/beego"
     "github.com/astaxie/beego/orm"
+    _ "intra-hub/routers"
     _ "github.com/go-sql-driver/mysql"
     _ "intra-hub/models"
+    _ "intra-hub/tasks"
     "time"
     "os"
 )
@@ -24,6 +25,8 @@ const (
 func main() {
     // Set session on
     beego.SessionOn = true
+
+    beego.EnableAdmin = true
 
     // Serve static files
     beego.SetStaticPath("/css", "static/css")
