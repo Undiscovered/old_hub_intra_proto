@@ -7,7 +7,8 @@ go get github.com/beego/bee
 
 ## Dep
 
-?
+go get golang.org/x/crypto/bcrypt
+
 
 # How to Run
 
