@@ -2,8 +2,8 @@
 
 ## Beego
 
-go get github.com/astaxie/beego
-go get github.com/beego/bee
+go get github.com/astaxie/beego   
+go get github.com/beego/bee  
 
 ## Dep
 
