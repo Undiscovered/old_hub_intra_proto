@@ -2,15 +2,32 @@
 
 ## Beego
 
+```
 go get github.com/astaxie/beego   
 go get github.com/beego/bee  
+```
 
 ## Dep
 
+```
 go get golang.org/x/crypto/bcrypt
-
+```
 
 # How to Run
+
+```
+cd src/intra-hub
+bee run
+```
+
+# How to create the database
+
+```
+cd src/intra-hub
+bee run
+# After it has build, quit the app (ctrl + c)
+./intra-hub orm syncdb --force=true
+```
 
 .
 
