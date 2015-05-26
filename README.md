@@ -1,10 +1,24 @@
 # Install
 
+```
+Install MYSQL and Go
+
+Create database "intra_hub":
+
+mysql -uroot
+> CREATE DATABASE intra_hub;
+
+```
+
 ## Beego
 
 ```
+
+# Install mysql
+
 go get github.com/astaxie/beego   
 go get github.com/beego/bee
+
 # Add bee to your GOPATH
 sudo mv $GOPATH/bin/bee /usr/bin
 ```
