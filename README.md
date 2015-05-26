@@ -4,7 +4,9 @@
 
 ```
 go get github.com/astaxie/beego   
-go get github.com/beego/bee  
+go get github.com/beego/bee
+# Add bee to your GOPATH
+sudo mv $GOPATH/bin/bee /usr/bin
 ```
 
 ## Dep
