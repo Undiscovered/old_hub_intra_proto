@@ -1,5 +1,7 @@
 # Install
 
+## MySQL
+
 ```
 Install MYSQL and Go
 
@@ -10,23 +12,21 @@ mysql -uroot
 
 ```
 
-## Beego
+## Dependencies
 
 ```
-
-# Install mysql
-
 go get github.com/astaxie/beego   
 go get github.com/beego/bee
+go get github.com/beego/i18n
+go get github.com/bitly/go-simplejson
+go get golang.org/x/crypto/bcrypt
+```
 
+## Beego path
+
+```
 # Add bee to your GOPATH
 sudo mv $GOPATH/bin/bee /usr/bin
-```
-
-## Dep
-
-```
-go get golang.org/x/crypto/bcrypt
 ```
 
 # How to Run
