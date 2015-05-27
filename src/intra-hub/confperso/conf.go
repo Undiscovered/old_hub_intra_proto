@@ -5,6 +5,6 @@ package confperso
 const (
     AliasDbName                = "default"
 	DatabaseName               = "intra_hub"
-	Username                   = "kaeyuri"
+	Username                   = "root"
 	Password                   = ""
 )
