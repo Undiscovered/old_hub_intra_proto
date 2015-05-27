@@ -54,20 +54,24 @@ go get golang.org/x/crypto/bcrypt
 sudo mv $GOPATH/bin/bee /usr/bin
 ```
 
-# How to Run
-
-```
-cd src/intra-hub
-bee run
-```
-
-# How to create the database
+## How to create the database
 
 ```
 cd src/intra-hub
 bee run
 # After it has build, quit the app (ctrl + c)
 ./intra-hub orm syncdb --force=true
+```
+
+## How to load users
+
+TO-DO  
+
+# How to Run
+
+```
+cd src/intra-hub
+bee run
 ```
 
 # Contribution
