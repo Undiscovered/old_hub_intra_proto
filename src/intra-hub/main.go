@@ -2,27 +2,57 @@ package main
 
 import (
 	"github.com/astaxie/beego"
-    "github.com/astaxie/beego/orm"
-    _ "intra-hub/routers"
-    _ "github.com/go-sql-driver/mysql"
-    _ "intra-hub/models"
-    _ "intra-hub/tasks"
-    "time"
-    "os"
+	"github.com/astaxie/beego/orm"
+	"github.com/beego/i18n"
+	_ "github.com/go-sql-driver/mysql"
+	_ "intra-hub/models"
+	_ "intra-hub/routers"
+	_ "intra-hub/tasks"
+	"os"
+	"strings"
+	"time"
+    "intra-hub/db"
 )
 
 const (
-    driverSQL = "mysql"
-    aliasDbName = "default"
-    databaseName = "intra_hub"
-    username = "root"
-    password = ""
-    maxIdleConns = 30
-    maxOpenConns = 30
-    optionsDatabaseConnections = "?charset=utf8"
+	driverSQL                  = "mysql"
+	aliasDbName                = "default"
+	databaseName               = "intra_hub"
+	username                   = "root"
+	password                   = ""
+	maxIdleConns               = 150
+	maxOpenConns               = 150
+	optionsDatabaseConnections = "?charset=utf8"
 )
 
-func main() {
+// langType represents a language type.
+type langType struct {
+	Lang, Name string
+}
+
+func init() {
+    // This is just used to get every languages files (see app.conf files)
+	langs := strings.Split(beego.AppConfig.String("lang::types"), "|")
+	names := strings.Split(beego.AppConfig.String("lang::names"), "|")
+	langTypes := make([]*langType, 0, len(langs))
+	for i, v := range langs {
+		langTypes = append(langTypes, &langType{
+			Lang: v,
+			Name: names[i],
+		})
+	}
+
+    // Then we load every language files with i18n.SetMessage
+	for _, lang := range langs {
+		beego.Trace("Loading language: " + lang)
+		if err := i18n.SetMessage(lang, "conf/"+"locale_"+lang+".ini"); err != nil {
+			beego.Error("Fail to set message file: " + err.Error())
+			return
+		}
+	}
+
+    orm.Debug = true
+
     // Set session on
     beego.SessionOn = true
 
@@ -41,14 +71,15 @@ func main() {
 
     // Set the ORM parameters
     orm.RegisterDriver(driverSQL, orm.DR_MySQL)
-    orm.RegisterDataBase(aliasDbName, driverSQL, username + password + "@/" + databaseName + optionsDatabaseConnections)
+    orm.RegisterDataBase(aliasDbName, driverSQL, username+password+"@/"+databaseName+optionsDatabaseConnections)
     orm.SetMaxIdleConns(aliasDbName, maxIdleConns)
     orm.SetMaxOpenConns(aliasDbName, maxOpenConns)
     orm.DefaultTimeLoc = time.UTC
     orm.RunCommand()
-
-    // Run the app
-	beego.Run()
-
+    db.PopulateDatabase()
 }
 
+func main() {
+	// Run the app
+	beego.Run()
+}

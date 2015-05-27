@@ -1,0 +1,17 @@
+body {
+    padding-top: 120px;
+    padding-bottom: 40px;
+}
+
+.btn {
+    outline: 0;
+    border-style: none;
+    box-shadow: inset 2px -3px rgba(0, 0, 0, 0.15);
+}
+
+.btn:focus {
+    outline: 0;
+    -webkit-outline: 0;
+    -moz-outline: 0;
+}
+

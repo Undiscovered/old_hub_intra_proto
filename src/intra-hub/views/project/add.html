@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Ajouter un Projet</title>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+
+</head>
+<body>
+<form method="post" action="/projects/add">
+    <label>Name</label>
+    <input name="name" type="text">
+    <label>Courte description</label>
+    <textarea rows="2" name="shortDescription"></textarea>
+    <label>Assigner un manager</label>
+    <select name="managerLogin">
+        <option>--</option>
+        {{ range $element := .Managers }}
+        <option>{{ $element.Login }}</option>
+        {{ end }}
+    </select>
+
+    <!--<div id="tags"></div>-->
+    <label>Status du projet</label>
+    <select name="status">
+        {{ range $element := .Status }}
+        <option value="{{ $element }}">{{ i18n $.Lang $element }}</option>
+        {{ end }}
+    </select>
+    <input id="membersId" type="hidden" name="membersId">
+    <input type="text" id="autocomplete"/>
+    <ul>
+
+    </ul>
+    <label>Logins</label>
+    <ul id="logins">
+
+    </ul>
+    <button type="submit">Creer le projet</button>
+</form>
+{{ .flash.error }}
+
+</body>
+<script src="//code.jquery.com/jquery-1.10.2.js" type="application/javascript"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js" type="application/javascript"></script>
+<script src="/static/js/http.min.js" type="application/javascript"></script>
+<script src="/static/js/taggle.min.js" type="application/javascript"></script>
+<script>
+    $(document).ready(start);
+
+    function start() {
+//        new Taggle('tags');
+
+        $('#autocomplete').autocomplete({
+            source: function (request, autoCompleteResponse) {
+                if (request.term.length >= 2) {
+                    new Http.Post('/users/search', {login: request.term}).start().then(function (response) {
+                        var users = JSON.parse(response);
+                        users.forEach(function (user) {
+                            user.label = user.firstName + ' ' + user.lastName;
+                            user.value = user.login;
+                        });
+                        autoCompleteResponse(users);
+                    });
+                }
+            },
+            select: function (event, object) {
+                var membersId = $('#membersId');
+                var currentIds = membersId.attr('value');
+                if (!currentIds) {
+                    membersId.attr('value', object.item.id);
+                } else {
+                    membersId.attr('value', currentIds + ',' + object.item.id);
+                }
+                console.log(membersId.val());
+                $('#logins').append('<li>' + object.item.login + '</li>');
+                $('#autocomplete').attr('value', '');
+            }
+        });
+    }
+</script>
+</html>

@@ -1,48 +1,71 @@
 package controllers
 
 import (
-	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/validation"
+	"github.com/bitly/go-simplejson"
 	"intra-hub/db"
 	"intra-hub/models"
+    "github.com/astaxie/beego"
 )
 
 type UserController struct {
 	BaseController
 }
 
-// TODO: API Mode
 func (c *UserController) Login() {
-	user := &models.User{}
-
-	if c.apiMode {
-
-	} else {
-        flash := beego.ReadFromRequest(&c.Controller)
-        c.TplNames = "login.html"
-		c.ParseForm(user)
-		beego.Warning(user)
-		valid := validation.Validation{}
-		if b, err := valid.Valid(user); err != nil {
-			beego.Error(err)
-			flash.Data["error"] = err.Error()
-			return
-		} else if !b {
-            beego.Error(valid.Errors)
-            flash.Data["error"] = valid.Errors[0].String()
-            return
-        }
-		user, err := db.CheckUserCredentials(user)
-		if err != nil {
-			beego.Error(err)
-			flash.Data["error"] = err.Error()
-			return
-		}
-		c.Data["User"] = user
-        c.TplNames = "index.html"
+    user := &models.User{}
+	if c.isLogged {
+		c.Redirect("/home", 301)
+		return
 	}
+	c.ParseForm(user)
+	valid := validation.Validation{}
+	if b, err := valid.Valid(user); err != nil {
+        c.SetErrorAndRedirect("/login", err)
+		return
+	} else if !b {
+        c.SetErrorAndRedirect("/login", err)
+		return
+	}
+	user, err := db.CheckUserCredentials(user)
+	if err != nil {
+        c.SetErrorAndRedirect("/login", err)
+		return
+	}
+	c.SetUser(user)
+	c.Redirect("/home", 301)
 }
 
 func (c *UserController) LoginView() {
 	c.TplNames = "login.html"
+}
+
+func (c *UserController) SearchUser() {
+	c.EnableRender = false
+	jsonBody, err := simplejson.NewJson(c.Ctx.Input.CopyBody())
+	if err != nil {
+        beego.Warn(err)
+		jsonErr := simplejson.New()
+		jsonErr.Set("error", err)
+		c.Data["json"] = jsonErr
+		c.ServeJson()
+		return
+	}
+	users, err := db.SearchUsers(jsonBody.Get("login").MustString(""))
+	if err != nil {
+        beego.Warn(err)
+		jsonErr := simplejson.New()
+		jsonErr.Set("error", err)
+		c.Data["json"] = jsonErr
+		c.ServeJson()
+		return
+	}
+    beego.Warn(users)
+    if users == nil {
+        // Return an empty array.
+        c.Data["json"] = []string{}
+    } else {
+        c.Data["json"] = users
+    }
+	c.ServeJson()
 }

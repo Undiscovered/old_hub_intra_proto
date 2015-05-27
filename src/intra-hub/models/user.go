@@ -2,7 +2,17 @@ package models
 
 import (
 	"github.com/astaxie/beego/orm"
-    "github.com/astaxie/beego/validation"
+	"github.com/astaxie/beego/validation"
+)
+
+const (
+	UserGroupStudent = "STUDENT"
+	UserGroupManager = "MANAGER"
+	UserGroupAdmin   = "ADMIN"
+)
+
+var (
+	EveryUserGroups = []string{UserGroupStudent, UserGroupManager, UserGroupAdmin}
 )
 
 func init() {
@@ -10,20 +20,22 @@ func init() {
 }
 
 type User struct {
-	Id        int
-	Login     string `orm:"unique" form:"login"`
-	FirstName string
-	LastName  string
-	Email     string
-	Picture   string
-	Password  string `form:"password"`
-	Promotion string
-	City      string
+	Id        int        `json:"id"`
+	Login     string     `json:"login" orm:"unique" form:"login"`
+	FirstName string     `json:"firstName"`
+	LastName  string     `json:"lastName"`
+	Email     string     `json:"email"`
+	Picture   string     `json:"picture"`
+	Password  string     `json:"password" form:"password"`
+	Promotion string     `json:"promotion"`
+	City      string     `json:"city"`
+	Groups    []*Group   `json:"groups" orm:"rel(m2m)"`
+	Projects  []*Project `json:"projects" orm:"rel(m2m)"`
 }
 
 func (u *User) TableIndex() [][]string {
 	return [][]string{
-		[]string{"Id", "Login"},
+		[]string{"Id", "Login", "FirstName", "LastName"},
 	}
 }
 
@@ -32,12 +44,12 @@ func (u *User) Values() []string {
 }
 
 func (u *User) Valid(v *validation.Validation) {
-    if len(u.Login) > 8 {
-        v.SetError("Login", "invalid login")
-    }
-    if len(u.Password) == 0 {
-        v.SetError("Password", "empty password")
-    }
+	if len(u.Login) > 8 {
+		v.SetError("Login", "invalid login")
+	}
+	if len(u.Password) == 0 {
+		v.SetError("Password", "empty password")
+	}
 }
 
 func GetUserFields() string {

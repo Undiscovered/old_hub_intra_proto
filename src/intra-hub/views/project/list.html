@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Liste des Projets</title>
+</head>
+<body>
+{{ if .Projects }}
+
+{{ range $key, $val := .Project }}
+{{ $key }}
+{{ $val }}
+{{ end }}
+
+{{ else }}
+
+Aucun projets
+
+{{ end }}
+
+<a href="/projects/add">Creer un projet</a>
+</body>
+</html>
