@@ -45,7 +45,11 @@ bee run
 ./intra-hub orm syncdb --force=true
 ```
 
-.
+# Gestion des branches
+
+- master : branche de production  
+- develop : branche principale de dev
+- feature-XXX : branche pour ajouter la feature XXX  
 
 # Next features
 
