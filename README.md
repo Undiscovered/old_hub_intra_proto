@@ -12,6 +12,31 @@ mysql -uroot
 
 ```
 
+## ConfPerso
+
+```
+mkdir src/intra-hub/confperso
+cd src/intra-hub/confperso
+touch conf.go
+```
+
+Open conf.go et put that inside :
+
+```
+package confperso
+
+// To update for yourself. Don't commit it
+const (
+    AliasDbName                = "default"
+	DatabaseName               = "intra_hub"
+	Username                   = "root"
+	Password                   = ""
+)
+```
+
+Replace username and password by the value you need.  
+
+
 ## Dependencies
 
 ```
@@ -29,20 +54,24 @@ go get golang.org/x/crypto/bcrypt
 sudo mv $GOPATH/bin/bee /usr/bin
 ```
 
-# How to Run
-
-```
-cd src/intra-hub
-bee run
-```
-
-# How to create the database
+## How to create the database
 
 ```
 cd src/intra-hub
 bee run
 # After it has build, quit the app (ctrl + c)
 ./intra-hub orm syncdb --force=true
+```
+
+## How to load users
+
+TO-DO  
+
+# How to Run
+
+```
+cd src/intra-hub
+bee run
 ```
 
 # Contribution
