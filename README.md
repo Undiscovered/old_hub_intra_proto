@@ -12,6 +12,31 @@ mysql -uroot
 
 ```
 
+## ConfPerso
+
+```
+mkdir src/intra-hub/confperso
+cd src/intra-hub/confperso
+touch conf.go
+```
+
+Open conf.go et put that inside :
+
+```
+package confperso
+
+// To update for yourself. Don't commit it
+const (
+    AliasDbName                = "default"
+	DatabaseName               = "intra_hub"
+	Username                   = "root"
+	Password                   = ""
+)
+```
+
+Replace username and password by the value you need.  
+
+
 ## Dependencies
 
 ```
