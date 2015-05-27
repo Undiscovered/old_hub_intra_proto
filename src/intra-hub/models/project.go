@@ -59,6 +59,9 @@ func (p *Project) Valid(v *validation.Validation) {
 	if p.ShortDescription == "" {
 		v.SetError("ShortDescription", "short description empty")
 	}
+    if p.MembersID == "" {
+        return
+    }
 	members := strings.Split(p.MembersID, ",")
 	for _, memberId := range members {
 		id, err := strconv.ParseInt(memberId, 10, 64)

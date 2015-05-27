@@ -12,10 +12,23 @@ func QueryProjects() orm.QuerySeter {
     return orm.NewOrm().QueryTable(ProjectsTable)
 }
 
-func GetProjectsPaginated(offset, limit int) (projects []*models.Project, err error) {
-    projects = make([]*models.Project, 0)
-    if _, err = QueryProjects().Offset(offset).Limit(limit).All(&projects); err != nil {
+func GetProjectsPaginated(page, limit int) (itemPaginated *models.ItemPaginated, err error) {
+    projects := make([]*models.Project, 0)
+    q := QueryProjects()
+    page -= 1
+    if _, err = q.Offset(page * limit).Limit(limit).RelatedSel().All(&projects); err != nil {
         return
+    }
+    count, err := q.Count()
+    if err != nil {
+        return
+    }
+    itemPaginated = &models.ItemPaginated{
+        Items: projects,
+        ItemCount: len(projects),
+        TotalItemCount: int(count),
+        CurrentPage: page + 1,
+        TotalPageCount: int(count) / limit + 1,
     }
     return
 }
@@ -41,7 +54,7 @@ func AddProject(project *models.Project) (*models.Project, error) {
     if err := o.Begin(); err != nil {
         return nil, err
     }
-    id, err :=  o.Insert(project)
+    id, err := o.Insert(project)
     if err != nil {
         o.Rollback()
         return nil, err
@@ -52,9 +65,11 @@ func AddProject(project *models.Project) (*models.Project, error) {
         return nil, err
     }
     project.Id = int(id)
-    if _, err := o.QueryM2M(project, "Members").Add(project.Members); err != nil {
-        o.Rollback()
-        return nil, err
+    if len(project.Members) != 0 {
+        if _, err := o.QueryM2M(project, "Members").Add(project.Members); err != nil {
+            o.Rollback()
+            return nil, err
+        }
     }
     if _, err := o.QueryM2M(project, "History").Add(historyItem); err != nil {
         o.Rollback()

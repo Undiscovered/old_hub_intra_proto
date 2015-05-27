@@ -5,6 +5,7 @@ import (
 	"github.com/beego/i18n"
 	"intra-hub/models"
 	"strings"
+    "strconv"
 )
 
 const (
@@ -29,7 +30,6 @@ func (c *BaseController) Prepare() {
     // Set Language
 	c.currentLanguage = "fr-FR"
 	c.Data["Lang"] = c.currentLanguage
-	beego.AddFuncMap("i18n", i18n.Tr)
 
     // Set Flash data
     c.flash = beego.ReadFromRequest(&c.Controller)
@@ -46,7 +46,18 @@ func (c *BaseController) Prepare() {
 		c.isLogged = true
 	}
 
-	// If the matching controller is a NestedPreparer, we call the NestedPrepare function
+    // Add basic template functions
+    beego.AddFuncMap("i18n", i18n.Tr)
+    incr := func(arg int) string {
+        return strconv.FormatInt(int64(arg + 1), 10)
+    }
+    decr := func(arg int) string {
+        return strconv.FormatInt(int64(arg - 1), 10)
+    }
+    beego.AddFuncMap("incr", incr)
+    beego.AddFuncMap("decr", decr)
+
+    // If the matching controller is a NestedPreparer, we call the NestedPrepare function
 	// To ensure that this Prepare function is called first (it is done to prevent overriding of
 	// Prepare functions.
 	if app, ok := c.AppController.(NestedPreparer); ok {
@@ -58,7 +69,7 @@ func (c *BaseController) SetUser(user *models.User) {
 	c.SetSession(sessionUserKey, user)
 }
 
-func (c *BaseController) SetErrorAndRedirect(url string, err error) {
+func (c *BaseController) SetErrorAndRedirect(err error) {
     c.flash.Data["error"] = err.Error()
     c.flash.Store(&c.Controller)
     c.Redirect(c.Ctx.Request.URL.Path, 303)

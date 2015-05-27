@@ -6,6 +6,7 @@ import (
 
 // Populate the database with default values.
 func PopulateDatabase() {
+    // Add Groups
     i, err := QueryGroup().PrepareInsert()
     if err != nil {
         panic(err)

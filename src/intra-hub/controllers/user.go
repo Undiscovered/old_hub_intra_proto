@@ -21,15 +21,15 @@ func (c *UserController) Login() {
 	c.ParseForm(user)
 	valid := validation.Validation{}
 	if b, err := valid.Valid(user); err != nil {
-        c.SetErrorAndRedirect("/login", err)
+        c.SetErrorAndRedirect(err)
 		return
 	} else if !b {
-        c.SetErrorAndRedirect("/login", err)
+        c.SetErrorAndRedirect(err)
 		return
 	}
 	user, err := db.CheckUserCredentials(user)
 	if err != nil {
-        c.SetErrorAndRedirect("/login", err)
+        c.SetErrorAndRedirect(err)
 		return
 	}
 	c.SetUser(user)

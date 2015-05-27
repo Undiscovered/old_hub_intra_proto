@@ -6,6 +6,7 @@ import (
 	"intra-hub/db"
 	"intra-hub/models"
 	"strconv"
+    "fmt"
 )
 
 type ProjectController struct {
@@ -13,37 +14,45 @@ type ProjectController struct {
 }
 
 func (c *ProjectController) NestedPrepare() {
-//	if !c.isLogged {
-//		beego.Warn("Not Logged")
-//		c.Redirect("/", 301)
-//		return
-//	}
+	//	if !c.isLogged {
+	//		beego.Warn("Not Logged")
+	//		c.Redirect("/", 301)
+	//		return
+	//	}
 }
 
 func (c *ProjectController) ListView() {
-	offset, err := c.GetInt("offset")
+    c.TplNames = "project/list.html"
+	page, err := c.GetInt("page")
 	if err != nil {
 		beego.Error(err)
-		c.flash.Data["error"] = err.Error()
+        c.SetErrorAndRedirect(err)
 		return
 	}
 	limit, err := c.GetInt("limit")
 	if err != nil {
 		beego.Error(err)
-		c.flash.Data["error"] = err.Error()
+        c.SetErrorAndRedirect(err)
 		return
 	}
+    if page <= 0 {
+        c.Redirect(fmt.Sprintf("/projects?page=1&limit=%d", limit), 301)
+        return
+    }
 	if limit == 0 {
 		limit = 25
 	}
-	projects, err := db.GetProjectsPaginated(offset, limit)
+    beego.Warn(beego.BeeTemplates)
+	paginatedItems, err := db.GetProjectsPaginated(page, limit)
 	if err != nil {
 		beego.Error(err)
-		c.flash.Data["error"] = err.Error()
+        c.SetErrorAndRedirect(err)
 		return
 	}
-	c.Data["Projects"] = projects
-	c.TplNames = "project/list.html"
+    c.Data["Limit"] = limit
+	c.Data["PaginatedItems"] = paginatedItems
+    c.Data["HasNextPage"] = paginatedItems.CurrentPage != paginatedItems.TotalPageCount
+    c.Data["HasPreviousPage"] = paginatedItems.CurrentPage != 1
 }
 
 func (c *ProjectController) SingleView() {
@@ -83,31 +92,26 @@ func (c *ProjectController) Add() {
 	valid := validation.Validation{}
 	if b, err := valid.Valid(project); err != nil {
 		beego.Error(err)
-        c.SetErrorAndRedirect("/projects/add", err)
+		c.SetErrorAndRedirect(err)
 		return
 	} else if !b {
 		beego.Error(valid.Errors[0])
-		c.flash.Data["error"] = valid.Errors[0].String()
-		c.flash.Store(&c.Controller)
-		c.Redirect("/projects/add", 303)
+        c.SetErrorAndRedirect(err)
 		return
 	}
 	if project.ManagerLogin != "--" {
 		manager, err := db.GetUserByLogin(project.ManagerLogin)
 		if err != nil {
 			beego.Error(err)
-			c.flash.Data["error"] = err.Error()
-			c.flash.Store(&c.Controller)
-			c.Redirect("/projects/add", 303)
+            c.SetErrorAndRedirect(err)
+            return
 		}
 		project.Manager = manager
 	}
 	project, err := db.AddProject(project)
 	if err != nil {
 		beego.Error(err)
-		c.flash.Data["error"] = err.Error()
-		c.flash.Store(&c.Controller)
-		c.Redirect("/projects/add", 303)
+        c.SetErrorAndRedirect(err)
 		return
 	}
 	c.Redirect("/projects/"+strconv.FormatInt(int64(project.Id), 10), 301)
