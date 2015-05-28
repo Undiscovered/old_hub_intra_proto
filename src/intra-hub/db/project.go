@@ -2,6 +2,7 @@ package db
 import (
     "intra-hub/models"
     "github.com/astaxie/beego/orm"
+    "github.com/astaxie/beego"
 )
 
 const (
@@ -14,10 +15,16 @@ func QueryProjects() orm.QuerySeter {
 
 func GetProjectsPaginated(page, limit int) (itemPaginated *models.ItemPaginated, err error) {
     projects := make([]*models.Project, 0)
-    q := QueryProjects()
+    o := orm.NewOrm()
+    q := o.QueryTable(ProjectsTable)
     page -= 1
     if _, err = q.Offset(page * limit).Limit(limit).RelatedSel().All(&projects); err != nil {
         return
+    }
+    for _, project := range projects {
+        if _, err := o.LoadRelated(project, "Members"); err != nil {
+            return nil, err
+        }
     }
     count, err := q.Count()
     if err != nil {
@@ -31,6 +38,23 @@ func GetProjectsPaginated(page, limit int) (itemPaginated *models.ItemPaginated,
         TotalPageCount: int(count) / limit + 1,
     }
     return
+}
+
+func GetProjectByIDOrName(nameOrId string) (*models.Project, error) {
+    project := &models.Project{}
+    o := orm.NewOrm()
+    q := o.QueryTable(ProjectsTable)
+    beego.Warn(nameOrId)
+    if err := q.SetCond(orm.NewCondition().Or("Id", nameOrId).Or("Name", nameOrId)).RelatedSel().One(project); err != nil {
+        return nil, err
+    }
+    if _, err := o.LoadRelated(project, "Members"); err != nil {
+        return nil, err
+    }
+    if _, err := o.LoadRelated(project, "History"); err != nil {
+        return nil, err
+    }
+    return project, nil
 }
 
 func GetProjectByID(id int) (*models.Project, error) {

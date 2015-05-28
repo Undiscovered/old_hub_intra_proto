@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>{{ i18n .Lang "TITLE" }}</title>
+    {{ template "layouts/include-css.html" }}
+</head>
+<body>
+{{ template "layouts/topbar.html" }}
+
+<div class="row">
+    <div class="col-sm-4 col-xs-4 col-sm-offset-2">
+        <a href="/projects/list?page=1&limit=15" class="clean">
+            <div class="panel panel-default">
+                <div class="panel-header text-center"><h3>Tous les projets</h3></div>
+                <div class="panel-thumbnail">
+                    <img src="//placehold.it/250X250/DD3333/EE3333" class="center-block img-responsive light-padding">
+                </div>
+            </div>
+        </a>
+
+    </div>
+    <!--/col-->
+
+    <div class="col-sm-4 col-xs-4">
+        <a href="">
+            <div class="panel panel-default">
+                <div class="panel-header text-center"><h3>Appels à projet</h3></div>
+                <div class="panel-thumbnail">
+                    <img src="//placehold.it/250X250/DD66DD/EE77EE" class="center-block img-responsive light-padding">
+                </div>
+            </div>
+        </a>
+    </div>
+    <!--/col-->
+
+    <div class="col-sm-4 col-xs-4 col-sm-offset-2">
+        <a href="">
+            <div class="panel panel-default">
+                <div class="panel-header text-center"><h3>Panthéon</h3></div>
+                <div class="panel-thumbnail">
+                    <img src="//placehold.it/250X250/2222DD/2222EE" class="center-block img-responsive light-padding">
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-sm-4 col-xs-4 ">
+        <a href="/projects/add" class="clean">
+            <div class="panel panel-default">
+                <div class="panel-header text-center"><h3>Lancer un projet</h3></div>
+                <div class="panel-thumbnail">
+                    <img src="//placehold.it/250X250/2222DD/2222EE" class="center-block img-responsive light-padding">
+                </div>
+            </div>
+        </a>
+    </div>
+    <!--/col-->
+
+</div>
+{{ template "layouts/include-js.html" }}
+
+</body>
+</html>

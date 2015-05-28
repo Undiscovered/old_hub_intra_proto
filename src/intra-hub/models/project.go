@@ -34,7 +34,7 @@ var (
 
 type Project struct {
 	Id               int
-	Name             string         `form:"name"`
+	Name             string         `orm:"unique" form:"name"`
 	ShortDescription string         `form:"shortDescription"`
 	Status           string         `form:"status"`
 	History          []*HistoryItem `orm:"null;rel(m2m)"`
@@ -47,6 +47,41 @@ type Project struct {
 
 	ManagerLogin string `orm:"-" form:"managerLogin"`
 	MembersID    string `orm:"-" form:"membersId"`
+	MemberCount  int    `orm:"-"`
+}
+
+func (p *Project) Cities() (s string) {
+    m := make(map[string]bool)
+    for _, member := range p.Members {
+        if member.City == "" {
+            continue
+        }
+        m[member.City] = true
+    }
+    for city := range m {
+        s += city + ", "
+    }
+    if len(s) > 2 {
+        s = s[:len(s)-2]
+    }
+    return
+}
+
+func (p *Project) Promotions() (s string) {
+    m := make(map[string]bool)
+    for _, member := range p.Members {
+        if member.City == "" {
+            continue
+        }
+        m[member.Promotion] = true
+    }
+    for promo := range m {
+        s += promo + ", "
+    }
+    if len(s) > 2 {
+        s = s[:len(s)-2]
+    }
+    return
 }
 
 func (p *Project) Valid(v *validation.Validation) {
@@ -59,9 +94,9 @@ func (p *Project) Valid(v *validation.Validation) {
 	if p.ShortDescription == "" {
 		v.SetError("ShortDescription", "short description empty")
 	}
-    if p.MembersID == "" {
-        return
-    }
+	if p.MembersID == "" {
+		return
+	}
 	members := strings.Split(p.MembersID, ",")
 	for _, memberId := range members {
 		id, err := strconv.ParseInt(memberId, 10, 64)

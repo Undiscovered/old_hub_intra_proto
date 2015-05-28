@@ -26,7 +26,9 @@ body {
 .form-control {border-color:#d7d7d7;}
 .btn-primary {border-color:transparent;}
 .btn-primary,.label-primary,.list-group-item.active, .list-group-item.active:hover, .list-group-item.active:focus {background-color:#4285f4;}
-.btn-plus {background-color:#ffffff;border-width:1px;border-color:#dddddd;box-shadow:1px 1px 0 #999999;border-radius:3px;color:#666666;text-shadow:0 0 1px #bbbbbb;}
+.btn-plus {background-color:#ffffff;
+    border: 1px #dddddd;
+    box-shadow:1px 1px 0 #999999;border-radius:3px;color:#666666;text-shadow:0 0 1px #bbbbbb;}
 .well,.panel {border-color:#d2d2d2;box-shadow:0 1px 0 #cfcfcf;border-radius:3px;}
 .btn-success,.label-success,.progress-bar-success{background-color:#65b045;}
 .btn-info,.label-info,.progress-bar-info{background-color:#a0c3ff;border-color:#a0c3ff;}
@@ -57,9 +59,6 @@ textarea {
 }
 .panel .panel-default {
  border-color:#cccccc;
-}
-.panel .panel-thumbnail {
- padding:0;
 }
 .panel .img-circle {
  width:50px;
@@ -101,4 +100,16 @@ h3,h4,h5 {
 
 #main {
  padding-top:120px;
+}
+
+.light-padding {
+    padding: 5px;
+}
+
+a.clean {
+    text-decoration: none;
+}
+
+a.off {
+    color: #F44336;
 }

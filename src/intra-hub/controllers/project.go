@@ -21,6 +21,10 @@ func (c *ProjectController) NestedPrepare() {
 	//	}
 }
 
+func (c *ProjectController) IntroView() {
+    c.TplNames = "project/intro.html"
+}
+
 func (c *ProjectController) ListView() {
     c.TplNames = "project/list.html"
 	page, err := c.GetInt("page")
@@ -57,13 +61,7 @@ func (c *ProjectController) ListView() {
 
 func (c *ProjectController) SingleView() {
 	c.TplNames = "project/single.html"
-	id, err := strconv.Atoi(c.Ctx.Input.Params[":id"])
-	if err != nil {
-		beego.Error(err)
-		c.flash.Data["error"] = err.Error()
-		return
-	}
-	project, err := db.GetProjectByID(id)
+	project, err := db.GetProjectByIDOrName(c.GetString(":nameOrId"))
 	if err != nil {
 		beego.Error(err)
 		c.flash.Data["error"] = err.Error()
