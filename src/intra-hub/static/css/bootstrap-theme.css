@@ -113,3 +113,7 @@ a.clean {
 a.off {
     color: #F44336;
 }
+
+.pagination>li>a {
+    color: #4582ec;
+}

@@ -1,12 +1,12 @@
 package controllers
 
 import (
+	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/validation"
 	"intra-hub/db"
 	"intra-hub/models"
 	"strconv"
-    "fmt"
 )
 
 type ProjectController struct {
@@ -22,41 +22,44 @@ func (c *ProjectController) NestedPrepare() {
 }
 
 func (c *ProjectController) IntroView() {
-    c.TplNames = "project/intro.html"
+	c.TplNames = "project/intro.html"
 }
 
 func (c *ProjectController) ListView() {
-    c.TplNames = "project/list.html"
+	c.TplNames = "project/list.html"
+	sortDesc := c.GetStrings("desc", nil)
+	beego.Warn(sortDesc)
 	page, err := c.GetInt("page")
 	if err != nil {
 		beego.Error(err)
-        c.SetErrorAndRedirect(err)
+		c.SetErrorAndRedirect(err)
 		return
 	}
 	limit, err := c.GetInt("limit")
 	if err != nil {
 		beego.Error(err)
-        c.SetErrorAndRedirect(err)
+		c.SetErrorAndRedirect(err)
 		return
 	}
-    if page <= 0 {
-        c.Redirect(fmt.Sprintf("/projects?page=1&limit=%d", limit), 301)
-        return
-    }
+	if page <= 0 {
+		c.Redirect(fmt.Sprintf("/projects?page=1&limit=%d", limit), 301)
+		return
+	}
 	if limit == 0 {
 		limit = 25
 	}
-    beego.Warn(beego.BeeTemplates)
+	beego.Warn(beego.BeeTemplates)
 	paginatedItems, err := db.GetProjectsPaginated(page, limit)
 	if err != nil {
 		beego.Error(err)
-        c.SetErrorAndRedirect(err)
+		c.SetErrorAndRedirect(err)
 		return
 	}
-    c.Data["Limit"] = limit
+	paginatedItems.SetPagesToShow()
+	c.Data["Limit"] = limit
 	c.Data["PaginatedItems"] = paginatedItems
-    c.Data["HasNextPage"] = paginatedItems.CurrentPage != paginatedItems.TotalPageCount
-    c.Data["HasPreviousPage"] = paginatedItems.CurrentPage != 1
+	c.Data["HasNextPage"] = paginatedItems.CurrentPage+1 < paginatedItems.TotalPageCount
+	c.Data["HasPreviousPage"] = paginatedItems.CurrentPage != 1
 }
 
 func (c *ProjectController) SingleView() {
@@ -94,22 +97,22 @@ func (c *ProjectController) Add() {
 		return
 	} else if !b {
 		beego.Error(valid.Errors[0])
-        c.SetErrorAndRedirect(err)
+		c.SetErrorAndRedirect(err)
 		return
 	}
 	if project.ManagerLogin != "--" {
 		manager, err := db.GetUserByLogin(project.ManagerLogin)
 		if err != nil {
 			beego.Error(err)
-            c.SetErrorAndRedirect(err)
-            return
+			c.SetErrorAndRedirect(err)
+			return
 		}
 		project.Manager = manager
 	}
 	project, err := db.AddProject(project)
 	if err != nil {
 		beego.Error(err)
-        c.SetErrorAndRedirect(err)
+		c.SetErrorAndRedirect(err)
 		return
 	}
 	c.Redirect("/projects/"+strconv.FormatInt(int64(project.Id), 10), 301)
