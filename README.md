@@ -63,16 +63,17 @@ bee run
 ./intra-hub orm syncdb --force=true
 ```
 
-## How to load users
-
-TO-DO  
-
 # How to Run
 
 ```
 cd src/intra-hub
 bee run
 ```
+
+## How to load users
+
+Browse to http://localhost:8088/task and run the task named BlowfishCrawler
+Or make a post request to http://localhost:8088/task?taskname=blowfishCrawler
 
 # Contribution
 
