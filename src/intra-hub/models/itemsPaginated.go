@@ -1,7 +1,6 @@
 package models
 
 import (
-	"github.com/astaxie/beego"
 	"github.com/soniah/tcgl/sort"
 )
 
@@ -36,37 +35,24 @@ func (p *ItemPaginated) SetPagesToShow() {
 		pagesToShow = append(pagesToShow, currentPage)
 		indexArray++
 	}
-	beego.Warn(pagesToShow)
 	sort.Sort(Alpha(pagesToShow))
-	beego.Warn(pagesToShow)
-	currentPageIndex := 0
 	firstPageIndex := 0
 	lastPageIndex := 0
 	for index, value := range pagesToShow {
-		switch value {
-		case 1:
+		switch {
+		case value == 1 && firstPageIndex == 0:
 			firstPageIndex = index
-			if p.CurrentPage == 1 {
-				currentPageIndex = index
-			}
-		case p.CurrentPage:
-			currentPageIndex = index
-		case p.TotalPageCount:
+		case value == p.TotalPageCount && lastPageIndex == 0:
+			lastPageIndex = index
+		case value == p.CurrentPage-4 && firstPageIndex == 0:
+			firstPageIndex = index
+		case value == p.CurrentPage+4 && lastPageIndex == 0:
 			lastPageIndex = index
 		}
 	}
-	beego.Warn(firstPageIndex, currentPageIndex, lastPageIndex)
-	if firstPageIndex != 0 {
-        if lastPageIndex != 0 {
-            pagesToShow = pagesToShow[firstPageIndex : lastPageIndex]
-        } else {
-            pagesToShow = pagesToShow[firstPageIndex : currentPageIndex+5]
-        }
-	} else if lastPageIndex != 0 {
-        pagesToShow = pagesToShow[:lastPageIndex]
-	} else {
-		pagesToShow = pagesToShow[:currentPageIndex+5]
-	}
-	beego.Warn(pagesToShow)
+    if p.TotalPageCount == 1 {
+        lastPageIndex = firstPageIndex
+    }
+	pagesToShow = pagesToShow[firstPageIndex : lastPageIndex+1]
 	p.PagesToShow = pagesToShow
 }

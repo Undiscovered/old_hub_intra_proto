@@ -36,6 +36,11 @@ func (c *UserController) Login() {
 	c.Redirect("/home", 301)
 }
 
+func (c *UserController) Logout() {
+    c.DestroySession()
+    c.Redirect("/login", 301)
+}
+
 func (c *UserController) LoginView() {
 	c.TplNames = "login.html"
 }

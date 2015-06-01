@@ -2,42 +2,66 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>Ajouter un Projet</title>
-
+    <title>Lancer un Projet</title>
+    {{ template "layouts/include-css.html" }}
 </head>
 <body>
-<form method="post" action="/projects/add">
-    <label>Name</label>
-    <input name="name" type="text">
-    <label>Courte description</label>
-    <textarea rows="2" name="shortDescription"></textarea>
-    <label>Assigner un manager</label>
-    <select name="managerLogin">
-        <option>--</option>
-        {{ range $element := .Managers }}
-        <option>{{ $element.Login }}</option>
-        {{ end }}
-    </select>
+{{ template "layouts/topbar.html" }}
 
-    <!--<div id="tags"></div>-->
-    <label>Status du projet</label>
-    <select name="status">
-        {{ range $element := .Status }}
-        <option value="{{ $element }}">{{ i18n $.Lang $element }}</option>
-        {{ end }}
-    </select>
-    <input id="membersId" type="hidden" name="membersId">
-    <input type="text" id="autocomplete"/>
-    <ul>
+<div class="container-fluid">
+    {{ if .flash.error }}
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+        {{ .flash.error }}
+    </div>
+    {{ end }}
 
-    </ul>
-    <label>Logins</label>
-    <ul id="logins">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>Lancer un projet</h4>
+        </div>
+        <div class="panel-body">
+            <form method="post" action="/projects/add">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input class="form-control" placeholder="Name" id="name" name="name" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="shortDescription">Courte description</label>
+                    <textarea class="form-control" id="shortDescription" rows="2" placeholder="Courte description"
+                              name="shortDescription"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="managerLogin">Assigner un manager</label>
+                    <select class="form-control" id="managerLogin" name="managerLogin">
+                        <option>--</option>
+                        {{ range $element := .Managers }}
+                        <option>{{ $element.Login }}</option>
+                        {{ end }}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="status">Status du projet</label>
+                    <select class="form-control" id="status" name="status">
+                        {{ range $element := .Status }}
+                        <option value="{{ $element }}">{{ i18n $.Lang $element }}</option>
+                        {{ end }}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="hidden" id="membersId" name="membersId">
+                    <input class="form-control" placeholder="Ajouter un membre" type="text" id="autocomplete"/>
+                    <ul id="logins" class="list-group">
 
-    </ul>
-    <button type="submit">Creer le projet</button>
-</form>
-{{ .flash.error }}
+                    </ul>
+                </div>
+
+                <button class="btn btn-primary" type="submit">Creer le projet</button>
+            </form>
+        </div>
+    </div>
+</div>
 
 </body>
 {{ template "layouts/include-js.html" }}
@@ -46,8 +70,6 @@
     $(document).ready(start);
 
     function start() {
-//        new Taggle('tags');
-
         $('#autocomplete').autocomplete({
             source: function (request, autoCompleteResponse) {
                 if (request.term.length >= 2) {
@@ -69,11 +91,31 @@
                 } else {
                     membersId.attr('value', currentIds + ',' + object.item.id);
                 }
-                console.log(membersId.val());
-                $('#logins').append('<li>' + object.item.login + '</li>');
-                $('#autocomplete').attr('value', '');
+                console.log(membersId.attr('value'));
+                $('#logins').append(generateListItem(object.item));
+                $('#autocomplete').val('');
+                return false;
             }
         });
+    }
+
+    function generateListItem(user) {
+        var deleteButton = '<span ' + 'onclick="deleteLogin(\'' + user.login + '\')"' + 'class="pull-right glyphicon glyphicon-remove"></span>';
+        var image = '<img class="img-responsive" src="' + user.picture + '">';
+        return '<li id="' + user.login + '" class="list-group-item"><div>' + image + user.login + deleteButton + '</div></li>';
+    }
+
+    function deleteLogin(login) {
+        var membersId = $('#membersId');
+        console.log(membersId.attr('value'));
+        var currentIds = membersId.attr('value');
+        var ids = currentIds.split(',');
+        for (var i = 0; i < ids.length; ++i) {
+            ids.splice(i, 1);
+        }
+        membersId.attr('value', ids);
+        console.log(membersId.attr('value'));
+        $('#' + login).remove();
     }
 </script>
 

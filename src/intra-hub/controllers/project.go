@@ -48,7 +48,6 @@ func (c *ProjectController) ListView() {
 	if limit == 0 {
 		limit = 25
 	}
-	beego.Warn(beego.BeeTemplates)
 	paginatedItems, err := db.GetProjectsPaginated(page, limit)
 	if err != nil {
 		beego.Error(err)
@@ -58,8 +57,10 @@ func (c *ProjectController) ListView() {
 	paginatedItems.SetPagesToShow()
 	c.Data["Limit"] = limit
 	c.Data["PaginatedItems"] = paginatedItems
-	c.Data["HasNextPage"] = paginatedItems.CurrentPage+1 < paginatedItems.TotalPageCount
+	c.Data["HasNextPage"] = paginatedItems.CurrentPage+1 <= paginatedItems.TotalPageCount
 	c.Data["HasPreviousPage"] = paginatedItems.CurrentPage != 1
+	c.Data["ShowGoToFirst"] = paginatedItems.PagesToShow[0] != 1
+	c.Data["ShowGoToLast"] = paginatedItems.PagesToShow[len(paginatedItems.PagesToShow)-1] != paginatedItems.TotalPageCount
 }
 
 func (c *ProjectController) SingleView() {
@@ -97,7 +98,7 @@ func (c *ProjectController) Add() {
 		return
 	} else if !b {
 		beego.Error(valid.Errors[0])
-		c.SetErrorAndRedirect(err)
+		c.SetErrorAndRedirect(fmt.Errorf(valid.Errors[0].String()))
 		return
 	}
 	if project.ManagerLogin != "--" {

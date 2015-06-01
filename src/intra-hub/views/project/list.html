@@ -50,10 +50,20 @@
                 <li><a href="/projects/list?page={{ decr .PaginatedItems.CurrentPage }}&limit={{ .Limit }}">
                     <span class="glyphicon glyphicon-chevron-left"></span></a></li>
                 {{ end }}
+                {{ if .ShowGoToFirst }}
+                <li><a href="/projects/list?page=1&limit={{ .Limit }}">
+                    1
+                </a></li>
+                {{ end }}
                 {{ range $element := .PaginatedItems.PagesToShow }}
                 <li class="{{ if eq $element $.PaginatedItems.CurrentPage }}active{{ end }}">
                     <a class="text-primary" href="/projects/list?page={{ $element }}&limit={{ $.Limit }}">
                         {{ $element }}</a></li>
+                {{ end }}
+                {{ if .ShowGoToLast }}
+                <li><a href="/projects/list?page={{ .PaginatedItems.TotalPageCount }}&limit={{ .Limit }}">
+                    {{ .PaginatedItems.TotalPageCount }}
+                </a></li>
                 {{ end }}
                 {{ if .HasNextPage }}
                 <li><a href="/projects/list?page={{ incr .PaginatedItems.CurrentPage }}&limit={{ .Limit }}">
@@ -63,22 +73,6 @@
         </div>
     </div>
 </div>
-<!--{{ .PaginatedItems.TotalItemCount }} projets en tout<br/>-->
-<!--{{ .PaginatedItems.ItemCount }} projets affiches<br/>-->
-<!--page {{ .PaginatedItems.CurrentPage }}<br/>-->
-<!--{{ .PaginatedItems.TotalPageCount }} pages en tout <br/>-->
-<!--{{ range $element := .PaginatedItems.Items }}-->
-<!--{{ $element }}-->
-<!--{{ end }}-->
-
-<!--{{ if .HasPreviousPage }}-->
-<!--<a href="/projects?page={{ decr .PaginatedItems.CurrentPage }}&limit={{ .Limit }}">Page precedente</a>-->
-<!--{{ end }}-->
-<!--{{ if .HasNextPage }}-->
-<!--<a href="/projects?page={{ incr .PaginatedItems.CurrentPage }}&limit={{ .Limit }}">Page suivante</a>-->
-<!--{{ end }}-->
-<!--{{ .flash.error }}-->
-
 </body>
 {{ template "layouts/include-js.html" }}
 
