@@ -27,18 +27,20 @@ func (c *ProjectController) IntroView() {
 
 func (c *ProjectController) ListView() {
 	c.TplNames = "project/list.html"
+	handleError := func(err error) {
+		beego.Error(err)
+		c.SetErrorAndRedirect(err)
+	}
 	sortDesc := c.GetStrings("desc", nil)
 	beego.Warn(sortDesc)
 	page, err := c.GetInt("page")
 	if err != nil {
-		beego.Error(err)
-		c.SetErrorAndRedirect(err)
+		handleError(err)
 		return
 	}
 	limit, err := c.GetInt("limit")
 	if err != nil {
-		beego.Error(err)
-		c.SetErrorAndRedirect(err)
+		handleError(err)
 		return
 	}
 	if page <= 0 {
@@ -50,11 +52,22 @@ func (c *ProjectController) ListView() {
 	}
 	paginatedItems, err := db.GetProjectsPaginated(page, limit)
 	if err != nil {
-		beego.Error(err)
-		c.SetErrorAndRedirect(err)
+		handleError(err)
 		return
 	}
 	paginatedItems.SetPagesToShow()
+	promotions, err := db.GetEveryPromotion()
+	if err != nil {
+		handleError(err)
+		return
+	}
+	cities, err := db.GetEveryCities()
+	if err != nil {
+		handleError(err)
+		return
+	}
+    c.Data["Cities"] = cities
+	c.Data["Promotions"] = promotions
 	c.Data["Limit"] = limit
 	c.Data["PaginatedItems"] = paginatedItems
 	c.Data["HasNextPage"] = paginatedItems.CurrentPage+1 <= paginatedItems.TotalPageCount
@@ -68,7 +81,7 @@ func (c *ProjectController) SingleView() {
 	project, err := db.GetProjectByIDOrName(c.GetString(":nameOrId"))
 	if err != nil {
 		beego.Error(err)
-        c.Redirect("/projects/list?page=1&limit=15", 301)
+		c.Redirect("/projects/list?page=1&limit=15", 301)
 		return
 	}
 	c.Data["Project"] = project
@@ -90,10 +103,10 @@ func (c *ProjectController) Add() {
 	c.TplNames = "project/add.html"
 	project := &models.Project{}
 	if err := c.ParseForm(project); err != nil {
-        beego.Error(err)
-        c.SetErrorAndRedirect(err)
-        return
-    }
+		beego.Error(err)
+		c.SetErrorAndRedirect(err)
+		return
+	}
 	valid := validation.Validation{}
 	if b, err := valid.Valid(project); err != nil {
 		beego.Error(err)
