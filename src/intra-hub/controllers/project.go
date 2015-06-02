@@ -89,8 +89,11 @@ func (c *ProjectController) AddView() {
 func (c *ProjectController) Add() {
 	c.TplNames = "project/add.html"
 	project := &models.Project{}
-	c.ParseForm(project)
-	beego.Warning(project)
+	if err := c.ParseForm(project); err != nil {
+        beego.Error(err)
+        c.SetErrorAndRedirect(err)
+        return
+    }
 	valid := validation.Validation{}
 	if b, err := valid.Valid(project); err != nil {
 		beego.Error(err)

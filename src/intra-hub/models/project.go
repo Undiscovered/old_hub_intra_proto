@@ -36,7 +36,7 @@ type Project struct {
 	Id               int
 	Name             string         `orm:"unique;size(128)" form:"name"`
 	ShortDescription string         `orm:"size(128)" form:"shortDescription"`
-	Status           string         `orm"size(128)" form:"status"`
+	Status           string         `orm:"size(128)" form:"status"`
 	History          []*HistoryItem `orm:"null;rel(m2m)"`
 	Members          []*User        `orm:"null;reverse(many)"`
 	Manager          *User          `orm:"null;rel(fk)"`
@@ -88,7 +88,7 @@ func (p *Project) Promotions() (s string) {
 
 func (p *Project) Valid(v *validation.Validation) {
 	if !stringutils.InSlice(EveryProjectStatus, p.Status) {
-		v.SetError("Status", "unknown or empty status")
+		v.SetError("Status", "unknown or empty status: "+p.Status)
 	}
 	if p.Name == "" {
 		v.SetError("Name", "empty name")
