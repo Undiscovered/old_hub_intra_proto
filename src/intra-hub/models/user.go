@@ -21,14 +21,14 @@ func init() {
 
 type User struct {
 	Id        int        `json:"id"`
-	Login     string     `json:"login" orm:"unique" form:"login"`
-	FirstName string     `json:"firstName"`
-	LastName  string     `json:"lastName"`
-	Email     string     `json:"email"`
-	Picture   string     `json:"picture"`
-	Password  string     `json:"password" form:"password"`
-	Promotion string     `json:"promotion"`
-	City      string     `json:"city"`
+	Login     string     `json:"login" orm:"unique;size(128)" form:"login"`
+	FirstName string     `json:"firstName" orm:"size(128)"`
+	LastName  string     `json:"lastName" orm:"size(128)"`
+	Email     string     `json:"email" orm:"size(128)"`
+	Picture   string     `json:"picture" orm:"size(128)"`
+	Password  string     `json:"password" orm:"size(128)" form:"password"`
+	Promotion string     `json:"promotion" orm:"size(128)"`
+	City      string     `json:"city" orm:"size(128)"`
 	Groups    []*Group   `json:"groups" orm:"rel(m2m)"`
 	Projects  []*Project `json:"projects" orm:"rel(m2m)"`
 }

@@ -7,5 +7,5 @@ func init() {
 
 type Techno struct {
     Id int
-    Name string `orm:"unique"`
+	Name string `orm:"unique;size(128)"`
 }

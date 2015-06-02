@@ -34,9 +34,9 @@ var (
 
 type Project struct {
 	Id               int
-	Name             string         `orm:"unique" form:"name"`
-	ShortDescription string         `form:"shortDescription"`
-	Status           string         `form:"status"`
+	Name             string         `orm:"unique;size(128)" form:"name"`
+	ShortDescription string         `orm:"size(128)" form:"shortDescription"`
+	Status           string         `orm"size(128)" form:"status"`
 	History          []*HistoryItem `orm:"null;rel(m2m)"`
 	Members          []*User        `orm:"null;reverse(many)"`
 	Manager          *User          `orm:"null;rel(fk)"`

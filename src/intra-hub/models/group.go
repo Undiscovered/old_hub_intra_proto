@@ -10,5 +10,5 @@ func init() {
 
 type Group struct {
 	Id    int
-	Name  string  `orm:"unique"`
+	Name  string  `orm:"unique;size(128)"`
 }
