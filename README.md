@@ -45,7 +45,10 @@ go get github.com/beego/bee
 go get github.com/beego/i18n
 go get github.com/bitly/go-simplejson
 go get golang.org/x/crypto/bcrypt
+go get github.com/soniah/tcgl/sort
 ```
+
+or just "go get ..."
 
 ## Beego path
 
