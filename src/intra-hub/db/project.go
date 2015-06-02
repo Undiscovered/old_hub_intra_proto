@@ -73,7 +73,7 @@ func GetProjectByID(id int) (*models.Project, error) {
     return project, nil
 }
 
-func AddProject(project *models.Project) (*models.Project, error) {
+func AddAndGetProject(project *models.Project) (*models.Project, error) {
     o := orm.NewOrm()
     if err := o.Begin(); err != nil {
         return nil, err
@@ -83,7 +83,7 @@ func AddProject(project *models.Project) (*models.Project, error) {
         o.Rollback()
         return nil, err
     }
-    historyItem, err := addHistoryEvent(models.HistoryItemTypeCreated, project)
+    historyItem, err := AddAndGetHistoryEvent(models.HistoryItemTypeCreated, project)
     if err != nil {
         o.Rollback()
         return nil, err

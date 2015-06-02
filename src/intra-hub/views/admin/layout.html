@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Admin</title>
+    {{ template "layouts/include-css.html" }}
+</head>
+<body>
+{{ template "layouts/topbar.html" }}
+
+{{ template "layouts/include-js.html" }}
+
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>Admin</h4>
+        </div>
+        <div class="panel-body">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#users">Utilisateurs</a></li>
+                <li><a data-toggle="tab" href="#techno">Technologies</a></li>
+                <li><a data-toggle="tab" href="#themes">Themes</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="users" class="tab-pane fade in active">
+                    <div class="well">
+                        {{ template "admin/users.html" }}
+                    </div>
+                </div>
+                <div id="techno" class="tab-pane fade">
+                    <div class="well">
+                        {{ template "admin/technos.html" }}
+                    </div>
+                </div>
+                <div id="themes" class="tab-pane fade">
+                    <div class="well">
+                        {{ template "admin/themes.html" }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

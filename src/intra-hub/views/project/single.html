@@ -2,13 +2,37 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title></title>
+    <title>{{ .Project.Name }}</title>
+    {{ template "layouts/include-css.html" }}
 </head>
-<>
-{{ .Project }}
-<br/>
-{{ .Project.Members }}
-<br/>
-{{ .Project.History }}
+
+<body>
+{{ template "layouts/topbar.html" }}
+
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>{{ .Project.Name }}</h4>
+        </div>
+        <div class="panel-body">
+            <h5>Short Description</h5>
+
+            <p style="white-space: pre-line;">
+                {{ .Project.ShortDescription }}
+            </p>
+
+            <h5>Membres</h5>
+            <ul class="list-group">
+                {{ range $element := .Project.Members }}
+                <li class="list-group-item">
+                    <img src="{{ $element.Picture }}"> {{ $element.FirstName }} {{ $element.LastName }}
+                </li>
+                {{ end }}
+            </ul>
+        </div>
+    </div>
+</div>
 </body>
+
+{{ template "layouts/include-js.html" }}
 </html>

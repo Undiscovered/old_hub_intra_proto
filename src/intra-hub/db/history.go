@@ -5,7 +5,7 @@ import (
 	"intra-hub/models"
 )
 
-func addHistoryEvent(eventType string, project *models.Project) (item *models.HistoryItem, err error) {
+func AddAndGetHistoryEvent(eventType string, project *models.Project) (item *models.HistoryItem, err error) {
 	o := orm.NewOrm()
 	item = &models.HistoryItem{
 		Project: project,

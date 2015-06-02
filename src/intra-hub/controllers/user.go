@@ -65,7 +65,6 @@ func (c *UserController) SearchUser() {
 		c.ServeJson()
 		return
 	}
-    beego.Warn(users)
     if users == nil {
         // Return an empty array.
         c.Data["json"] = []string{}

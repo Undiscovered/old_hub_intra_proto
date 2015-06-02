@@ -40,6 +40,8 @@ type Project struct {
 	History          []*HistoryItem `orm:"null;rel(m2m)"`
 	Members          []*User        `orm:"null;reverse(many)"`
 	Manager          *User          `orm:"null;rel(fk)"`
+	Themes           []*Theme       `orm:"null;rel(m2m)"`
+	Technos          []*Techno      `orm:"null;rel(m2m)"`
 	Created          time.Time      `orm:"auto_now_add;type(datetime)"`
 	Updated          time.Time      `orm:"auto_now;type(datetime)"`
 
@@ -51,37 +53,37 @@ type Project struct {
 }
 
 func (p *Project) Cities() (s string) {
-    m := make(map[string]bool)
-    for _, member := range p.Members {
-        if member.City == "" {
-            continue
-        }
-        m[member.City] = true
-    }
-    for city := range m {
-        s += city + ", "
-    }
-    if len(s) > 2 {
-        s = s[:len(s)-2]
-    }
-    return
+	m := make(map[string]bool)
+	for _, member := range p.Members {
+		if member.City == "" {
+			continue
+		}
+		m[member.City] = true
+	}
+	for city := range m {
+		s += city + ", "
+	}
+	if len(s) > 2 {
+		s = s[:len(s)-2]
+	}
+	return
 }
 
 func (p *Project) Promotions() (s string) {
-    m := make(map[string]bool)
-    for _, member := range p.Members {
-        if member.City == "" {
-            continue
-        }
-        m[member.Promotion] = true
-    }
-    for promo := range m {
-        s += promo + ", "
-    }
-    if len(s) > 2 {
-        s = s[:len(s)-2]
-    }
-    return
+	m := make(map[string]bool)
+	for _, member := range p.Members {
+		if member.City == "" {
+			continue
+		}
+		m[member.Promotion] = true
+	}
+	for promo := range m {
+		s += promo + ", "
+	}
+	if len(s) > 2 {
+		s = s[:len(s)-2]
+	}
+	return
 }
 
 func (p *Project) Valid(v *validation.Validation) {
@@ -98,11 +100,17 @@ func (p *Project) Valid(v *validation.Validation) {
 		return
 	}
 	members := strings.Split(p.MembersID, ",")
+Loop:
 	for _, memberId := range members {
 		id, err := strconv.ParseInt(memberId, 10, 64)
 		if err != nil {
 			v.SetError("MembersID", err.Error())
 			return
+		}
+		for _, member := range p.Members {
+			if int(id) == member.Id {
+				continue Loop
+			}
 		}
 		p.Members = append(p.Members, &User{Id: int(id)})
 	}

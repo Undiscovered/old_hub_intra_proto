@@ -15,3 +15,6 @@ body {
     -moz-outline: 0;
 }
 
+.light-margin {
+    margin: 10px;
+}

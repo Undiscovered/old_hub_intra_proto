@@ -75,10 +75,21 @@
                 if (request.term.length >= 2) {
                     new Http.Post('/users/search', {login: request.term}).start().then(function (response) {
                         var users = JSON.parse(response);
-                        users.forEach(function (user) {
+                        var currentIds = $('#membersId').attr('value');
+                        var arrayIds;
+                        if (currentIds) {
+                            arrayIds = currentIds.split(',');
+                        }
+                        for (var i = 0; i < users.length; ++i) {
+                            var user = users[i];
+                            // If the user is already is the project, removes it.
+                            if (arrayIds && ~arrayIds.indexOf(String(user.id)) !== 0) {
+                                users.splice(i, 1);
+                                continue;
+                            }
                             user.label = user.firstName + ' ' + user.lastName;
                             user.value = user.login;
-                        });
+                        }
                         autoCompleteResponse(users);
                     });
                 }
@@ -107,14 +118,12 @@
 
     function deleteLogin(login) {
         var membersId = $('#membersId');
-        console.log(membersId.attr('value'));
         var currentIds = membersId.attr('value');
         var ids = currentIds.split(',');
         for (var i = 0; i < ids.length; ++i) {
             ids.splice(i, 1);
         }
         membersId.attr('value', ids);
-        console.log(membersId.attr('value'));
         $('#' + login).remove();
     }
 </script>

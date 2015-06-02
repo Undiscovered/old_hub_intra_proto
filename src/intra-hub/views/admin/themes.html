@@ -1,0 +1,28 @@
+<div class="input-group">
+    <input id="theme" name="name" placeholder="Theme" type="text" class="form-control">
+
+    <div class="input-group-btn">
+        <button onclick="addTheme()" class="btn btn-success">Ajouter un Theme</button>
+    </div>
+</div>
+
+<ul id="list" class="list-group">
+    {{ if not .Themes }}
+    <li class="list-group-item active">0 themes</li>
+    {{ end }}
+    {{ range $index, $element := .Themes }}
+    <li class="list-group-item">#{{ $index }} {{ $element }}</li>
+    {{ end }}
+</ul>
+
+<script>
+    function addTheme() {
+        var themeName = $('#theme').val();
+        new Http.Post('/theme', {name: themeName}).start().then(function (response) {
+            var theme = JSON.parse(response);
+            $('#list').append('<li class="list-group-item">#' + theme.id + ' ' + theme.name + '</li> ');
+        }).fail(function(error, errorCode) {
+
+        });
+    }
+</script>

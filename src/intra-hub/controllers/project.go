@@ -68,7 +68,7 @@ func (c *ProjectController) SingleView() {
 	project, err := db.GetProjectByIDOrName(c.GetString(":nameOrId"))
 	if err != nil {
 		beego.Error(err)
-		c.flash.Data["error"] = err.Error()
+        c.Redirect("/projects/list?page=1&limit=15", 301)
 		return
 	}
 	c.Data["Project"] = project
@@ -110,7 +110,7 @@ func (c *ProjectController) Add() {
 		}
 		project.Manager = manager
 	}
-	project, err := db.AddProject(project)
+	project, err := db.AddAndGetProject(project)
 	if err != nil {
 		beego.Error(err)
 		c.SetErrorAndRedirect(err)
