@@ -72,7 +72,7 @@ func init() {
 
     // Set the ORM parameters
     orm.RegisterDriver(driverSQL, orm.DR_MySQL)
-    orm.RegisterDataBase(aliasDbName, driverSQL, username+password+"@/"+databaseName+optionsDatabaseConnections)
+	orm.RegisterDataBase(aliasDbName, driverSQL, username + ":" + password+"@/"+databaseName+optionsDatabaseConnections)
     orm.SetMaxIdleConns(aliasDbName, maxIdleConns)
     orm.SetMaxOpenConns(aliasDbName, maxOpenConns)
     orm.DefaultTimeLoc = time.UTC
