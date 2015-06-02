@@ -12,14 +12,15 @@ import (
 	"strings"
 	"time"
     "intra-hub/db"
+    "intra-hub/confperso"
 )
 
 const (
 	driverSQL                  = "mysql"
-	aliasDbName                = "default"
-	databaseName               = "intra_hub"
-	username                   = "root"
-	password                   = ""
+	aliasDbName                = confperso.AliasDbName
+	databaseName               = confperso.DatabaseName
+	username                   = confperso.Username
+	password                   = confperso.Password
 	maxIdleConns               = 150
 	maxOpenConns               = 150
 	optionsDatabaseConnections = "?charset=utf8"
