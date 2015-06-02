@@ -25,7 +25,7 @@ func (c *UserController) Login() {
         c.SetErrorAndRedirect(err)
 		return
 	} else if !b {
-        c.SetErrorAndRedirect(fmt.Errorf(valid.Errors[0]))
+        c.SetErrorAndRedirect(fmt.Errorf(valid.Errors[0].Message))
 		return
 	}
 	user, err := db.CheckUserCredentials(user)
@@ -33,6 +33,7 @@ func (c *UserController) Login() {
         c.SetErrorAndRedirect(err)
 		return
 	}
+    beego.Alert(user.Promotion, user.City)
 	c.SetUser(user)
 	c.Redirect("/home", 301)
 }

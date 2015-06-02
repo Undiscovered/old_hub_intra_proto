@@ -3,6 +3,7 @@ package models
 import (
 	"github.com/astaxie/beego/orm"
 	"github.com/astaxie/beego/validation"
+	"strconv"
 )
 
 const (
@@ -17,6 +18,18 @@ var (
 
 func init() {
 	orm.RegisterModel(&User{})
+	orm.RegisterModel(&City{})
+	orm.RegisterModel(&Promotion{})
+}
+
+type City struct {
+	Id   int
+	Name string `orm:"unique;size(128)"`
+}
+
+type Promotion struct {
+	Id   int
+	Name string `orm:"unique;size(128)"`
 }
 
 type User struct {
@@ -27,8 +40,8 @@ type User struct {
 	Email     string     `json:"email" orm:"size(128)"`
 	Picture   string     `json:"picture" orm:"size(128)"`
 	Password  string     `json:"password" orm:"size(128)" form:"password"`
-	Promotion string     `json:"promotion" orm:"size(128)"`
-	City      string     `json:"city" orm:"size(128)"`
+	Promotion *Promotion `json:"promotion" orm:"null;rel(fk)"`
+	City      *City      `json:"city" orm:"null;rel(fk)"`
 	Groups    []*Group   `json:"groups" orm:"rel(m2m)"`
 	Projects  []*Project `json:"projects" orm:"rel(m2m)"`
 }
@@ -40,7 +53,8 @@ func (u *User) TableIndex() [][]string {
 }
 
 func (u *User) Values() []string {
-	return []string{u.Login, u.FirstName, u.LastName, u.Email, u.Picture, u.Password, u.Promotion, u.City}
+	return []string{u.Login, u.FirstName, u.LastName, u.Email, u.Picture,
+		u.Password, strconv.FormatInt(int64(u.Promotion.Id), 10), strconv.FormatInt(int64(u.City.Id), 10)}
 }
 
 func (u *User) Valid(v *validation.Validation) {
@@ -53,5 +67,5 @@ func (u *User) Valid(v *validation.Validation) {
 }
 
 func GetUserFields() string {
-	return "login, first_name, last_name, email, picture, password, promotion, city"
+	return "login, first_name, last_name, email, picture, password, promotion_id, city_id"
 }

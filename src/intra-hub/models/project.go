@@ -55,10 +55,10 @@ type Project struct {
 func (p *Project) Cities() (s string) {
 	m := make(map[string]bool)
 	for _, member := range p.Members {
-		if member.City == "" {
+		if member.City.Name == "" {
 			continue
 		}
-		m[member.City] = true
+		m[member.City.Name] = true
 	}
 	for city := range m {
 		s += city + ", "
@@ -72,10 +72,10 @@ func (p *Project) Cities() (s string) {
 func (p *Project) Promotions() (s string) {
 	m := make(map[string]bool)
 	for _, member := range p.Members {
-		if member.City == "" {
+		if member.City.Name == "" {
 			continue
 		}
-		m[member.Promotion] = true
+		m[member.Promotion.Name] = true
 	}
 	for promo := range m {
 		s += promo + ", "

@@ -43,7 +43,7 @@ func GetManagers() (managers []*models.User, err error) {
 
 func GetUserByLogin(login string) (*models.User, error) {
 	userDb := &models.User{}
-	if err := QueryUser().Filter("Login", login).One(userDb); err != nil {
+	if err := QueryUser().Filter("Login", login).RelatedSel().One(userDb); err != nil {
 		return nil, err
 	}
 	return userDb, nil
