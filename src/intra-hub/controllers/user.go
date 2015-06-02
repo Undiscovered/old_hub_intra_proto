@@ -6,6 +6,7 @@ import (
 	"intra-hub/db"
 	"intra-hub/models"
     "github.com/astaxie/beego"
+    "fmt"
 )
 
 type UserController struct {
@@ -24,7 +25,7 @@ func (c *UserController) Login() {
         c.SetErrorAndRedirect(err)
 		return
 	} else if !b {
-        c.SetErrorAndRedirect(err)
+        c.SetErrorAndRedirect(fmt.Errorf(valid.Errors[0]))
 		return
 	}
 	user, err := db.CheckUserCredentials(user)
