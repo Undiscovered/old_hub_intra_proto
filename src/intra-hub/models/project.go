@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+    "github.com/astaxie/beego"
 )
 
 func init() {
@@ -72,7 +73,8 @@ func (p *Project) Cities() (s string) {
 func (p *Project) Promotions() (s string) {
 	m := make(map[string]bool)
 	for _, member := range p.Members {
-		if member.City.Name == "" {
+        beego.Warn(member.Promotion)
+		if member.Promotion.Name == "" {
 			continue
 		}
 		m[member.Promotion.Name] = true
@@ -80,6 +82,7 @@ func (p *Project) Promotions() (s string) {
 	for promo := range m {
 		s += promo + ", "
 	}
+    beego.Warn(s, m)
 	if len(s) > 2 {
 		s = s[:len(s)-2]
 	}

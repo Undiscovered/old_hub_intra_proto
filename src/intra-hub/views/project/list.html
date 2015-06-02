@@ -142,7 +142,28 @@
     }
 
     function performSearch() {
+        var limit = getParameterByName('limit');
+        var page = getParameterByName('page');
+        var promotions = $('#promotions').val();
+        var cities = $('#cities').val();
+        console.log(limit);
+        console.log(page);
+        console.log(promotions);
+        console.log(cities);
 
+        if (cities === null && promotions === null) {
+            return;
+        }
+        if (cities === null && promotions !== null) {
+            window.location.href = String.format('{0}{1}?page={2}&limit={3}&promotions={4}', window.location.origin,
+            window.location.pathname, page, limit, promotions.join());
+        } else if (cities !== null && promotions === null) {
+            window.location.href = String.format('{0}{1}?page={2}&limit={3}&cities={4}', window.location.origin,
+                    window.location.pathname, page, limit, cities.join());
+        } else {
+            window.location.href = String.format('{0}{1}?page={2}&limit={3}&cities={4}&promotions={5}', window.location.origin,
+                    window.location.pathname, page, limit, cities.join(), promotions.join());
+        }
     }
 
 </script>

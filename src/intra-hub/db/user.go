@@ -4,6 +4,8 @@ import (
 	"github.com/astaxie/beego/orm"
 	"golang.org/x/crypto/bcrypt"
 	"intra-hub/models"
+	"sync"
+    "github.com/astaxie/beego"
 )
 
 const (
@@ -26,13 +28,13 @@ func CheckUserCredentials(user *models.User) (*models.User, error) {
 }
 
 func SearchUsers(query string) (usersFound []*models.User, err error) {
-    query = "%" + query + "%"
-    rawSql := `SELECT id, picture, first_name, last_name, login FROM user WHERE
+	query = "%" + query + "%"
+	rawSql := `SELECT id, picture, first_name, last_name, login FROM user WHERE
     first_name LIKE ? OR
     last_name LIKE ? OR
     login LIKE ? OR
     CONCAT(first_name, ' ', last_name) LIKE ? LIMIT 15`
-    _, err = orm.NewOrm().Raw(rawSql, query, query, query, query).QueryRows(&usersFound)
+	_, err = orm.NewOrm().Raw(rawSql, query, query, query, query).QueryRows(&usersFound)
 	return
 }
 
@@ -47,4 +49,31 @@ func GetUserByLogin(login string) (*models.User, error) {
 		return nil, err
 	}
 	return userDb, nil
+}
+
+func loadEveryInfoOfUsers(users []*models.User) error {
+	wg := sync.WaitGroup{}
+	errorChan := make(chan error)
+	for _, u := range users {
+		wg.Add(1)
+		go func(w *sync.WaitGroup) {
+			defer wg.Done()
+            o := orm.NewOrm()
+			if _, err := o.LoadRelated(u, "City"); err != nil {
+				errorChan <- err
+			}
+            if _, err := o.LoadRelated(u, "Promotion"); err != nil {
+                errorChan <- err
+            }
+		}(&wg)
+	}
+    wg.Wait()
+	if len(errorChan) > 0 {
+        beego.Error("ERROR", errorChan)
+		select {
+		case err := <-errorChan:
+			return err
+		}
+	}
+	return nil
 }
