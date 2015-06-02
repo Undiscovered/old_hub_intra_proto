@@ -13,12 +13,19 @@ func QueryProjects() orm.QuerySeter {
     return orm.NewOrm().QueryTable(ProjectsTable)
 }
 
-func GetProjectsPaginated(page, limit int) (itemPaginated *models.ItemPaginated, err error) {
+func GetProjectsPaginated(page, limit int, promotions, cities []string) (itemPaginated *models.ItemPaginated, err error) {
     projects := make([]*models.Project, 0)
     o := orm.NewOrm()
     q := o.QueryTable(ProjectsTable)
     page -= 1
-    if _, err = q.Offset(page * limit).Limit(limit).RelatedSel().All(&projects); err != nil {
+    query := q.Offset(page * limit).Limit(limit)
+    if promotions[0] != "" {
+        query = query.Filter("Members__User__Promotion__Name__in", promotions)
+    }
+    if cities[0] != "" {
+        query = query.Filter("Members__User__City__Name__in", cities)
+    }
+    if _, err = query.RelatedSel().All(&projects); err != nil {
         return
     }
     for _, project := range projects {

@@ -7,6 +7,7 @@ import (
 	"intra-hub/db"
 	"intra-hub/models"
 	"strconv"
+    "strings"
 )
 
 type ProjectController struct {
@@ -31,8 +32,8 @@ func (c *ProjectController) ListView() {
 		beego.Error(err)
 		c.SetErrorAndRedirect(err)
 	}
-	sortDesc := c.GetStrings("desc", nil)
-	beego.Warn(sortDesc)
+	promotionSort := strings.Split(c.GetString("promotions", ""), ",")
+    citySort := strings.Split(c.GetString("cities", ""), ",")
 	page, err := c.GetInt("page")
 	if err != nil {
 		handleError(err)
@@ -50,7 +51,7 @@ func (c *ProjectController) ListView() {
 	if limit == 0 {
 		limit = 25
 	}
-	paginatedItems, err := db.GetProjectsPaginated(page, limit)
+	paginatedItems, err := db.GetProjectsPaginated(page, limit, promotionSort, citySort)
 	if err != nil {
 		handleError(err)
 		return
