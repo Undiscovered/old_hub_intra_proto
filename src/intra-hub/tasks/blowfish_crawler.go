@@ -12,6 +12,7 @@ import (
     "os"
     "path"
     "intra-hub/db"
+    _ "crypto/sha512"
 )
 
 const (
