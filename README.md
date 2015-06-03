@@ -22,3 +22,10 @@ Tri par : Promotion(s) impliqué(s), étudiant, état d'avancement, thémes, tec
 # BDD
 
 A venir : Modélisation de la BDD. A faire en amont si la techno est séléctionnée.
+
+# Backup
+
+Mise en place du script
+`cp backup/backup.sh > /bin`
+Mise en place du crontab
+`crontab -l | cat backup/crontab.txt  | crontab -`
