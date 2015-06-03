@@ -63,7 +63,7 @@ func C(page, limit int, promotions, cities []string, name string) (itemPaginated
 	return
 }
 
-func GetProjectsPaginated(page, limit int, promotions, cities, managers []string, name string) (itemPaginated *models.ItemPaginated, err error) {
+func GetProjectsPaginated(page, limit int, promotions, cities, managers, status []string, name string) (itemPaginated *models.ItemPaginated, err error) {
 	//    return C(page, limit, promotions, cities, name)
 	projects := make([]*models.Project, 0)
 	o := orm.NewOrm()
@@ -75,9 +75,12 @@ func GetProjectsPaginated(page, limit int, promotions, cities, managers []string
 	if cities[0] != "" {
 		q = q.Filter("Members__User__City__Name__in", cities)
 	}
-    if managers[0] != "" {
-        q = q.Filter("Manager__Login__in", managers)
-    }
+	if managers[0] != "" {
+		q = q.Filter("Manager__Login__in", managers)
+	}
+	if status[0] != "" {
+		q = q.Filter("Status__in", status)
+	}
 	if name != "" {
 		q = q.Filter("Name__icontains", name)
 	}

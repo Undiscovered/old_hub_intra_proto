@@ -54,9 +54,8 @@
                             <td>Promotions</td>
                             <td>Villes</td>
                             <td>Personne(s) sur le projet</td>
-                            <td>Technos</td>
-                            <td>Themes</td>
                             <td>Manageur</td>
+                            <td>Status</td>
                         </tr>
                         </thead>
                         {{ range $element := .PaginatedItems.Items }}
@@ -66,12 +65,13 @@
                             <td>{{ $element.Promotions }}</td>
                             <td>{{ $element.Cities }}</td>
                             <td>{{ len $element.Members }}</td>
-                            <td></td>
-                            <td></td>
                             <td>
                                 {{ if $element.Manager }}
                                 {{ $element.Manager.Login }}
                                 {{ end }}
+                            </td>
+                            <td>
+                                {{ i18n $.Lang $element.Status }}
                             </td>
                         </tr>
                         {{ end }}
@@ -136,7 +136,19 @@
                         <select id="managers" class="form-control" multiple="multiple">
                             <option></option>
                             {{ range $element := .Managers }}
-                            <option value="{{ $element.Login }}">{{ $element.FirstName }} {{ $element.LastName }}</option>
+                            <option value="{{ $element.Login }}">{{ $element.FirstName }} {{ $element.LastName }}
+                            </option>
+                            {{ end }}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select id="status" class="form-control" multiple="multiple">
+                            <option></option>
+                            {{ range $element := .Status }}
+                            <option value="{{ $element }}">{{ i18n $.Lang $element }}
+                            </option>
                             {{ end }}
                         </select>
                     </div>
@@ -170,6 +182,10 @@
             placeholder: 'Manageurs',
             tags: true
         });
+        $('#status').select2({
+            placeholder: 'Status',
+            tags: true
+        });
     }
 
     function performSearch() {
@@ -179,11 +195,12 @@
         var cities = $('#cities').val();
         var name = $('#name').val() ? $('#name').val() : null;
         var managers = $('#managers').val();
+        var status = $('#status').val();
 
-        if (cities === null && promotions === null && name === null && managers === null) {
+        if (cities === null && promotions === null && name === null && managers === null && status === null) {
             return;
         }
-        var baseUrl =  String.format('{0}{1}?page={2}&limit={3}', window.location.origin, window.location.pathname, page, limit);
+        var baseUrl = String.format('{0}{1}?page={2}&limit={3}', window.location.origin, window.location.pathname, page, limit);
 
         if (cities !== null) {
             baseUrl += String.format('&cities={0}', cities.join());
@@ -196,6 +213,9 @@
         }
         if (managers !== null) {
             baseUrl += String.format('&managers={0}', managers.join());
+        }
+        if (status !== null) {
+            baseUrl += String.format('&status={0}', status.join());
         }
         window.location.href = baseUrl;
     }
