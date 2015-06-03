@@ -56,16 +56,16 @@ func loadEveryInfoOfUsers(users []*models.User) error {
 	errorChan := make(chan error)
 	for _, u := range users {
 		wg.Add(1)
-		go func(w *sync.WaitGroup) {
+		go func(w *sync.WaitGroup, user *models.User) {
 			defer wg.Done()
             o := orm.NewOrm()
-			if _, err := o.LoadRelated(u, "City"); err != nil {
+			if _, err := o.LoadRelated(user, "City"); err != nil {
 				errorChan <- err
 			}
-            if _, err := o.LoadRelated(u, "Promotion"); err != nil {
+            if _, err := o.LoadRelated(user, "Promotion"); err != nil {
                 errorChan <- err
             }
-		}(&wg)
+		}(&wg, u)
 	}
     wg.Wait()
 	if len(errorChan) > 0 {

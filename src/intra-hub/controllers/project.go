@@ -32,8 +32,9 @@ func (c *ProjectController) ListView() {
 		beego.Error(err)
 		c.SetErrorAndRedirect(err)
 	}
-	promotionSort := strings.Split(c.GetString("promotions", ""), ",")
-    citySort := strings.Split(c.GetString("cities", ""), ",")
+	promotionQuery := strings.Split(c.GetString("promotions", ""), ",")
+    cityQuery := strings.Split(c.GetString("cities", ""), ",")
+    nameQuery := c.GetString("name", "")
 	page, err := c.GetInt("page")
 	if err != nil {
 		handleError(err)
@@ -51,7 +52,7 @@ func (c *ProjectController) ListView() {
 	if limit == 0 {
 		limit = 25
 	}
-	paginatedItems, err := db.GetProjectsPaginated(page, limit, promotionSort, citySort)
+	paginatedItems, err := db.GetProjectsPaginated(page, limit, promotionQuery, cityQuery, nameQuery)
 	if err != nil {
 		handleError(err)
 		return
