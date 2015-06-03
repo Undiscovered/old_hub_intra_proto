@@ -131,6 +131,16 @@
                         </select>
                     </div>
 
+                    <div class="form-group">
+                        <label for="managers">Manageurs</label>
+                        <select id="managers" class="form-control" multiple="multiple">
+                            <option></option>
+                            {{ range $element := .Managers }}
+                            <option value="{{ $element.Login }}">{{ $element.FirstName }} {{ $element.LastName }}</option>
+                            {{ end }}
+                        </select>
+                    </div>
+
                     <button class="btn btn-primary" onclick="performSearch()">Rechercher</button>
                 </div>
             </div>
@@ -150,11 +160,15 @@
 
         $('#promotions').select2({
             placeholder: 'Promotions',
-            tags: promotions ? promotions.split(',') : true
+            tags: true
         });
         $('#cities').select2({
             placeholder: 'Villes',
-            tags: cities ? cities.split(',') : true
+            tags: true
+        });
+        $('#managers').select2({
+            placeholder: 'Manageurs',
+            tags: true
         });
     }
 
@@ -164,8 +178,9 @@
         var promotions = $('#promotions').val();
         var cities = $('#cities').val();
         var name = $('#name').val() ? $('#name').val() : null;
+        var managers = $('#managers').val();
 
-        if (cities === null && promotions === null && name === null) {
+        if (cities === null && promotions === null && name === null && managers === null) {
             return;
         }
         var baseUrl =  String.format('{0}{1}?page={2}&limit={3}', window.location.origin, window.location.pathname, page, limit);
@@ -178,6 +193,9 @@
         }
         if (name !== null) {
             baseUrl += String.format('&name={0}', name);
+        }
+        if (managers !== null) {
+            baseUrl += String.format('&managers={0}', managers.join());
         }
         window.location.href = baseUrl;
     }

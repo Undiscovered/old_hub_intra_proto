@@ -34,6 +34,7 @@ func (c *ProjectController) ListView() {
 	}
 	promotionQuery := strings.Split(c.GetString("promotions", ""), ",")
     cityQuery := strings.Split(c.GetString("cities", ""), ",")
+    managersQuery := strings.Split(c.GetString("managers", ""), ",")
     nameQuery := c.GetString("name", "")
 	page, err := c.GetInt("page")
 	if err != nil {
@@ -52,7 +53,7 @@ func (c *ProjectController) ListView() {
 	if limit == 0 {
 		limit = 25
 	}
-	paginatedItems, err := db.GetProjectsPaginated(page, limit, promotionQuery, cityQuery, nameQuery)
+	paginatedItems, err := db.GetProjectsPaginated(page, limit, promotionQuery, cityQuery, managersQuery, nameQuery)
 	if err != nil {
 		handleError(err)
 		return
@@ -68,6 +69,12 @@ func (c *ProjectController) ListView() {
 		handleError(err)
 		return
 	}
+    managers, err := db.GetManagers()
+    if err != nil {
+        handleError(err)
+        return
+    }
+    c.Data["Managers"] = managers
     c.Data["Cities"] = cities
 	c.Data["Promotions"] = promotions
 	c.Data["Limit"] = limit
