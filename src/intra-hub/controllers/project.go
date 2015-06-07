@@ -7,7 +7,7 @@ import (
 	"intra-hub/db"
 	"intra-hub/models"
 	"strconv"
-    "strings"
+	"strings"
 )
 
 type ProjectController struct {
@@ -32,11 +32,13 @@ func (c *ProjectController) ListView() {
 		beego.Error(err)
 		c.SetErrorAndRedirect(err)
 	}
-	promotionQuery := strings.Split(c.GetString("promotions", ""), ",")
-    cityQuery := strings.Split(c.GetString("cities", ""), ",")
-    managersQuery := strings.Split(c.GetString("managers", ""), ",")
-    statusQuery := strings.Split(c.GetString("status", ""), ",")
-    nameQuery := c.GetString("name", "")
+	queryFilter := make(map[string]interface{})
+	queryFilter["promotions"] = strings.Split(c.GetString("promotions", ""), ",")
+	queryFilter["cities"] = strings.Split(c.GetString("cities", ""), ",")
+	queryFilter["managers"] = strings.Split(c.GetString("managers", ""), ",")
+	queryFilter["status"] = strings.Split(c.GetString("status", ""), ",")
+    queryFilter["student"] = c.GetString("student", "")
+	queryFilter["name"] = c.GetString("name", "")
 	page, err := c.GetInt("page")
 	if err != nil {
 		handleError(err)
@@ -54,7 +56,7 @@ func (c *ProjectController) ListView() {
 	if limit == 0 {
 		limit = 25
 	}
-	paginatedItems, err := db.GetProjectsPaginated(page, limit, promotionQuery, cityQuery, managersQuery, statusQuery, nameQuery)
+	paginatedItems, err := db.GetProjectsPaginated(page, limit, queryFilter)
 	if err != nil {
 		handleError(err)
 		return
@@ -70,14 +72,14 @@ func (c *ProjectController) ListView() {
 		handleError(err)
 		return
 	}
-    managers, err := db.GetManagers()
-    if err != nil {
-        handleError(err)
-        return
-    }
-    c.Data["Status"] = models.EveryProjectStatus
-    c.Data["Managers"] = managers
-    c.Data["Cities"] = cities
+	managers, err := db.GetManagers()
+	if err != nil {
+		handleError(err)
+		return
+	}
+	c.Data["Status"] = models.EveryProjectStatus
+	c.Data["Managers"] = managers
+	c.Data["Cities"] = cities
 	c.Data["Promotions"] = promotions
 	c.Data["Limit"] = limit
 	c.Data["PaginatedItems"] = paginatedItems

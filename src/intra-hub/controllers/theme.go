@@ -21,7 +21,8 @@ func (c *ThemeController) Post() {
         c.ServeJson()
         return
     }
-    if err := db.AddTheme(theme); err != nil {
+    theme, err := db.AddAndGetTheme(theme)
+    if err != nil {
         beego.Error(err)
         jsonErr := simplejson.New()
         jsonErr.Set("error", err)

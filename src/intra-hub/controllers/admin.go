@@ -16,5 +16,6 @@ func (c *AdminController) Get() {
         c.SetErrorAndRedirect(err)
         return
     }
+    beego.Warn(themes)
     c.Data["Themes"] = themes
 }

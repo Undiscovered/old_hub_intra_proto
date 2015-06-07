@@ -63,26 +63,38 @@ func C(page, limit int, promotions, cities []string, name string) (itemPaginated
 	return
 }
 
-func GetProjectsPaginated(page, limit int, promotions, cities, managers, status []string, name string) (itemPaginated *models.ItemPaginated, err error) {
-	//    return C(page, limit, promotions, cities, name)
+func GetProjectsPaginated(page, limit int, queryFilter map[string]interface{}) (itemPaginated *models.ItemPaginated, err error) {
 	projects := make([]*models.Project, 0)
 	o := orm.NewOrm()
 	q := o.QueryTable(ProjectsTable)
 	page -= 1
-	if promotions[0] != "" {
-		q = q.Filter("Members__User__Promotion__Name__in", promotions)
-	}
-	if cities[0] != "" {
-		q = q.Filter("Members__User__City__Name__in", cities)
-	}
-	if managers[0] != "" {
-		q = q.Filter("Manager__Login__in", managers)
-	}
-	if status[0] != "" {
-		q = q.Filter("Status__in", status)
-	}
-	if name != "" {
-		q = q.Filter("Name__icontains", name)
+	for key, value := range queryFilter {
+		switch value.(type) {
+		case []string:
+			if value.([]string)[0] == "" {
+				continue
+			}
+		case string:
+			if value.(string) == "" {
+				continue
+			}
+		}
+		beego.Warn(key, value)
+		switch key {
+		case "promotions":
+			q = q.SetCond(orm.NewCondition().And("Members__User__Promotion__Name__in", value))
+		case "cities":
+			q = q.SetCond(orm.NewCondition().And("Members__User__City__Name__in", value))
+		case "student":
+			q = q.SetCond(orm.NewCondition().And("Members__User__Login__icontains", value).
+				Or("Members__User__FirstName__icontains", value).Or("Members__User__LastName__icontains", value))
+		case "managers":
+			q = q.SetCond(orm.NewCondition().And("Manager__Login__in", value))
+		case "status":
+			q = q.SetCond(orm.NewCondition().And("Status__in", value))
+		case "name":
+			q = q.SetCond(orm.NewCondition().And("Name__icontains", value))
+		}
 	}
 	if _, err = q.RelatedSel().All(&projects); err != nil {
 		return
@@ -105,7 +117,6 @@ func GetProjectsPaginated(page, limit int, promotions, cities, managers, status 
 		tmp = len(projects)
 	}
 	projects = projects[page*limit : tmp]
-	beego.Warn(projects, len(projects), cap(projects))
 	for _, project := range projects {
 		if _, err = o.LoadRelated(project, "Members"); err != nil {
 			return

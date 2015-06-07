@@ -18,7 +18,11 @@ func GetAllThemes() (themes []*models.Theme, err error) {
     return
 }
 
-func AddTheme(theme *models.Theme) error {
-    _, err := orm.NewOrm().Insert(theme)
-    return err
+func AddAndGetTheme(theme *models.Theme) (*models.Theme, error) {
+    id, err := orm.NewOrm().Insert(theme)
+    if err != nil {
+        return nil, err
+    }
+    theme.Id = int(id)
+    return theme, nil
 }

@@ -12,6 +12,9 @@
 <div class="container-fluid">
     <div class="panel panel-default">
         <div class="panel-heading">
+            <a href="/projects/list?page=1&limit=15">
+                <span class="glyphicon glyphicon-chevron-left"> Liste des projets</span>
+            </a>
             <h4>{{ .Project.Name }}</h4>
         </div>
         <div class="panel-body">
@@ -25,7 +28,7 @@
             <ul class="list-group">
                 {{ range $element := .Project.Members }}
                 <li class="list-group-item">
-                    <img src="{{ $element.Picture }}"> {{ $element.FirstName }} {{ $element.LastName }}
+                    <img src="{{ $element.Picture }}"> {{ $element.FirstName }} {{ $element.LastName }} {{ $element.Promotion }}
                 </li>
                 {{ end }}
             </ul>

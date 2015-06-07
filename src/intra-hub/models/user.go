@@ -10,10 +10,11 @@ const (
 	UserGroupStudent = "STUDENT"
 	UserGroupManager = "MANAGER"
 	UserGroupAdmin   = "ADMIN"
+    UserGroupPedago = "PEDAGO"
 )
 
 var (
-	EveryUserGroups = []string{UserGroupStudent, UserGroupManager, UserGroupAdmin}
+	EveryUserGroups = []string{UserGroupStudent, UserGroupPedago, UserGroupManager, UserGroupAdmin}
 )
 
 func init() {
