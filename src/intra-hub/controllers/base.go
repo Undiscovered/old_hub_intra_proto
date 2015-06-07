@@ -6,6 +6,7 @@ import (
 	"intra-hub/models"
 	"strings"
     "strconv"
+    "math/rand"
 )
 
 const (
@@ -54,8 +55,13 @@ func (c *BaseController) Prepare() {
     decr := func(arg int) string {
         return strconv.FormatInt(int64(arg - 1), 10)
     }
+    randomizeLabel := func() string {
+        labels := []string{"success", "warning", "danger", "info", "primary", "default"}
+        return labels[rand.Intn(len(labels))]
+    }
     beego.AddFuncMap("incr", incr)
     beego.AddFuncMap("decr", decr)
+    beego.AddFuncMap("randLabel", randomizeLabel)
 
     // If the matching controller is a NestedPreparer, we call the NestedPrepare function
 	// To ensure that this Prepare function is called first (it is done to prevent overriding of

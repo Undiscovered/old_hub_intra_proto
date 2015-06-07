@@ -25,17 +25,17 @@
             <div class="tab-content">
                 <div id="users" class="tab-pane fade in active">
                     <div class="well">
-                        {{ template "admin/users.html" }}
+                        {{ template "admin/users.html" . }}
                     </div>
                 </div>
                 <div id="techno" class="tab-pane fade">
                     <div class="well">
-                        {{ template "admin/technos.html" }}
+                        {{ template "admin/technos.html" . }}
                     </div>
                 </div>
                 <div id="themes" class="tab-pane fade">
                     <div class="well">
-                        {{ template "admin/themes.html" }}
+                        {{ template "admin/themes.html" . }}
                     </div>
                 </div>
             </div>

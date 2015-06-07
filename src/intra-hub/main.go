@@ -68,7 +68,6 @@ func init() {
     os.Create("logs/test.log")
     beego.SetLogger("file", `{"filename":"logs/test.log"}`)
     beego.SetLogFuncCall(true)
-    beego.SetLevel(beego.LevelInformational)
 
     // Set the ORM parameters
     orm.RegisterDriver(driverSQL, orm.DR_MySQL)

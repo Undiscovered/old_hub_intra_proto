@@ -6,13 +6,20 @@
     </div>
 </div>
 
-{{ .Themes }}
+
 <ul id="list" class="list-group">
     {{ if not .Themes }}
     <li class="list-group-item active">0 themes</li>
     {{ end }}
     {{ range $index, $element := .Themes }}
-    <li class="list-group-item">#{{ $index }} {{ $element }}</li>
+    <li class="list-group-item">
+        <span class="label label-{{ randLabel }} s-1x">{{ $element.Name }}</span>
+        <span class="pull-right">
+            <span class="btn-group btn-group-xs">
+                <button class="btn btn-danger" onclick="deleteTheme({{ $element.Id }})"><span class="fa fa-remove color-white"></span></button>
+            </span>
+        </span>
+    </li>
     {{ end }}
 </ul>
 
@@ -21,9 +28,14 @@
         var themeName = $('#theme').val();
         new Http.Post('/theme', {name: themeName}).start().then(function (response) {
             var theme = JSON.parse(response);
-            $('#list').append('<li class="list-group-item">#' + theme.id + ' ' + theme.name + '</li> ');
-        }).fail(function(error, errorCode) {
+            $('#list').append('<li class="list-group-item"><span class="label label-' + randomizeLabel() +
+                    ' s-1x" >' + theme.name + '</span></li> ');
+        }).fail(function (error, errorCode) {
 
         });
+    }
+
+    function deleteTheme(id) {
+
     }
 </script>

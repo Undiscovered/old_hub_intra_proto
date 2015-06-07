@@ -23,6 +23,12 @@ function getParameterByName(name) {
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
+function randomizeLabel() {
+    var labels = ['primary', 'info', 'default', 'danger', 'warning', 'success'];
+    var random = Math.floor(Math.random() * labels.length) + 1;
+    return labels[random];
+}
+
 if (!String.format) {
     String.format = function (format) {
         var args = Array.prototype.slice.call(arguments, 1);
