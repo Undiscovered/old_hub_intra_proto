@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Nouvel utilisateur</title>
+    {{ template "layouts/include-css.html" }}
+</head>
+<body>
+{{ template "layouts/topbar.html" }}
+
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>Ajouter un nouvel utilisateur</h4>
+        </div>
+        <div class="panel-body">
+            <form method="POST" action="/users/add">
+                <div class="form-group">
+                    <label for="login">Login</label>
+                    <input id="login" name="login" type="text" class="form-control" placeholder="Login" required="">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input id="email" name="email" type="email" class="form-control" placeholder="Email" required="">
+                </div>
+                <div class="form-group">
+                    <label for="role">Role</label>
+                    <select id="role" class="form-control">
+                        {{ range $element := .Groups }}
+                        <option>{{ i18n $.Lang $element }}</option>
+                        {{ end }}
+                    </select>
+                </div>
+                <button class="btn btn-success">Creer l'utilisateur</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{ template "layouts/include-js.html" }}
+
+</body>
+</html>
