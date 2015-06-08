@@ -11,6 +11,7 @@ func init() {
     beego.Router("/logout", &controllers.UserController{}, "get:Logout")
     beego.Router("/admin", &controllers.AdminController{})
     beego.Router("/theme", &controllers.ThemeController{})
+    beego.Router("/theme/:id", &controllers.ThemeController{})
     beego.Router("/login", &controllers.UserController{}, "get:LoginView;post:Login")
     beego.Router("/users/search", &controllers.UserController{}, "post:SearchUser")
     beego.Router("/projects", &controllers.ProjectController{}, "get:IntroView")

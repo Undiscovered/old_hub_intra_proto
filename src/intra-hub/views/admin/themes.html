@@ -1,5 +1,6 @@
 <div class="input-group">
-    <input id="theme" name="name" placeholder="Theme" type="text" class="form-control">
+    <input id="theme" name="name" onkeypress="if (event.keyCode === 13) {addTheme()}" placeholder="Theme" type="text"
+           class="form-control">
 
     <div class="input-group-btn">
         <button onclick="addTheme()" class="btn btn-success">Ajouter un Theme</button>
@@ -12,11 +13,12 @@
     <li class="list-group-item active">0 themes</li>
     {{ end }}
     {{ range $index, $element := .Themes }}
-    <li class="list-group-item">
+    <li class="list-group-item" id="{{ $element.Id }}">
         <span class="label label-{{ randLabel }} s-1x">{{ $element.Name }}</span>
         <span class="pull-right">
             <span class="btn-group btn-group-xs">
-                <button class="btn btn-danger" onclick="deleteTheme({{ $element.Id }})"><span class="fa fa-remove color-white"></span></button>
+                <button class="btn btn-danger" onclick="deleteTheme({{ $element.Id }})"><span
+                        class="fa fa-remove color-white"></span></button>
             </span>
         </span>
     </li>
@@ -24,18 +26,28 @@
 </ul>
 
 <script>
+    function onKeyPressed() {
+        console.log($event);
+    }
     function addTheme() {
-        var themeName = $('#theme').val();
-        new Http.Post('/theme', {name: themeName}).start().then(function (response) {
-            var theme = JSON.parse(response);
-            $('#list').append('<li class="list-group-item"><span class="label label-' + randomizeLabel() +
-                    ' s-1x" >' + theme.name + '</span></li> ');
-        }).fail(function (error, errorCode) {
-
+        var th = $('#theme');
+        var themeName = th.val().trim();
+        if (themeName === '') {
+            return;
+        }
+        th.val('');
+        new Http().Post('/theme', {name: themeName}).success(function (theme) {
+            $('#list').append('<li class="list-group-item" id="' + theme.id + '"><span class="label label-' + randomizeLabel() +
+                    ' s-1x" >' + theme.name + '</span>' +
+                    '<span class="pull-right"><span class="btn-group btn-group-xs">' +
+                    '<button class="btn btn-danger" onclick=deleteTheme(' + theme.id + ')><span class="fa fa-remove color-white"></span></button>' +
+                    '<span/><span/></li> ');
         });
     }
 
     function deleteTheme(id) {
-
+        new Http().Delete('/theme/' + id).success(function () {
+           $('#' + id).remove();
+        });
     }
 </script>

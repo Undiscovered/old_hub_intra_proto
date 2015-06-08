@@ -26,3 +26,8 @@ func AddAndGetTheme(theme *models.Theme) (*models.Theme, error) {
     theme.Id = int(id)
     return theme, nil
 }
+
+func DeleteThemeByID(id int) error {
+    _, err := orm.NewOrm().Delete(&models.Theme{Id: id})
+    return err
+}

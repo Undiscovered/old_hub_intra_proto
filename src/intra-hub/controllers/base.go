@@ -13,6 +13,9 @@ const (
 	sessionUserKey = "0xd3ob4"
 )
 
+var (
+    jsonOK = map[string]interface{}{"status": "OK"}
+)
 type NestedPreparer interface {
 	NestedPrepare()
 }
