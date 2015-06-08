@@ -49,6 +49,7 @@ type Project struct {
 
 	ManagerLogin string `orm:"-" form:"managerLogin"`
 	MembersID    string `orm:"-" form:"membersId"`
+	ThemesID     string `orm:"-" form:"themesId"`
 	MemberCount  int    `orm:"-"`
 }
 
@@ -99,8 +100,10 @@ func (p *Project) Valid(v *validation.Validation) {
 	if p.MembersID == "" {
 		return
 	}
+    // Convert the string MembersID to an array of User.
+    // MembersId has the format 1,2,3,4 etc.
 	members := strings.Split(p.MembersID, ",")
-Loop:
+LoopMembers:
 	for _, memberId := range members {
 		id, err := strconv.ParseInt(memberId, 10, 64)
 		if err != nil {
@@ -109,9 +112,26 @@ Loop:
 		}
 		for _, member := range p.Members {
 			if int(id) == member.Id {
-				continue Loop
+				continue LoopMembers
 			}
 		}
 		p.Members = append(p.Members, &User{Id: int(id)})
 	}
+    // Convert the string ThemeID to an array of Theme.
+    // ThemeID has the format 1,2,3,4 etc.
+    themes := strings.Split(p.ThemesID, ",")
+LoopTheme:
+    for _, themeId := range themes {
+        id, err := strconv.ParseInt(themeId, 10, 64)
+        if err != nil {
+            v.SetError("ThemesID", err.Error())
+            return
+        }
+        for _, theme := range p.Themes {
+            if int(id) == theme.Id {
+                continue LoopTheme
+            }
+        }
+        p.Themes = append(p.Themes, &Theme{Id: int(id)})
+    }
 }

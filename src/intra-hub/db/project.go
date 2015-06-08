@@ -139,7 +139,6 @@ func GetProjectByIDOrName(nameOrId string) (*models.Project, error) {
 	project := &models.Project{}
 	o := orm.NewOrm()
 	q := o.QueryTable(ProjectsTable)
-	beego.Warn(nameOrId)
 	if err := q.SetCond(orm.NewCondition().Or("Id", nameOrId).Or("Name", nameOrId)).RelatedSel().One(project); err != nil {
 		return nil, err
 	}
@@ -196,6 +195,12 @@ func AddAndGetProject(project *models.Project) (*models.Project, error) {
 			return nil, err
 		}
 	}
+    if len(project.Themes) != 0 {
+        if _, err := o.QueryM2M(project, "Themes").Add(project.Themes); err != nil {
+            o.Rollback()
+            return nil, err
+        }
+    }
 	if _, err := o.QueryM2M(project, "History").Add(historyItem); err != nil {
 		o.Rollback()
 		return nil, err
