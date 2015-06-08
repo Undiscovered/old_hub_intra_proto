@@ -16,6 +16,14 @@ func QueryUser() orm.QuerySeter {
 	return orm.NewOrm().QueryTable(UserTable)
 }
 
+func AddAndGetUser(user *models.User) (*models.User, error) {
+    _, err := orm.NewOrm().Insert(user)
+    if err != nil {
+        return nil, err
+    }
+    return GetUserByLogin(user.Login)
+}
+
 func CheckUserCredentials(user *models.User) (*models.User, error) {
 	userDb, err := GetUserByLogin(user.Login)
 	if err != nil {

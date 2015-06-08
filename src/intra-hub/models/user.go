@@ -10,7 +10,7 @@ const (
 	UserGroupStudent = "STUDENT"
 	UserGroupManager = "MANAGER"
 	UserGroupAdmin   = "ADMIN"
-    UserGroupPedago = "PEDAGO"
+	UserGroupPedago  = "PEDAGO"
 )
 
 var (
@@ -59,7 +59,7 @@ func (u *User) Values() []string {
 }
 
 func (u *User) Valid(v *validation.Validation) {
-	if len(u.Login) > 8 {
+	if len(u.Login) > 15 {
 		v.SetError("Login", "invalid login")
 	}
 	if len(u.Password) == 0 {

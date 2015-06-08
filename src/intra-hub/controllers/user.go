@@ -75,3 +75,7 @@ func (c *UserController) SearchUser() {
     }
 	c.ServeJson()
 }
+
+func (c *UserController) AddView() {
+
+}

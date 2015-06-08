@@ -1,67 +1,14 @@
 package db
 
 import (
-	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"intra-hub/models"
-	"log"
 )
 
 const (
 	ProjectsTable = "project"
 )
-
-func C(page, limit int, promotions, cities []string, name string) (itemPaginated *models.ItemPaginated, err error) {
-	projects := make([]*models.Project, 0)
-	raw := "SELECT DISTINCT T0.`id`, T0.`name`, T0.`short_description`, T0.`status`, T0.`manager_id`, T0.`created`, T0.`updated`, " +
-		"T1.`id`, T1.`login`, T1.`first_name`, T1.`last_name`, T1.`email`, T1.`picture`, T1.`password`, T1.`promotion_id`, T1.`city_id`," +
-		"T2.`id`, T2.`name`," +
-		"T3.`id`, T3.`name`" +
-		"FROM `project` T0 " +
-		"LEFT OUTER JOIN `user` T1 ON T1.`id` = T0.`manager_id` " +
-		"LEFT OUTER JOIN `promotion` T2 ON T2.`id` = T1.`promotion_id` " +
-		"LEFT OUTER JOIN `city` T3 ON T3.`id` = T1.`city_id` " +
-		"INNER JOIN `user_projects` T4 ON T4.`project_id` = T0.`id` " +
-		"INNER JOIN `user` T5 ON T5.`id` = T4.`user_id` " +
-		"LEFT OUTER JOIN `city` T6 ON T6.`id` = T5.`city_id` "
-	values := make([]interface{}, 0)
-	if promotions[0] != "" {
-		raw += "WHERE T2.`name` IN (?) "
-		values = append(values, promotions)
-	}
-	if cities[0] != "" {
-		raw += "WHERE T3.`name` IN (?) "
-		values = append(values, cities)
-	}
-	if name != "" {
-		raw += "WHERE T0.`name` COLLATE UTF8_GENERAL_CI LIKE (%?%) "
-		values = append(values, name)
-	}
-	page -= 1
-	raw += fmt.Sprintf("LIMIT %d OFFSET %d", limit, page*limit)
-	beego.Warn(values...)
-	var count int64
-	if len(values) > 0 {
-		if count, err = orm.NewOrm().Raw(raw, values...).QueryRows(&projects); err != nil {
-			return
-		}
-	} else {
-		if count, err = orm.NewOrm().Raw(raw).QueryRows(&projects); err != nil {
-			return
-		}
-	}
-	beego.Warn(count)
-	itemPaginated = &models.ItemPaginated{
-		Items:          projects,
-		ItemCount:      len(projects),
-		TotalItemCount: int(count),
-		CurrentPage:    page + 1,
-		TotalPageCount: int(count)/limit + 1,
-	}
-	log.Printf("%#v\n", projects[0])
-	return
-}
 
 func GetProjectsPaginated(page, limit int, queryFilter map[string]interface{}) (itemPaginated *models.ItemPaginated, err error) {
 	projects := make([]*models.Project, 0)
@@ -139,6 +86,7 @@ func GetProjectByIDOrName(nameOrId string) (*models.Project, error) {
 	project := &models.Project{}
 	o := orm.NewOrm()
 	q := o.QueryTable(ProjectsTable)
+	beego.Warn(nameOrId)
 	if err := q.SetCond(orm.NewCondition().Or("Id", nameOrId).Or("Name", nameOrId)).RelatedSel().One(project); err != nil {
 		return nil, err
 	}
@@ -198,7 +146,7 @@ func AddAndGetProject(project *models.Project) (*models.Project, error) {
     if len(project.Themes) != 0 {
         if _, err := o.QueryM2M(project, "Themes").Add(project.Themes); err != nil {
             o.Rollback()
-            return nil, err
+
         }
     }
 	if _, err := o.QueryM2M(project, "History").Add(historyItem); err != nil {

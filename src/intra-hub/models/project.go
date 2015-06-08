@@ -41,7 +41,6 @@ type Project struct {
 	Members          []*User        `orm:"null;reverse(many)"`
 	Manager          *User          `orm:"null;rel(fk)"`
 	Themes           []*Theme       `orm:"null;rel(m2m)"`
-	Technos          []*Techno      `orm:"null;rel(m2m)"`
 	Created          time.Time      `orm:"auto_now_add;type(datetime)"`
 	Updated          time.Time      `orm:"auto_now;type(datetime)"`
 
