@@ -1,9 +1,10 @@
 package db
 
 import (
+	"intra-hub/models"
+
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
-	"intra-hub/models"
 )
 
 const (
@@ -143,12 +144,12 @@ func AddAndGetProject(project *models.Project) (*models.Project, error) {
 			return nil, err
 		}
 	}
-    if len(project.Themes) != 0 {
-        if _, err := o.QueryM2M(project, "Themes").Add(project.Themes); err != nil {
-            o.Rollback()
+	if len(project.Themes) != 0 {
+		if _, err := o.QueryM2M(project, "Themes").Add(project.Themes); err != nil {
+			o.Rollback()
 
-        }
-    }
+		}
+	}
 	if _, err := o.QueryM2M(project, "History").Add(historyItem); err != nil {
 		o.Rollback()
 		return nil, err

@@ -50,9 +50,9 @@ func (p *ItemPaginated) SetPagesToShow() {
 			lastPageIndex = index
 		}
 	}
-    if p.TotalPageCount == 1 {
-        lastPageIndex = firstPageIndex
-    }
+	if p.TotalPageCount == 1 {
+		lastPageIndex = firstPageIndex
+	}
 	pagesToShow = pagesToShow[firstPageIndex : lastPageIndex+1]
 	p.PagesToShow = pagesToShow
 }

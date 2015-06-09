@@ -1,9 +1,10 @@
 package models
 
 import (
+	"strconv"
+
 	"github.com/astaxie/beego/orm"
 	"github.com/astaxie/beego/validation"
-	"strconv"
 )
 
 const (
@@ -19,18 +20,6 @@ var (
 
 func init() {
 	orm.RegisterModel(&User{})
-	orm.RegisterModel(&City{})
-	orm.RegisterModel(&Promotion{})
-}
-
-type City struct {
-	Id   int
-	Name string `orm:"unique;size(128)"`
-}
-
-type Promotion struct {
-	Id   int
-	Name string `orm:"unique;size(128)"`
 }
 
 type User struct {
@@ -45,6 +34,7 @@ type User struct {
 	City      *City      `json:"city" orm:"null;rel(fk)"`
 	Groups    []*Group   `json:"groups" orm:"rel(m2m)"`
 	Projects  []*Project `json:"projects" orm:"rel(m2m)"`
+	Skills    []*Skill   `json:"skills" orm:"rel(m2m);rel_through(intra-hub/models.UserSkill)"`
 }
 
 func (u *User) TableIndex() [][]string {

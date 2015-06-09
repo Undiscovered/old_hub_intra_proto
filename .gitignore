@@ -2,7 +2,6 @@
 
 # Personal conf
 src/intra-hub/confperso
-src/intra-hub/services/mail/conf.go
 
 ### Go template
 # Compiled Object files, Static and Dynamic libs (Shared Objects)

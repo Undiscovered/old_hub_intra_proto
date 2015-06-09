@@ -10,13 +10,13 @@ import (
 	"github.com/bitly/go-simplejson"
 )
 
-type TechnoController struct {
+type SkillController struct {
 	BaseController
 }
 
-func (c *TechnoController) Post() {
-	techno := &models.Techno{}
-	if err := json.Unmarshal(c.Ctx.Input.CopyBody(), techno); err != nil {
+func (c *SkillController) Post() {
+	skill := &models.Skill{}
+	if err := json.Unmarshal(c.Ctx.Input.CopyBody(), skill); err != nil {
 		beego.Error(err)
 		jsonErr := simplejson.New()
 		jsonErr.Set("error", err)
@@ -24,7 +24,7 @@ func (c *TechnoController) Post() {
 		c.ServeJson()
 		return
 	}
-	techno, err := db.AddAndGetTechno(techno)
+	skill, err := db.AddAndGetSkill(skill)
 	if err != nil {
 		beego.Error(err)
 		jsonErr := simplejson.New()
@@ -33,12 +33,12 @@ func (c *TechnoController) Post() {
 		c.ServeJson()
 		return
 	}
-	c.Data["json"] = techno
+	c.Data["json"] = skill
 	c.ServeJson()
 }
 
-func (c *TechnoController) Delete() {
-	technoID, err := c.GetInt(":id", -1)
+func (c *SkillController) Delete() {
+	skillID, err := c.GetInt(":id", -1)
 	if err != nil {
 		beego.Error(err)
 		jsonErr := simplejson.New()
@@ -47,7 +47,7 @@ func (c *TechnoController) Delete() {
 		c.ServeJson()
 		return
 	}
-	if err := db.DeleteTechnoByID(technoID); err != nil {
+	if err := db.DeleteSkillByID(skillID); err != nil {
 		beego.Error(err)
 		jsonErr := simplejson.New()
 		jsonErr.Set("error", err.Error())

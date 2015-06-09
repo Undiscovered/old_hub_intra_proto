@@ -3,16 +3,18 @@ package tasks
 import (
 	"bufio"
 	_ "crypto/sha512"
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/orm"
-	"github.com/astaxie/beego/toolbox"
-	"intra-hub/db"
-	"intra-hub/models"
 	"io"
 	"net/http"
 	"os"
 	"path"
 	"strings"
+
+	"intra-hub/db"
+	"intra-hub/models"
+
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/orm"
+	"github.com/astaxie/beego/toolbox"
 )
 
 const (
@@ -120,25 +122,25 @@ func blowFishCrawler() error {
 		o.Begin()
 		user, groupName := newUser(scannerBlowFish.Text())
 		// Set Promotion
-        groupName = mapGroup[groupName]
+		groupName = mapGroup[groupName]
 		if promotion := mapPromotions[groupName]; promotion == nil {
 			promotion = &models.Promotion{Name: groupName}
 			id, err := o.Insert(promotion)
 			if err != nil {
 				o.Rollback()
-                return err
+				return err
 			}
 			promotion.Id = int(id)
-            user.Promotion = promotion
+			user.Promotion = promotion
 			mapPromotions[groupName] = promotion
 		} else {
-            user.Promotion = promotion
-        }
+			user.Promotion = promotion
+		}
 		// Set City
-        cityName := ""
-        if len(strings.Split(scannerLocation.Text(), ":")) > 1 {
-            cityName = mapLocations[strings.Split(scannerLocation.Text(), ":")[1]]
-        }
+		cityName := ""
+		if len(strings.Split(scannerLocation.Text(), ":")) > 1 {
+			cityName = mapLocations[strings.Split(scannerLocation.Text(), ":")[1]]
+		}
 		if city := mapCities[cityName]; city == nil {
 			city = &models.City{Name: cityName}
 			id, err := o.Insert(city)
@@ -147,7 +149,7 @@ func blowFishCrawler() error {
 				return err
 			}
 			city.Id = int(id)
-            user.City = city
+			user.City = city
 			mapCities[cityName] = city
 		} else {
 			user.City = city

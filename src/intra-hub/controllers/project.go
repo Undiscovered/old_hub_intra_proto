@@ -2,12 +2,14 @@ package controllers
 
 import (
 	"fmt"
-	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/validation"
-	"intra-hub/db"
-	"intra-hub/models"
 	"strconv"
 	"strings"
+
+	"intra-hub/db"
+	"intra-hub/models"
+
+	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/validation"
 )
 
 type ProjectController struct {
@@ -37,7 +39,7 @@ func (c *ProjectController) ListView() {
 	queryFilter["cities"] = strings.Split(c.GetString("cities", ""), ",")
 	queryFilter["managers"] = strings.Split(c.GetString("managers", ""), ",")
 	queryFilter["status"] = strings.Split(c.GetString("status", ""), ",")
-    queryFilter["student"] = c.GetString("student", "")
+	queryFilter["student"] = c.GetString("student", "")
 	queryFilter["name"] = c.GetString("name", "")
 	page, err := c.GetInt("page")
 	if err != nil {
@@ -108,13 +110,13 @@ func (c *ProjectController) AddView() {
 		c.flash.Data["error"] = err.Error()
 		return
 	}
-    themes, err := db.GetAllThemes()
-    if err != nil {
-        beego.Error(err)
-        c.flash.Data["error"] = err.Error()
-        return
-    }
-    c.Data["Themes"] = themes
+	themes, err := db.GetAllThemes()
+	if err != nil {
+		beego.Error(err)
+		c.flash.Data["error"] = err.Error()
+		return
+	}
+	c.Data["Themes"] = themes
 	c.Data["Status"] = models.EveryProjectStatus
 	c.Data["Managers"] = managers
 }
@@ -146,7 +148,7 @@ func (c *ProjectController) Add() {
 		}
 		project.Manager = manager
 	}
-    beego.Warn(project.Themes, project.ThemesID)
+	beego.Warn(project.Themes, project.ThemesID)
 	project, err := db.AddAndGetProject(project)
 	if err != nil {
 		beego.Error(err)

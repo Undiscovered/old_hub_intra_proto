@@ -1,7 +1,7 @@
 package models
 
 import (
-    "github.com/astaxie/beego/orm"
+	"github.com/astaxie/beego/orm"
 )
 
 func init() {
@@ -9,6 +9,6 @@ func init() {
 }
 
 type Group struct {
-	Id    int
-	Name  string  `orm:"unique;size(128)"`
+	Id   int
+	Name string `orm:"unique;size(128)"`
 }

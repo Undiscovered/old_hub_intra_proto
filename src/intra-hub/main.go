@@ -1,18 +1,20 @@
 package main
 
 import (
+    "os"
+    "strings"
+    "time"
+
+    "intra-hub/confperso"
+    "intra-hub/db"
+    _ "intra-hub/models"
+    _ "intra-hub/routers"
+    _ "intra-hub/tasks"
+
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"github.com/beego/i18n"
 	_ "github.com/go-sql-driver/mysql"
-	_ "intra-hub/models"
-	_ "intra-hub/routers"
-	_ "intra-hub/tasks"
-	"os"
-	"strings"
-	"time"
-    "intra-hub/db"
-    "intra-hub/confperso"
 )
 
 const (
@@ -32,7 +34,7 @@ type langType struct {
 }
 
 func init() {
-    // This is just used to get every languages files (see app.conf files)
+	// This is just used to get every languages files (see app.conf files)
 	langs := strings.Split(beego.AppConfig.String("lang::types"), "|")
 	names := strings.Split(beego.AppConfig.String("lang::names"), "|")
 	langTypes := make([]*langType, 0, len(langs))
@@ -43,7 +45,7 @@ func init() {
 		})
 	}
 
-    // Then we load every language files with i18n.SetMessage
+	// Then we load every language files with i18n.SetMessage
 	for _, lang := range langs {
 		beego.Trace("Loading language: " + lang)
 		if err := i18n.SetMessage(lang, "conf/"+"locale_"+lang+".ini"); err != nil {
@@ -52,31 +54,31 @@ func init() {
 		}
 	}
 
-    orm.Debug = true
+	orm.Debug = true
 
-    // Set session on
-    beego.SessionOn = true
+	// Set session on
+	beego.SessionOn = true
 
-    beego.EnableAdmin = true
+	beego.EnableAdmin = true
 
-    // Serve static files
-    beego.SetStaticPath("/css", "static/css")
-    beego.SetStaticPath("/js", "static/js")
-    beego.SetStaticPath("/img", "static/img")
+	// Serve static files
+	beego.SetStaticPath("/css", "static/css")
+	beego.SetStaticPath("/js", "static/js")
+	beego.SetStaticPath("/img", "static/img")
 
-    // Set logger
-    os.Create("logs/test.log")
-    beego.SetLogger("file", `{"filename":"logs/test.log"}`)
-    beego.SetLogFuncCall(true)
+	// Set logger
+	os.Create("logs/test.log")
+	beego.SetLogger("file", `{"filename":"logs/test.log"}`)
+	beego.SetLogFuncCall(true)
 
-    // Set the ORM parameters
-    orm.RegisterDriver(driverSQL, orm.DR_MySQL)
-	orm.RegisterDataBase(aliasDbName, driverSQL, username + ":" + password+"@/"+databaseName+optionsDatabaseConnections)
-    orm.SetMaxIdleConns(aliasDbName, maxIdleConns)
-    orm.SetMaxOpenConns(aliasDbName, maxOpenConns)
-    orm.DefaultTimeLoc = time.UTC
-    orm.RunCommand()
-    db.PopulateDatabase()
+	// Set the ORM parameters
+	orm.RegisterDriver(driverSQL, orm.DR_MySQL)
+	orm.RegisterDataBase(aliasDbName, driverSQL, username+":"+password+"@/"+databaseName+optionsDatabaseConnections)
+	orm.SetMaxIdleConns(aliasDbName, maxIdleConns)
+	orm.SetMaxOpenConns(aliasDbName, maxOpenConns)
+	orm.DefaultTimeLoc = time.UTC
+	orm.RunCommand()
+	db.PopulateDatabase()
 }
 
 func main() {

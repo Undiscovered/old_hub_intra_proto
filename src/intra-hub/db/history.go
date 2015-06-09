@@ -1,8 +1,9 @@
 package db
 
 import (
-	"github.com/astaxie/beego/orm"
 	"intra-hub/models"
+
+	"github.com/astaxie/beego/orm"
 )
 
 func AddAndGetHistoryEvent(eventType string, project *models.Project) (item *models.HistoryItem, err error) {
@@ -12,6 +13,6 @@ func AddAndGetHistoryEvent(eventType string, project *models.Project) (item *mod
 		Type:    eventType,
 	}
 	id, err := o.Insert(item)
-    item.Id = int(id)
+	item.Id = int(id)
 	return
 }

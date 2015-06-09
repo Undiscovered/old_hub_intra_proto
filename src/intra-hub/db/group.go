@@ -1,8 +1,9 @@
 package db
 
 import (
-	"github.com/astaxie/beego/orm"
 	"intra-hub/models"
+
+	"github.com/astaxie/beego/orm"
 )
 
 const (
@@ -10,7 +11,7 @@ const (
 )
 
 func QueryGroup() orm.QuerySeter {
-    return orm.NewOrm().QueryTable(GroupTable)
+	return orm.NewOrm().QueryTable(GroupTable)
 }
 
 func GetGroupsByNames(names ...string) (groups []*models.Group, err error) {

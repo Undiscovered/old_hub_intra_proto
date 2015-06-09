@@ -1,11 +1,13 @@
 package db
 
 import (
+	"sync"
+
+	"intra-hub/models"
+
+	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"golang.org/x/crypto/bcrypt"
-	"intra-hub/models"
-	"sync"
-    "github.com/astaxie/beego"
 )
 
 const (
@@ -17,11 +19,11 @@ func QueryUser() orm.QuerySeter {
 }
 
 func AddAndGetUser(user *models.User) (*models.User, error) {
-    _, err := orm.NewOrm().Insert(user)
-    if err != nil {
-        return nil, err
-    }
-    return GetUserByLogin(user.Login)
+	_, err := orm.NewOrm().Insert(user)
+	if err != nil {
+		return nil, err
+	}
+	return GetUserByLogin(user.Login)
 }
 
 func CheckUserCredentials(user *models.User) (*models.User, error) {
@@ -66,18 +68,18 @@ func loadEveryInfoOfUsers(users []*models.User) error {
 		wg.Add(1)
 		go func(w *sync.WaitGroup, user *models.User) {
 			defer wg.Done()
-            o := orm.NewOrm()
+			o := orm.NewOrm()
 			if _, err := o.LoadRelated(user, "City"); err != nil {
 				errorChan <- err
 			}
-            if _, err := o.LoadRelated(user, "Promotion"); err != nil {
-                errorChan <- err
-            }
+			if _, err := o.LoadRelated(user, "Promotion"); err != nil {
+				errorChan <- err
+			}
 		}(&wg, u)
 	}
-    wg.Wait()
+	wg.Wait()
 	if len(errorChan) > 0 {
-        beego.Error("ERROR", errorChan)
+		beego.Error("ERROR", errorChan)
 		select {
 		case err := <-errorChan:
 			return err
