@@ -19,13 +19,14 @@ func init() {
 	beego.Router("/theme", &controllers.ThemeController{})
 	beego.Router("/theme/:id", &controllers.ThemeController{})
 
-    beego.Router("/technos", &controllers.TechnoController{})
-    beego.Router("/technos/:id", &controllers.TechnoController{})
+	beego.Router("/technos", &controllers.TechnoController{})
+	beego.Router("/technos/:id", &controllers.TechnoController{})
 
-    beego.Router("/skills", &controllers.SkillController{})
+	beego.Router("/skills", &controllers.SkillController{})
 	beego.Router("/skills/:id", &controllers.SkillController{})
 
 	beego.Router("/users/search", &controllers.UserController{}, "post:SearchUser")
+	beego.Router("/users/:id", &controllers.UserController{}, "get:SingleView")
 
 	beego.Router("/projects", &controllers.ProjectController{}, "get:IntroView")
 	beego.Router("/projects/list", &controllers.ProjectController{}, "get:ListView")

@@ -1,15 +1,15 @@
 package main
 
 import (
-    "os"
-    "strings"
-    "time"
+	"os"
+	"strings"
+	"time"
 
-    "intra-hub/confperso"
-    "intra-hub/db"
-    _ "intra-hub/models"
-    _ "intra-hub/routers"
-    _ "intra-hub/tasks"
+	"intra-hub/confperso"
+	"intra-hub/db"
+	_ "intra-hub/models"
+	_ "intra-hub/routers"
+	_ "intra-hub/tasks"
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
