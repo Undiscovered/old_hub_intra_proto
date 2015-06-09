@@ -14,33 +14,14 @@ func init() {
 	orm.RegisterModel(&Project{})
 }
 
-const (
-	ProjectStatusWaitingManager              = "WAITING_MANAGER"
-	ProjectStatusToFormalize                 = "TO_FORMALIZE"
-	ProjectStatusPedagogicalValidationNeeded = "PEDAGOGICAL_VALIDATION_NEEDED"
-	ProjectStatusPitchRequired               = "PITCH_REQUIRED"
-	ProjectStatusInProgress                  = "IN_PROGRESS"
-	ProjectStatusWaitingForOralDefense       = "WAITING_FOR_DEFENSE"
-	ProjectStatusCreditsGiven                = "CREDITS_GIVEN"
-	ProjectStatusBlockedByPedagogy           = "BLOCKED_BY_PEDAGOGY"
-	ProjectStatusAbandoned                   = "ABANDONED"
-)
-
-var (
-	EveryProjectStatus = []string{ProjectStatusWaitingManager, ProjectStatusToFormalize,
-		ProjectStatusPedagogicalValidationNeeded, ProjectStatusPitchRequired,
-		ProjectStatusInProgress, ProjectStatusWaitingForOralDefense, ProjectStatusCreditsGiven,
-		ProjectStatusBlockedByPedagogy, ProjectStatusAbandoned}
-)
-
 type Project struct {
 	Id               int
 	Name             string         `orm:"unique;size(128)" form:"name"`
 	ShortDescription string         `orm:"size(128)" form:"shortDescription"`
-	Status           string         `orm:"size(128)" form:"status"`
+	Status           *ProjectStatus `orm:"rel(fk)"`
+	Manager          *User          `orm:"null;rel(fk)"`
 	History          []*HistoryItem `orm:"null;rel(m2m)"`
 	Members          []*User        `orm:"null;reverse(many)"`
-	Manager          *User          `orm:"null;rel(fk)"`
 	Themes           []*Theme       `orm:"null;rel(m2m)"`
 	Created          time.Time      `orm:"auto_now_add;type(datetime)"`
 	Updated          time.Time      `orm:"auto_now;type(datetime)"`
@@ -51,6 +32,7 @@ type Project struct {
 	MembersID    string `orm:"-" form:"membersId"`
 	ThemesID     string `orm:"-" form:"themesId"`
 	MemberCount  int    `orm:"-"`
+	StatusName   string `orm:"-" form:"status"`
 }
 
 func (p *Project) Cities() (s string) {
@@ -88,8 +70,8 @@ func (p *Project) Promotions() (s string) {
 }
 
 func (p *Project) Valid(v *validation.Validation) {
-	if !stringutils.InSlice(EveryProjectStatus, p.Status) {
-		v.SetError("Status", "unknown or empty status: "+p.Status)
+	if !stringutils.InSlice(EveryProjectStatus, p.StatusName) {
+		v.SetError("Status", "unknown or empty status: "+p.StatusName)
 	}
 	if p.Name == "" {
 		v.SetError("Name", "empty name")

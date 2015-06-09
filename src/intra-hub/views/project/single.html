@@ -16,6 +16,9 @@
                 <span class="glyphicon glyphicon-chevron-left"> Liste des projets</span>
             </a>
             <h4>{{ .Project.Name }}</h4>
+            {{ range $element := .Project.Themes }}
+            <span class="label label-{{ randLabel }}">{{ $element.Name }}</span>
+            {{ end }}
         </div>
         <div class="panel-body">
             <h5>Short Description</h5>
@@ -28,7 +31,8 @@
             <ul class="list-group">
                 {{ range $element := .Project.Members }}
                 <li class="list-group-item">
-                    <img src="{{ $element.Picture }}"> {{ $element.FirstName }} {{ $element.LastName }} {{ $element.Promotion }}
+                    <img src="{{ $element.Picture }}">
+                    <a href="/users/{{ $element.Login }}"> {{ $element.Name }}</a> - {{ $element.Promotion.Name }}
                 </li>
                 {{ end }}
             </ul>

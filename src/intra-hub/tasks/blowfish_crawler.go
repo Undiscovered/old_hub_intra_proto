@@ -19,7 +19,7 @@ import (
 
 const (
 	blowFishCrawlerTaskName = "blowfishCrawler"
-	epitechCDNPath          = "https://cdn.local.epitech.eu/userprofil/commentview/"
+	epitechCDNPath          = "https://cdn.local.epitech.eu/userprofil/profilview/"
 	locationFileURL         = "https://lost-contact.mit.edu/afs/epitech.net/site/etc/location"
 	blowFishURL             = "https://lost-contact.mit.edu/afs/epitech.net/site/etc/master.passwd.blowfish"
 	groupFileURL            = "https://lost-contact.mit.edu/afs/epitech.net/site/etc/group"

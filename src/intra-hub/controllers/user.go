@@ -17,6 +17,26 @@ type UserController struct {
 	BaseController
 }
 
+func (c *UserController) AddView() {
+	c.TplNames = "admin/add-user.html"
+	c.Data["Groups"] = models.EveryUserGroups
+}
+
+func (c *UserController) SingleView() {
+	c.TplNames = "user/profile.html"
+	user, err := db.GetUserByLogin(c.GetString(":id", ""))
+	if err != nil {
+		beego.Error(err)
+		c.Redirect("/home", 301)
+		return
+	}
+	c.Data["User"] = user
+}
+
+func (c *UserController) LoginView() {
+	c.TplNames = "login.html"
+}
+
 func (c *UserController) Login() {
 	user := &models.User{}
 	if c.isLogged {
@@ -47,10 +67,6 @@ func (c *UserController) Logout() {
 	c.Redirect("/login", 301)
 }
 
-func (c *UserController) LoginView() {
-	c.TplNames = "login.html"
-}
-
 func (c *UserController) SearchUser() {
 	c.EnableRender = false
 	jsonBody, err := simplejson.NewJson(c.Ctx.Input.CopyBody())
@@ -78,11 +94,6 @@ func (c *UserController) SearchUser() {
 		c.Data["json"] = users
 	}
 	c.ServeJson()
-}
-
-func (c *UserController) AddView() {
-	c.TplNames = "admin/add-user.html"
-	c.Data["Groups"] = models.EveryUserGroups
 }
 
 func (c *UserController) AddUser() {

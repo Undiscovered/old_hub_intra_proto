@@ -39,7 +39,7 @@ func GetProjectsPaginated(page, limit int, queryFilter map[string]interface{}) (
 		case "managers":
 			q = q.SetCond(orm.NewCondition().And("Manager__Login__in", value))
 		case "status":
-			q = q.SetCond(orm.NewCondition().And("Status__in", value))
+			q = q.SetCond(orm.NewCondition().And("Status__Name__in", value))
 		case "name":
 			q = q.SetCond(orm.NewCondition().And("Name__icontains", value))
 		}
@@ -100,6 +100,9 @@ func GetProjectByIDOrName(nameOrId string) (*models.Project, error) {
 	if _, err := o.LoadRelated(project, "History"); err != nil {
 		return nil, err
 	}
+	if _, err := o.LoadRelated(project, "Themes"); err != nil {
+		return nil, err
+	}
 	return project, nil
 }
 
@@ -119,6 +122,9 @@ func GetProjectByID(id int) (*models.Project, error) {
 	if _, err := o.LoadRelated(project, "History"); err != nil {
 		return nil, err
 	}
+	if _, err := o.LoadRelated(project, "Themes"); err != nil {
+		return nil, err
+	}
 	return project, nil
 }
 
@@ -127,6 +133,12 @@ func AddAndGetProject(project *models.Project) (*models.Project, error) {
 	if err := o.Begin(); err != nil {
 		return nil, err
 	}
+    status, err := GetProjectStatusByName(project.StatusName)
+    if err != nil {
+        o.Rollback()
+        return nil, err
+    }
+    project.Status = status
 	id, err := o.Insert(project)
 	if err != nil {
 		o.Rollback()

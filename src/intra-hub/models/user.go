@@ -37,6 +37,10 @@ type User struct {
 	Skills    []*Skill   `json:"skills" orm:"rel(m2m);rel_through(intra-hub/models.UserSkill)"`
 }
 
+func (u *User) Name() string {
+	return u.FirstName + " " + u.LastName
+}
+
 func (u *User) TableIndex() [][]string {
 	return [][]string{
 		[]string{"Id", "Login", "FirstName", "LastName"},
