@@ -28,9 +28,13 @@ package confperso
 // To update for yourself. Don't commit it
 const (
     AliasDbName                = "default"
-	DatabaseName               = "intra_hub"
-	Username                   = "root"
-	Password                   = ""
+    DatabaseName               = "intra_hub"
+    Username                   = "root"
+    Password                   = ""
+
+    EmailUsername = "vincent.neel@epitech.eu"
+    EmailPassword = "*******"
+    EmailHost     = "smtp.epitech.eu"
 )
 ```
 
