@@ -51,6 +51,7 @@ func (c *BaseController) Prepare() {
 	if user := c.GetSession(sessionUserKey); user != nil {
 		c.user = user.(*models.User)
 		c.isLogged = true
+        c.Data["UserLogged"] = c.user
 	}
 
 	// Add basic template functions

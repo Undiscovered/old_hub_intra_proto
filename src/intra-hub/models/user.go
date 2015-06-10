@@ -32,7 +32,7 @@ type User struct {
 	Password  string     `json:"password" orm:"size(128)" form:"password"`
 	Promotion *Promotion `json:"promotion" orm:"null;rel(fk)"`
 	City      *City      `json:"city" orm:"null;rel(fk)"`
-	Groups    []*Group   `json:"groups" orm:"rel(m2m)"`
+	Group     *Group     `json:"group" orm:"null;rel(fk)"`
 	Projects  []*Project `json:"projects" orm:"rel(m2m)"`
 	Skills    []*Skill   `json:"skills" orm:"rel(m2m);rel_through(intra-hub/models.UserSkill)"`
 }
@@ -49,7 +49,8 @@ func (u *User) TableIndex() [][]string {
 
 func (u *User) Values() []string {
 	return []string{u.Login, u.FirstName, u.LastName, u.Email, u.Picture,
-		u.Password, strconv.FormatInt(int64(u.Promotion.Id), 10), strconv.FormatInt(int64(u.City.Id), 10)}
+		u.Password, strconv.FormatInt(int64(u.Group.Id), 10),
+		strconv.FormatInt(int64(u.Promotion.Id), 10), strconv.FormatInt(int64(u.City.Id), 10)}
 }
 
 func (u *User) Valid(v *validation.Validation) {
@@ -62,5 +63,5 @@ func (u *User) Valid(v *validation.Validation) {
 }
 
 func GetUserFields() string {
-	return "login, first_name, last_name, email, picture, password, promotion_id, city_id"
+	return "login, first_name, last_name, email, picture, password, group_id, promotion_id, city_id"
 }

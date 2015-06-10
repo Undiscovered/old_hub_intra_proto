@@ -29,7 +29,7 @@ var (
 	studentGroup *models.Group
 
 	specialUsersPath = path.Dir(beego.AppConfigPath) + "/specials"
-	specialUsersinfo = make(map[string][]*models.Group)
+	specialUsersinfo = make(map[string]*models.Group)
 	mapCities        = make(map[string]*models.City)
 	mapPromotions    = make(map[string]*models.Promotion)
 
@@ -84,8 +84,7 @@ func newUser(blowfish string) (*models.User, string) {
 			lastName = nameSplitted[1]
 		}
 	}
-	groups := make([]*models.Group, 1)
-	groups[0] = studentGroup
+    group := studentGroup
 	user := &models.User{
 		Login:     lineSplitted[0],
 		FirstName: strings.Title(firstName),
@@ -94,10 +93,10 @@ func newUser(blowfish string) (*models.User, string) {
 		Picture:   epitechCDNPath + lineSplitted[0] + ".jpg",
 		Email:     lineSplitted[0] + "@epitech.eu",
 	}
-	if groupsToAdd, ok := specialUsersinfo[user.Login]; ok {
-		groups = append(groups, groupsToAdd...)
+	if g := specialUsersinfo[user.Login]; g != nil {
+        group = g
 	}
-	user.Groups = groups
+    user.Group = group
 	return user, lineSplitted[3]
 }
 
@@ -124,15 +123,16 @@ func blowFishCrawler() error {
 		// Set Promotion
 		groupName = mapGroup[groupName]
 		if promotion := mapPromotions[groupName]; promotion == nil {
-			promotion = &models.Promotion{Name: groupName}
-			id, err := o.Insert(promotion)
-			if err != nil {
-				o.Rollback()
-				return err
-			}
-			promotion.Id = int(id)
-			user.Promotion = promotion
-			mapPromotions[groupName] = promotion
+            promotion = &models.Promotion{Name: groupName}
+            if _, id, err := o.ReadOrCreate(promotion, "Name"); err == nil {
+                promotion.Id = int(id)
+                user.Promotion = promotion
+                mapPromotions[groupName] = promotion
+            } else {
+                beego.Critical(err)
+                o.Rollback()
+                return err
+            }
 		} else {
 			user.Promotion = promotion
 		}
@@ -143,39 +143,38 @@ func blowFishCrawler() error {
 		}
 		if city := mapCities[cityName]; city == nil {
 			city = &models.City{Name: cityName}
-			id, err := o.Insert(city)
-			if err != nil {
-				o.Rollback()
-				return err
-			}
-			city.Id = int(id)
-			user.City = city
-			mapCities[cityName] = city
+            if _, id, err := o.ReadOrCreate(city, "Name"); err == nil {
+                city.Id = int(id)
+                user.City = city
+                mapCities[cityName] = city
+            } else {
+                beego.Critical(err)
+                o.Rollback()
+                return err
+            }
 		} else {
 			user.City = city
 		}
-		r, err := o.Raw("INSERT INTO user ("+models.GetUserFields()+") VALUES (?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE password=?", user.Values(), user.Password).Exec()
+		r, err := o.Raw("INSERT INTO user ("+models.GetUserFields()+") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE password=?", user.Values(), user.Password).Exec()
 		if err != nil {
+            beego.Critical(err)
 			o.Rollback()
 			return err
 		}
 		rowsAffected, err := r.RowsAffected()
 		if err != nil {
-			o.Rollback()
+            beego.Critical(err)
+            o.Rollback()
 			return err
 		}
 		if rowsAffected != 0 {
 			lastId, err := r.LastInsertId()
 			if err != nil {
-				o.Rollback()
+                beego.Critical(err)
+                o.Rollback()
 				return err
 			}
 			user.Id = int(lastId)
-			m2m := o.QueryM2M(user, "Groups")
-			if _, err := m2m.Add(user.Groups); err != nil {
-				o.Rollback()
-				return err
-			}
 		}
 		o.Commit()
 	}
@@ -191,18 +190,18 @@ func loadUsersFiles() error {
 	}
 	defer specialUsersFile.Close()
 	scannerManager := bufio.NewScanner(specialUsersFile)
-	groups, err := db.GetGroupsByNames(models.UserGroupStudent)
+	group, err := db.GetGroupByNames(models.UserGroupStudent)
 	if err != nil {
 		return err
 	}
-	studentGroup = groups[0]
+	studentGroup = group
 	for scannerManager.Scan() {
 		lineSplitted := strings.Split(scannerManager.Text(), "=")
-		groups, err := db.GetGroupsByNames(strings.Split(lineSplitted[1], ",")...)
+		group, err := db.GetGroupByNames(lineSplitted[1])
 		if err != nil {
 			return err
 		}
-		specialUsersinfo[lineSplitted[0]] = groups
+		specialUsersinfo[lineSplitted[0]] = group
 	}
 	return nil
 }

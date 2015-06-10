@@ -14,7 +14,7 @@ func QueryTechnos() orm.QuerySeter {
 	return orm.NewOrm().QueryTable(TechnoTable)
 }
 
-func GetAllTechnos() (technos []*models.Techno, err error) {
+func GetEveryTechnos() (technos []*models.Techno, err error) {
 	technos = make([]*models.Techno, 0)
 	_, err = QueryTechnos().All(&technos)
 	return

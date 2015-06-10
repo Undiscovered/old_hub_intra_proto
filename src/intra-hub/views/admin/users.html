@@ -1,5 +1,9 @@
-<div class="input-group">
+<div>
     <a href="/admin/users/add" class="btn btn-success">Ajouter un utilisateur ext.</a>
+    <div class="form-group" style="margin-top: 15px">
+        <label>Modifier un utilisateur</label>
+        <input class="form-control" placeholder="Modifier un utilisateur" type="text" id="autocomplete"/>
+    </div>
 </div>
 
 <script type="application/javascript">
@@ -21,6 +25,8 @@
             },
             select: function (event, object) {
                 $('#autocomplete').val('');
+                console.log(object);
+                window.location.href = '/users/edit/' + object.item.login;
                 return false;
             }
         });

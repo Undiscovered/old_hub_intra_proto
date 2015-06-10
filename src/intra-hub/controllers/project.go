@@ -110,7 +110,7 @@ func (c *ProjectController) AddView() {
 		c.flash.Data["error"] = err.Error()
 		return
 	}
-	themes, err := db.GetAllThemes()
+	themes, err := db.GetEveryThemes()
 	if err != nil {
 		beego.Error(err)
 		c.flash.Data["error"] = err.Error()

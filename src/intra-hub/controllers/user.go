@@ -37,6 +37,19 @@ func (c *UserController) LoginView() {
 	c.TplNames = "login.html"
 }
 
+func (c *UserController) EditView() {
+    c.TplNames = "user/edit.html"
+    user, err := db.GetUserByLogin(c.GetString(":login", ""))
+    if err != nil {
+        beego.Error(err)
+        c.Redirect("/home", 301)
+    }
+    skills, err := db.GetEverySkills()
+    c.Data["Groups"] = models.EveryUserGroups
+    c.Data["User"] = user
+    c.Data["Skills"] = skills
+}
+
 func (c *UserController) Login() {
 	user := &models.User{}
 	if c.isLogged {

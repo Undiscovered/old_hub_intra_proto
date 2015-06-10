@@ -11,19 +11,19 @@ type AdminController struct {
 
 func (c *AdminController) Get() {
 	c.TplNames = "admin/layout.html"
-	themes, err := db.GetAllThemes()
+	themes, err := db.GetEveryThemes()
 	if err != nil {
 		beego.Error(err)
 		c.SetErrorAndRedirect(err)
 		return
 	}
-	skills, err := db.GetAllSkills()
+	skills, err := db.GetEverySkills()
 	if err != nil {
 		beego.Error(err)
 		c.SetErrorAndRedirect(err)
 		return
 	}
-	technos, err := db.GetAllTechnos()
+	technos, err := db.GetEveryTechnos()
 	if err != nil {
 		beego.Error(err)
 		c.SetErrorAndRedirect(err)

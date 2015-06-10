@@ -14,7 +14,7 @@ func QuerySkills() orm.QuerySeter {
 	return orm.NewOrm().QueryTable(SkillTable)
 }
 
-func GetAllSkills() (skills []*models.Skill, err error) {
+func GetEverySkills() (skills []*models.Skill, err error) {
 	skills = make([]*models.Skill, 0)
 	_, err = QuerySkills().All(&skills)
 	return

@@ -49,7 +49,7 @@ func SearchUsers(query string) (usersFound []*models.User, err error) {
 }
 
 func GetManagers() (managers []*models.User, err error) {
-	_, err = QueryUser().Filter("Groups__Group__Name", models.UserGroupManager).All(&managers)
+	_, err = QueryUser().Filter("Group__Name", models.UserGroupManager).All(&managers)
 	return
 }
 

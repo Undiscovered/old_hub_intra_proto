@@ -14,7 +14,7 @@ func QueryThemes() orm.QuerySeter {
 	return orm.NewOrm().QueryTable(ThemeTable)
 }
 
-func GetAllThemes() (themes []*models.Theme, err error) {
+func GetEveryThemes() (themes []*models.Theme, err error) {
 	themes = make([]*models.Theme, 0)
 	_, err = QueryThemes().All(&themes)
 	return
