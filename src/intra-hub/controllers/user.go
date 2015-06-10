@@ -11,6 +11,8 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/validation"
 	"github.com/bitly/go-simplejson"
+    "strconv"
+    "github.com/jmcvetta/randutil"
 )
 
 type UserController struct {
@@ -38,16 +40,16 @@ func (c *UserController) LoginView() {
 }
 
 func (c *UserController) EditView() {
-    c.TplNames = "user/edit.html"
-    user, err := db.GetUserByLogin(c.GetString(":login", ""))
-    if err != nil {
-        beego.Error(err)
-        c.Redirect("/home", 301)
-    }
-    skills, err := db.GetEverySkills()
-    c.Data["Groups"] = models.EveryUserGroups
-    c.Data["User"] = user
-    c.Data["Skills"] = skills
+	c.TplNames = "user/edit.html"
+	user, err := db.GetUserByLogin(c.GetString(":login", ""))
+	if err != nil {
+		beego.Error(err)
+		c.Redirect("/home", 301)
+	}
+	skills, err := db.GetEverySkills()
+	c.Data["Groups"] = models.EveryUserGroups
+	c.Data["User"] = user
+	c.Data["Skills"] = skills
 }
 
 func (c *UserController) Login() {
@@ -109,6 +111,38 @@ func (c *UserController) SearchUser() {
 	c.ServeJson()
 }
 
+func (c *UserController) ActivateUserView() {
+	c.TplNames = "user/reset-password.html"
+    id, err := strconv.Atoi(c.GetString(":id"))
+    if err != nil {
+        beego.Error(err)
+        c.SetErrorAndRedirect(err)
+        return
+    }
+    c.Data["Id"] = id
+    c.Data["Token"] = c.GetString(":token")
+}
+
+func (c *UserController) ActivateUser() {
+    c.EnableRender = false
+    password := c.GetString("password")
+    token := c.GetString(":token")
+    id, err := strconv.Atoi(c.GetString(":id"))
+    if err != nil {
+        beego.Error(err)
+        c.SetErrorAndRedirect(err)
+        return
+    }
+    user, err := db.ActivateUser(id, token, password)
+    if err != nil {
+        beego.Error(err)
+        c.SetErrorAndRedirect(err)
+        return
+    }
+    c.SetUser(user)
+    c.Redirect("/home", 301)
+}
+
 func (c *UserController) AddUser() {
 	defer c.ServeJson()
 	handleError := func(err error) {
@@ -131,11 +165,15 @@ func (c *UserController) AddUser() {
 		handleError(fmt.Errorf("wrong email format"))
 		return
 	}
-	user, err := db.AddAndGetUser(user)
-	if err != nil {
+    randString, err := randutil.AlphaString(9)
+    if err != nil {
+        handleError(err)
+        return
+    }
+    user.Token = randString
+	if err := db.AddUser(user); err != nil {
 		handleError(err)
 		return
 	}
 	go mail.SendUserCreated(user)
-	c.Data["json"] = user
 }

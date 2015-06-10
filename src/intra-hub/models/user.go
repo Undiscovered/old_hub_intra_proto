@@ -30,6 +30,7 @@ type User struct {
 	Email     string     `json:"email" orm:"size(128)"`
 	Picture   string     `json:"picture" orm:"size(128)"`
 	Password  string     `json:"password" orm:"size(128)" form:"password"`
+	Token     string     `orm:"size(128)"`
 	Promotion *Promotion `json:"promotion" orm:"null;rel(fk)"`
 	City      *City      `json:"city" orm:"null;rel(fk)"`
 	Group     *Group     `json:"group" orm:"null;rel(fk)"`

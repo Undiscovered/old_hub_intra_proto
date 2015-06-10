@@ -8,6 +8,7 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"golang.org/x/crypto/bcrypt"
+    "fmt"
 )
 
 const (
@@ -18,12 +19,12 @@ func QueryUser() orm.QuerySeter {
 	return orm.NewOrm().QueryTable(UserTable)
 }
 
-func AddAndGetUser(user *models.User) (*models.User, error) {
+func AddUser(user *models.User) error {
 	_, err := orm.NewOrm().Insert(user)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return GetUserByLogin(user.Login)
+	return nil
 }
 
 func CheckUserCredentials(user *models.User) (*models.User, error) {
@@ -33,7 +34,9 @@ func CheckUserCredentials(user *models.User) (*models.User, error) {
 	}
 	if err := bcrypt.CompareHashAndPassword([]byte(userDb.Password), []byte(user.Password)); err != nil {
 		return nil, err
-	}
+	} else if userDb.Password == "" {
+        return nil, fmt.Errorf("password not set")
+    }
 	return userDb, nil
 }
 
@@ -59,6 +62,24 @@ func GetUserByLogin(login string) (*models.User, error) {
 		return nil, err
 	}
 	return userDb, nil
+}
+
+func ActivateUser(id int, token, password string) (*models.User, error) {
+    userDb := &models.User{}
+    o := orm.NewOrm()
+    if err := o.QueryTable(UserTable).Filter("Id", id).Filter("Token", token).RelatedSel().One(userDb); err != nil {
+        return nil, err
+    }
+    userDb.Token = ""
+    hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+    if err != nil {
+        return nil, err
+    }
+    userDb.Password = string(hash)
+    if _, err := o.Update(userDb); err != nil {
+        return nil, err
+    }
+    return userDb, nil
 }
 
 func loadEveryInfoOfUsers(users []*models.User) error {
