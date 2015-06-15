@@ -23,19 +23,20 @@ func init() {
 }
 
 type User struct {
-	Id        int        `json:"id"`
-	Login     string     `json:"login" orm:"unique;size(128)" form:"login"`
-	FirstName string     `json:"firstName" orm:"size(128)"`
-	LastName  string     `json:"lastName" orm:"size(128)"`
-	Email     string     `json:"email" orm:"size(128)" form:"email"`
-	Picture   string     `json:"picture" orm:"size(128)"`
-	Password  string     `json:"password" orm:"size(128)" form:"password"`
-	Token     string     `orm:"size(128)"`
-	Promotion *Promotion `json:"promotion" orm:"null;rel(fk)"`
-	City      *City      `json:"city" orm:"null;rel(fk)"`
-	Group     *Group     `json:"group" orm:"null;rel(fk)"`
-	Projects  []*Project `json:"projects" orm:"rel(m2m)"`
-	Skills    []*Skill   `json:"skills" orm:"rel(m2m);rel_through(intra-hub/models.UserSkill)"`
+	Id          int        `json:"id"`
+	Login       string     `json:"login" orm:"unique;size(128)" form:"login"`
+	FirstName   string     `json:"firstName" orm:"size(128)"`
+	LastName    string     `json:"lastName" orm:"size(128)"`
+	Email       string     `json:"email" orm:"size(128)" form:"email"`
+	Picture     string     `json:"picture" orm:"size(128)"`
+	Password    string     `json:"password" orm:"size(128)" form:"password"`
+	PhoneNumber string     `json:"phoneNumber" orm:"size(16)" form:"phoneNumber"`
+	Token       string     `orm:"size(128)"`
+	Promotion   *Promotion `json:"promotion" orm:"null;rel(fk)"`
+	City        *City      `json:"city" orm:"null;rel(fk)"`
+	Group       *Group     `json:"group" orm:"null;rel(fk)"`
+	Projects    []*Project `json:"projects" orm:"rel(m2m)"`
+	Skills      []*Skill   `json:"skills" orm:"rel(m2m);rel_through(intra-hub/models.UserSkill)"`
 }
 
 func (u *User) Name() string {

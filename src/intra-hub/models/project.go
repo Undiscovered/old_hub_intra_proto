@@ -25,6 +25,7 @@ type Project struct {
 	Themes           []*Theme       `orm:"null;rel(m2m)"`
 	Created          time.Time      `orm:"auto_now_add;type(datetime)"`
 	Updated          time.Time      `orm:"auto_now;type(datetime)"`
+	Validated        bool           `orm:"validated" form:"validated"`
 
 	// Non Persistent fields
 

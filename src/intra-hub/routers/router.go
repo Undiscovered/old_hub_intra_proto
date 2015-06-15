@@ -37,5 +37,6 @@ func init() {
 	beego.Router("/projects/:nameOrId", &controllers.ProjectController{}, "get:SingleView")
 	beego.Router("/projects/add", &controllers.ProjectController{}, "get:AddView;post:Add")
 
+    beego.Router("/pedago/project/validation", &controllers.PedagoController{}, "get:ValidateProjectView")
 	beego.Router("/api/login", &controllers.UserController{}, "post:Login")
 }
