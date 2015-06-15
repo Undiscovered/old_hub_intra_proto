@@ -33,20 +33,39 @@ func (c *UserController) SingleView() {
 	c.Data["User"] = user
 }
 
+func (c *UserController) MeView() {
+    c.RequireLogin()
+    c.TplNames = "user/profile.html"
+    c.Data["User"] = c.user
+    c.Data["Edit"] = true
+}
+
 func (c *UserController) LoginView() {
 	c.TplNames = "login.html"
 }
 
 func (c *UserController) EditView() {
+    c.RequireLogin()
 	c.TplNames = "user/edit.html"
 	user, err := db.GetUserByLogin(c.GetString(":login", ""))
 	if err != nil {
 		beego.Error(err)
 		c.Redirect("/home", 301)
 	}
+    cities, err := db.GetEveryCities()
+    if err != nil {
+        beego.Error(err)
+        c.Redirect("/home", 301)
+    }
 	skills, err := db.GetEverySkills()
+    if err != nil {
+        beego.Error(err)
+        c.Redirect("/home", 301)
+    }
+    c.Data["Cities"] = cities
 	c.Data["Groups"] = models.EveryUserGroups
 	c.Data["User"] = user
+    c.Data["Edit"] = user.Login == c.user.Login
 	c.Data["Skills"] = skills
 }
 

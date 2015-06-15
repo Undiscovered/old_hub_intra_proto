@@ -11,6 +11,11 @@
     <div class="panel panel-default">
         <div class="panel-heading">
 
+            {{ if .Edit }}
+            <div>
+                <a href="/users/edit/{{ .User.Login }}" class="btn btn-success">Editer</a>
+            </div>
+            {{ end }}
             <div style="font-size: 1.5em">
                 <img src="{{ .User.Picture }}">
                 {{ .User.Name }}

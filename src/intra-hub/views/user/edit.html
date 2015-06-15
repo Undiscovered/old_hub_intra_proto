@@ -26,8 +26,14 @@
                 <input type="email" id="email" placeholder="Email" class="form-control" value="{{ .User.Email }}">
             </div>
             <div class="input-group">
-                <label for="city">Ville</label>
-                <input type="text" id="city" placeholder="Ville" class="form-control" value="{{ .User.City.Name }}">
+                <label for="cities">Ville</label><br/>
+                <select id="cities" class="form-control">
+                    {{ range $element := .Cities }}
+                    <option value="{{ $element.Id }}" {{ if eq $element.Name $.User.City.Name }} selected="selected" {{ end }}>
+                        {{ $element.Name }}
+                    </option>
+                    {{ end }}
+                </select>
             </div>
             <div class="input-group">
                 <label for="role">Role</label>

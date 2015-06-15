@@ -91,3 +91,9 @@ func (c *BaseController) SetErrorAndRedirect(err error) {
 	c.flash.Store(&c.Controller)
 	c.Redirect(c.redirectURL, 303)
 }
+
+func (c *BaseController) RequireLogin() {
+    if !c.isLogged {
+        c.Redirect("/login", 301)
+    }
+}
