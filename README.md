@@ -50,6 +50,7 @@ go get github.com/beego/i18n
 go get github.com/bitly/go-simplejson
 go get golang.org/x/crypto/bcrypt
 go get github.com/soniah/tcgl/sort
+go get github.com/jmcvetta/randutil
 ```
 
 or just "go get ..."
