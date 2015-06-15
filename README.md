@@ -35,6 +35,7 @@ const (
     EmailUsername = "vincent.neel@epitech.eu"
     EmailPassword = "*******"
     EmailHost     = "smtp.epitech.eu"
+    EmailHostPort = "587"
 )
 ```
 
