@@ -2,8 +2,6 @@ package controllers
 
 import (
 	"fmt"
-	"strings"
-
 	"intra-hub/db"
 	"intra-hub/models"
 	"intra-hub/services/mail"
@@ -113,14 +111,21 @@ func (c *UserController) SearchUser() {
 
 func (c *UserController) ActivateUserView() {
 	c.TplNames = "user/reset-password.html"
+    token := c.GetString(":token")
     id, err := strconv.Atoi(c.GetString(":id"))
     if err != nil {
         beego.Error(err)
         c.SetErrorAndRedirect(err)
         return
     }
+    if err := db.CheckUserExists(id, token); err != nil {
+        beego.Error(err)
+        c.DestroySession()
+        c.Redirect("/login", 301)
+        return
+    }
     c.Data["Id"] = id
-    c.Data["Token"] = c.GetString(":token")
+    c.Data["Token"] = token
 }
 
 func (c *UserController) ActivateUser() {
@@ -144,36 +149,30 @@ func (c *UserController) ActivateUser() {
 }
 
 func (c *UserController) AddUser() {
-	defer c.ServeJson()
-	handleError := func(err error) {
-		beego.Warn(err)
-		jsonErr := simplejson.New()
-		jsonErr.Set("error", err.Error())
-		c.Data["json"] = jsonErr
-	}
-	c.EnableRender = false
+    c.redirectURL = "/admin/users/add"
 	user := &models.User{}
 	if err := c.ParseForm(user); err != nil {
-		handleError(err)
+		c.SetErrorAndRedirect(err)
 		return
 	}
 	if user.Login == "" {
-		handleError(fmt.Errorf("login not specified"))
+        c.SetErrorAndRedirect(fmt.Errorf("login not specified"))
 		return
 	}
-	if user.Email == "" || !strings.Contains(user.Email, "@") {
-		handleError(fmt.Errorf("wrong email format"))
+	if user.Email == "" {
+		c.SetErrorAndRedirect(fmt.Errorf("wrong email format"))
 		return
 	}
     randString, err := randutil.AlphaString(9)
     if err != nil {
-        handleError(err)
+        c.SetErrorAndRedirect(err)
         return
     }
     user.Token = randString
 	if err := db.AddUser(user); err != nil {
-		handleError(err)
+		c.SetErrorAndRedirect(err)
 		return
 	}
 	go mail.SendUserCreated(user)
+    c.Redirect("/admin/users/add", 301)
 }

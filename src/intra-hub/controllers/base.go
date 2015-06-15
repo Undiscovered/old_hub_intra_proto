@@ -31,9 +31,13 @@ type BaseController struct {
 	isLogged        bool
 	apiMode         bool
 	flash           *beego.FlashData
+	redirectURL     string
 }
 
 func (c *BaseController) Prepare() {
+    // Set Default redirect URL
+    c.redirectURL = c.Ctx.Input.Request.URL.Path
+
 	// Set Language
 	c.currentLanguage = "fr-FR"
 	c.Data["Lang"] = c.currentLanguage
@@ -51,7 +55,7 @@ func (c *BaseController) Prepare() {
 	if user := c.GetSession(sessionUserKey); user != nil {
 		c.user = user.(*models.User)
 		c.isLogged = true
-        c.Data["UserLogged"] = c.user
+		c.Data["UserLogged"] = c.user
 	}
 
 	// Add basic template functions
@@ -85,5 +89,5 @@ func (c *BaseController) SetUser(user *models.User) {
 func (c *BaseController) SetErrorAndRedirect(err error) {
 	c.flash.Data["error"] = err.Error()
 	c.flash.Store(&c.Controller)
-	c.Redirect(c.Ctx.Request.URL.Path, 303)
+	c.Redirect(c.redirectURL, 303)
 }

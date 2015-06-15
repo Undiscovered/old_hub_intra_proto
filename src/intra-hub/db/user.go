@@ -82,6 +82,14 @@ func ActivateUser(id int, token, password string) (*models.User, error) {
     return userDb, nil
 }
 
+func CheckUserExists(id int, token string) error {
+    userDb := &models.User{}
+    if err := QueryUser().Filter("Id", id).Filter("Token", token).One(userDb); err != nil {
+        return err
+    }
+    return nil
+}
+
 func loadEveryInfoOfUsers(users []*models.User) error {
 	wg := sync.WaitGroup{}
 	errorChan := make(chan error)

@@ -27,7 +27,7 @@ type User struct {
 	Login     string     `json:"login" orm:"unique;size(128)" form:"login"`
 	FirstName string     `json:"firstName" orm:"size(128)"`
 	LastName  string     `json:"lastName" orm:"size(128)"`
-	Email     string     `json:"email" orm:"size(128)"`
+	Email     string     `json:"email" orm:"size(128)" form:"email"`
 	Picture   string     `json:"picture" orm:"size(128)"`
 	Password  string     `json:"password" orm:"size(128)" form:"password"`
 	Token     string     `orm:"size(128)"`
