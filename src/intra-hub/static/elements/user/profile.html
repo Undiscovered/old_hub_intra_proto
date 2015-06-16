@@ -1,11 +1,43 @@
 <link rel="import" href="/static/bower_components/polymer/polymer.html">
 <link rel="import" href="/static/bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="/static/bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="/static/bower_components/iron-flex-layout/iron-flex-layout.html">
 
 <dom-module id="user-profile">
 
     <style>
         img {
             border: solid #f0f0f0 2px;
+        }
+
+        paper-toolbar {
+            background: #2196F3;
+        }
+
+        span[small] {
+            font-size: 0.65em;
+        }
+
+        div[layout] {
+        @apply(--layout-horizontal);
+        }
+
+        div[right] {
+        @apply(--layout-flex) @apply(--layout-vertical)
+        }
+
+        div[right] > * {
+            font-size: 1.3em;
+        }
+
+        div[space] {
+            padding-left: 10px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        span.fa {
+            color: #3F51B5;
         }
     </style>
     <template>
@@ -19,9 +51,40 @@
                 on-response="handleResponse">
         </iron-ajax>
 
-        <img src="{{ user.picture }}">
-        <h2>{{ user.firstName }}</h2>
-        <h4>{{ user.login }}</h4>
+        <paper-toolbar>
+            <h2>
+                <span>{{ user.firstName }}</span> <span>{{ user.lastName }}</span>
+                <span small>-</span> <span small>{{ user.login }}</span>
+            </h2>
+        </paper-toolbar>
+        <div layout>
+            <div left>
+                <img src="{{ user.picture }}">
+            </div>
+            <div right>
+                <div space>
+                    <span class="fa fa-paper-plane-o"></span> <a href="{{ userEmail }}">{{ user.email }}</a>
+                </div>
+                <div space>
+                    <span class="fa fa-user"></span> <span>{{ user.login }}</span>
+                </div>
+                <template is="dom-if" if="{{ user.promotion }}">
+                    <div space>
+                        <span class="fa fa-graduation-cap"></span> <span>{{ user.promotion.name }}</span>
+                    </div>
+                </template>
+                <template is="dom-if" if="{{ user.city }}">
+                    <div space>
+                        <span class="fa fa-map-marker"></span> <span>{{ user.city.name }}</span>
+                    </div>
+                </template>
+                <template is="dom-if" if="{{ user.group }}">
+                    <div space>
+                        <span class="fa fa-transgender"></span> <span>{{ user.group.name }}</span>
+                    </div>
+                </template>
+            </div>
+        </div>
     </template>
 
     <script>
@@ -33,8 +96,8 @@
             },
             ready: function () {
             },
-            handleResponse: function (event) {
-                console.log(this.user);
+            handleResponse: function () {
+                this.userEmail = 'mailto:' + this.user.email;
             }
         });
     </script>
