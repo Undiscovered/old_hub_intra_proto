@@ -1,0 +1,21 @@
+{
+  "name": "intra-hub",
+  "version": "0.0.0",
+  "homepage": "https://github.com/KaeYuri/hub_intra_proto",
+  "authors": [
+    "Vincent <20cent.neel@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.0.0",
+    "iron-elements": "PolymerElements/iron-elements#~1.0.0",
+    "paper-material": "PolymerElements/paper-material#^1.0.0"
+  }
+}

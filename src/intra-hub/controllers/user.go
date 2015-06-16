@@ -195,3 +195,8 @@ func (c *UserController) AddUser() {
 	go mail.SendUserCreated(user)
     c.Redirect("/admin/users/add", 301)
 }
+
+func (c *UserController) GetMe() {
+    defer c.ServeJson()
+    c.Data["json"] = c.user.Clean()
+}

@@ -31,12 +31,18 @@ type User struct {
 	Picture     string     `json:"picture" orm:"size(128)"`
 	Password    string     `json:"password" orm:"size(128)" form:"password"`
 	PhoneNumber string     `json:"phoneNumber" orm:"size(16)" form:"phoneNumber"`
-	Token       string     `orm:"size(128)"`
+	Token       string     `json:"token,omitempty" orm:"size(128)"`
+	Tech4Derog  bool       `json:"tech4Derog" form:"tech4Derog"`
 	Promotion   *Promotion `json:"promotion" orm:"null;rel(fk)"`
 	City        *City      `json:"city" orm:"null;rel(fk)"`
 	Group       *Group     `json:"group" orm:"null;rel(fk)"`
 	Projects    []*Project `json:"projects" orm:"rel(m2m)"`
 	Skills      []*Skill   `json:"skills" orm:"rel(m2m);rel_through(intra-hub/models.UserSkill)"`
+}
+
+func (u *User) Clean() *User {
+    u.Password = ""
+    return u
 }
 
 func (u *User) Name() string {

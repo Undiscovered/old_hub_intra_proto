@@ -3,15 +3,15 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>Liste des Projets</title>
-    {{ template "layouts/include-css.html" }}
+    [[ template "layouts/include-css.html" ]]
 </head>
 <body>
-{{ template "layouts/topbar.html" }}
+[[ template "layouts/topbar.html" ]]
 
 <div class="container-fluid">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h4>{{ .PaginatedItems.TotalItemCount }} projets en tout - {{ len .PaginatedItems.Items }} projets
+            <h4>[[ .PaginatedItems.TotalItemCount ]] projets en tout - [[ len .PaginatedItems.Items ]] projets
                 affiches</h4>
         </div>
         <div class="panel-body">
@@ -19,7 +19,7 @@
             <span class="dropdown">
                 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
                         data-toggle="dropdown" aria-expanded="true">
-                    {{ .Limit }} Projets par page
+                    [[ .Limit ]] Projets par page
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
@@ -58,48 +58,48 @@
                             <td>Status</td>
                         </tr>
                         </thead>
-                        {{ range $element := .PaginatedItems.Items }}
+                        [[ range $element := .PaginatedItems.Items ]]
 
                         <tr>
-                            <td><a href="/projects/{{ $element.Name }}">{{ $element.Name }}</a></td>
-                            <td>{{ $element.Promotions }}</td>
-                            <td>{{ $element.Cities }}</td>
-                            <td>{{ len $element.Members }}</td>
+                            <td><a href="/projects/[[ $element.Name ]]">[[ $element.Name ]]</a></td>
+                            <td>[[ $element.Promotions ]]</td>
+                            <td>[[ $element.Cities ]]</td>
+                            <td>[[ len $element.Members ]]</td>
                             <td>
-                                {{ if $element.Manager }}
-                                {{ $element.Manager.Login }}
-                                {{ end }}
+                                [[ if $element.Manager ]]
+                                [[ $element.Manager.Login ]]
+                                [[ end ]]
                             </td>
                             <td>
-                                {{ i18n $.Lang $element.Status.Name }}
+                                [[ i18n $.Lang $element.Status.Name ]]
                             </td>
                         </tr>
-                        {{ end }}
+                        [[ end ]]
                     </table>
                     <ul class="pagination center-block">
-                        {{ if .HasPreviousPage }}
-                        <li><a href="/projects/list?page={{ decr .PaginatedItems.CurrentPage }}&limit={{ .Limit }}">
+                        [[ if .HasPreviousPage ]]
+                        <li><a href="/projects/list?page=[[ decr .PaginatedItems.CurrentPage ]]&limit=[[ .Limit ]]">
                             <span class="glyphicon glyphicon-chevron-left"></span></a></li>
-                        {{ end }}
-                        {{ if .ShowGoToFirst }}
-                        <li><a href="/projects/list?page=1&limit={{ .Limit }}">
+                        [[ end ]]
+                        [[ if .ShowGoToFirst ]]
+                        <li><a href="/projects/list?page=1&limit=[[ .Limit ]]">
                             1
                         </a></li>
-                        {{ end }}
-                        {{ range $element := .PaginatedItems.PagesToShow }}
-                        <li class="{{ if eq $element $.PaginatedItems.CurrentPage }}active{{ end }}">
-                            <a class="text-primary" href="/projects/list?page={{ $element }}&limit={{ $.Limit }}">
-                                {{ $element }}</a></li>
-                        {{ end }}
-                        {{ if .ShowGoToLast }}
-                        <li><a href="/projects/list?page={{ .PaginatedItems.TotalPageCount }}&limit={{ .Limit }}">
-                            {{ .PaginatedItems.TotalPageCount }}
+                        [[ end ]]
+                        [[ range $element := .PaginatedItems.PagesToShow ]]
+                        <li class="[[ if eq $element $.PaginatedItems.CurrentPage ]]active[[ end ]]">
+                            <a class="text-primary" href="/projects/list?page=[[ $element ]]&limit=[[ $.Limit ]]">
+                                [[ $element ]]</a></li>
+                        [[ end ]]
+                        [[ if .ShowGoToLast ]]
+                        <li><a href="/projects/list?page=[[ .PaginatedItems.TotalPageCount ]]&limit=[[ .Limit ]]">
+                            [[ .PaginatedItems.TotalPageCount ]]
                         </a></li>
-                        {{ end }}
-                        {{ if .HasNextPage }}
-                        <li><a href="/projects/list?page={{ incr .PaginatedItems.CurrentPage }}&limit={{ .Limit }}">
+                        [[ end ]]
+                        [[ if .HasNextPage ]]
+                        <li><a href="/projects/list?page=[[ incr .PaginatedItems.CurrentPage ]]&limit=[[ .Limit ]]">
                             <span class="glyphicon glyphicon-chevron-right"></span></a></li>
-                        {{ end }}
+                        [[ end ]]
                     </ul>
 
                 </div>
@@ -119,9 +119,9 @@
                         <label for="promotions">Promotion</label>
                         <select id="promotions" class="form-control" multiple="multiple">
                             <option></option>
-                            {{ range $element := .Promotions }}
-                            <option>{{ $element.Name }}</option>
-                            {{ end }}
+                            [[ range $element := .Promotions ]]
+                            <option>[[ $element.Name ]]</option>
+                            [[ end ]]
                         </select>
                     </div>
 
@@ -129,9 +129,9 @@
                         <label for="cities">Ville</label>
                         <select id="cities" class="form-control" multiple="multiple">
                             <option></option>
-                            {{ range $element := .Cities }}
-                            <option>{{ $element.Name }}</option>
-                            {{ end }}
+                            [[ range $element := .Cities ]]
+                            <option>[[ $element.Name ]]</option>
+                            [[ end ]]
                         </select>
                     </div>
 
@@ -139,10 +139,10 @@
                         <label for="managers">Manageurs</label>
                         <select id="managers" class="form-control" multiple="multiple">
                             <option></option>
-                            {{ range $element := .Managers }}
-                            <option value="{{ $element.Login }}">{{ $element.FirstName }} {{ $element.LastName }}
+                            [[ range $element := .Managers ]]
+                            <option value="[[ $element.Login ]]">[[ $element.FirstName ]] [[ $element.LastName ]]
                             </option>
-                            {{ end }}
+                            [[ end ]]
                         </select>
                     </div>
 
@@ -150,10 +150,10 @@
                         <label for="status">Status</label>
                         <select id="status" class="form-control" multiple="multiple">
                             <option></option>
-                            {{ range $element := .Status }}
-                            <option value="{{ $element }}">{{ i18n $.Lang $element }}
+                            [[ range $element := .Status ]]
+                            <option value="[[ $element ]]">[[ i18n $.Lang $element ]]
                             </option>
-                            {{ end }}
+                            [[ end ]]
                         </select>
                     </div>
 
@@ -164,7 +164,7 @@
     </div>
 </div>
 </body>
-{{ template "layouts/include-js.html" }}
+[[ template "layouts/include-js.html" ]]
 
 <script type="application/javascript">
     $(document).ready(start);

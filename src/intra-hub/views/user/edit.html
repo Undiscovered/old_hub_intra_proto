@@ -2,54 +2,54 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>Edition {{ .User.Login }}</title>
-    {{ template "layouts/include-css.html" }}
+    <title>Edition [[ .User.Login ]]</title>
+    [[ template "layouts/include-css.html" ]]
 </head>
 <body>
-{{ template "layouts/topbar.html" }}
+[[ template "layouts/topbar.html" ]]
 
 <div class="container-fluid">
     <div class="panel panel-default">
         <div class="panel-heading">
             <div style="font-size: 1.5em">
-                <img src="{{ .User.Picture }}">
-                {{ .User.Name }}
+                <img src="[[ .User.Picture ]]">
+                [[ .User.Name ]]
             </div>
         </div>
         <div class="panel-body">
             <div class="input-group">
                 <label for="login">Login</label>
-                <input type="text" id="login" class="form-control" value="{{ .User.Login }}" disabled="">
+                <input type="text" id="login" class="form-control" value="[[ .User.Login ]]" disabled="">
             </div>
             <div class="input-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" placeholder="Email" class="form-control" value="{{ .User.Email }}">
+                <input type="email" id="email" placeholder="Email" class="form-control" value="[[ .User.Email ]]">
             </div>
             <div class="input-group">
                 <label for="cities">Ville</label><br/>
                 <select id="cities" class="form-control">
-                    {{ range $element := .Cities }}
-                    <option value="{{ $element.Id }}" {{ if eq $element.Name $.User.City.Name }} selected="selected" {{ end }}>
-                        {{ $element.Name }}
+                    [[ range $element := .Cities ]]
+                    <option value="[[ $element.Id ]]" [[ if eq $element.Name $.User.City.Name ]] selected="selected" [[ end ]] >
+                        [[ $element.Name ]]
                     </option>
-                    {{ end }}
+                    [[ end ]]
                 </select>
             </div>
             <div class="input-group">
                 <label for="role">Role</label>
                 <select id="role" class="form-control">
-                    {{ range $element := .Groups }}
-                    <option {{ if eq $element $.User.Group.Name }} selected="selected" {{ end }}>{{ i18n $.Lang $element }}</option>
-                    {{ end }}
+                    [[ range $element := .Groups ]]
+                    <option [[ if eq $element $.User.Group.Name ]] selected="selected" [[ end ]]>[[ i18n $.Lang $element ]]</option>
+                    [[ end ]]
                 </select>
             </div>
             <div class="input-group">
                 <label for="skills">Competences</label><br/>
                 <select id="skills" class="form-control" multiple="true">
-                    {{ range $element := .Skills }}
-                    <option value="{{ $element.Id }}">{{ $element.Name }}
+                    [[ range $element := .Skills ]]
+                    <option value="[[ $element.Id ]]">[[ $element.Name ]]
                     </option>
-                    {{ end }}
+                    [[ end ]]
                 </select>
             </div>
             <button class="btn btn-success" onclick="editUser()">Editer</button>
@@ -57,7 +57,7 @@
     </div>
 </div>
 
-{{ template "layouts/include-js.html" }}
+[[ template "layouts/include-js.html" ]]
 
 <script type="application/javascript">
 

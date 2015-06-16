@@ -1,0 +1,41 @@
+<link rel="import" href="/static/bower_components/polymer/polymer.html">
+<link rel="import" href="/static/bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="user-profile">
+
+    <style>
+        img {
+            border: solid #f0f0f0 2px;
+        }
+    </style>
+    <template>
+
+        <iron-ajax
+                auto
+                method="GET"
+                url="/api/users/me"
+                handle-as="json"
+                last-response="{{ user }}"
+                on-response="handleResponse">
+        </iron-ajax>
+
+        <img src="{{ user.picture }}">
+        <h2>{{ user.firstName }}</h2>
+        <h4>{{ user.login }}</h4>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'user-profile',
+
+            properties: {
+                user: Object
+            },
+            ready: function () {
+            },
+            handleResponse: function (event) {
+                console.log(this.user);
+            }
+        });
+    </script>
+</dom-module>

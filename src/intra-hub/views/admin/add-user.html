@@ -3,10 +3,10 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>Nouvel utilisateur</title>
-    {{ template "layouts/include-css.html" }}
+    [[ template "layouts/include-css.html" ]]
 </head>
 <body>
-{{ template "layouts/topbar.html" }}
+[[ template "layouts/topbar.html" ]]
 
 <div class="container-fluid">
     <div class="panel panel-default">
@@ -26,9 +26,9 @@
                 <div class="form-group">
                     <label for="role">Role</label>
                     <select id="role" class="form-control">
-                        {{ range $element := .Groups }}
-                        <option>{{ i18n $.Lang $element }}</option>
-                        {{ end }}
+                        [[ range $element := .Groups ]]
+                        <option>[[ i18n $.Lang $element ]]</option>
+                        [[ end ]]
                     </select>
                 </div>
                 <button class="btn btn-success">Creer l'utilisateur</button>
@@ -37,7 +37,7 @@
     </div>
 </div>
 
-{{ template "layouts/include-js.html" }}
+[[ template "layouts/include-js.html" ]]
 
 </body>
 </html>
