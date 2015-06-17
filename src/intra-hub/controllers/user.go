@@ -11,6 +11,7 @@ import (
 	"github.com/bitly/go-simplejson"
     "strconv"
     "github.com/jmcvetta/randutil"
+    "intra-hub/jsonutils"
 )
 
 type UserController struct {
@@ -36,14 +37,8 @@ func (c *UserController) SingleView() {
 func (c *UserController) MeView() {
     c.RequireLogin()
     c.TplNames = "user/profile.html"
-    jsUser, err := c.user.ToJSON(c.currentLanguage)
-    if err != nil {
-        beego.Error(err)
-        c.Redirect("/home", 301)
-        return
-    }
     c.Data["User"] = c.user
-    c.Data["UserJSON"] = jsUser
+    c.Data["UserJSON"] = c.user.ToJSON(c.currentLanguage)
     c.Data["Edit"] = true
 }
 
@@ -69,11 +64,17 @@ func (c *UserController) EditView() {
         beego.Error(err)
         c.Redirect("/home", 301)
     }
-    c.Data["Cities"] = cities
-	c.Data["Groups"] = models.EveryUserGroups
-	c.Data["User"] = user
+    groups, err := db.GetEveryGroups()
+    if err != nil {
+        beego.Error(err)
+        c.Redirect("/home", 301)
+    }
+    c.Data["User"] = user
     c.Data["Edit"] = user.Login == c.user.Login
-	c.Data["Skills"] = skills
+    c.Data["Cities"] = jsonutils.MarshalUnsafe(cities)
+	c.Data["Groups"] = jsonutils.MarshalUnsafe(groups)
+    c.Data["UserJSON"] = user.ToJSON(c.currentLanguage)
+	c.Data["Skills"] = jsonutils.MarshalUnsafe(skills)
 }
 
 func (c *UserController) Login() {

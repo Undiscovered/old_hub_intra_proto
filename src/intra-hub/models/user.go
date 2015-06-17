@@ -5,8 +5,8 @@ import (
 
 	"github.com/astaxie/beego/orm"
 	"github.com/astaxie/beego/validation"
-    "github.com/beego/i18n"
-    "encoding/json"
+	"github.com/beego/i18n"
+	"intra-hub/jsonutils"
 )
 
 const (
@@ -43,8 +43,8 @@ type User struct {
 }
 
 func (u *User) Clean() *User {
-    u.Password = ""
-    return u
+	u.Password = ""
+	return u
 }
 
 func (u *User) Name() string {
@@ -72,14 +72,10 @@ func (u *User) Valid(v *validation.Validation) {
 	}
 }
 
-func (u *User) ToJSON(locale string) (string, error) {
-    u.City.Name = i18n.Tr(locale, u.City.Name)
-    u.Group.Name = i18n.Tr(locale, u.Group.Name)
-    js, err := json.Marshal(u)
-    if err != nil {
-        return "", err
-    }
-    return string(js), nil
+func (u *User) ToJSON(locale string) string {
+	u.City.LocalizedName = i18n.Tr(locale, u.City.Name)
+	u.Group.LocalizedName = i18n.Tr(locale, u.Group.Name)
+	return jsonutils.MarshalUnsafe(u)
 }
 
 func GetUserFields() string {

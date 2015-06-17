@@ -97,3 +97,10 @@ func (c *BaseController) RequireLogin() {
         c.Redirect("/login", 301)
     }
 }
+
+func (c *BaseController) TranslateSlice(slice []string) []string {
+    for i, s := range slice {
+        slice[i] = i18n.Tr(c.currentLanguage, s)
+    }
+    return slice
+}

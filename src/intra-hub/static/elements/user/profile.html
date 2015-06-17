@@ -1,7 +1,10 @@
 <link rel="import" href="/static/bower_components/polymer/polymer.html">
-<link rel="import" href="/static/bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="/static/bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="/static/bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="/static/bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="/static/bower_components/paper-toolbar/paper-toolbar.html">
+<link rel="import" href="/static/bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="/static/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/static/bower_components/gold-email-input/gold-email-input.html">
 
 <dom-module id="user-profile">
 
@@ -10,8 +13,16 @@
             border: solid #f0f0f0 2px;
         }
 
+        [white] {
+            color: #ffffff;
+        }
+
         paper-toolbar {
             background: #2196F3;
+        }
+
+        .title > span {
+            font-size: 1.4em;
         }
 
         span[small] {
@@ -24,6 +35,10 @@
 
         div[right] {
         @apply(--layout-flex) @apply(--layout-vertical)
+        }
+
+        [flex] {
+        @apply(--layout-flex)
         }
 
         div[right] > * {
@@ -39,41 +54,111 @@
         span.fa {
             color: #3F51B5;
         }
+
     </style>
     <template>
-        <paper-toolbar>
-            <h2>
-                <span>{{ user.firstName }}</span> <span>{{ user.lastName }}</span>
-            </h2>
-        </paper-toolbar>
-        <div layout>
-            <div left>
-                <img src="{{ user.picture }}">
-            </div>
-            <div right>
-                <div space>
-                    <span class="fa fa-paper-plane-o"></span> <a href="{{ userEmail }}">{{ user.email }}</a>
+
+        <!-- Profile View -->
+        <template is="dom-if" if="{{ !editMode }}">
+            <paper-toolbar>
+                <div class="title">
+                    <span>{{ user.firstName }}</span> <span>{{ user.lastName }}</span>
                 </div>
-                <div space>
-                    <span class="fa fa-user"></span> <span>{{ user.login }}</span>
+                <template is="dom-if" if="{{ canEdit }}">
+                    <a href="{{ editLink }}">
+                        <paper-icon-button white icon="create"></paper-icon-button>
+                    </a>
+                </template>
+            </paper-toolbar>
+            <div layout>
+                <div left>
+                    <img src="{{ user.picture }}">
                 </div>
-                <template is="dom-if" if="{{ user.promotion }}">
+                <div right>
                     <div space>
-                        <span class="fa fa-graduation-cap"></span> <span>{{ user.promotion.name }}</span>
+                        <span class="fa fa-user"></span> <span>{{ user.login }}</span>
                     </div>
-                </template>
-                <template is="dom-if" if="{{ user.city }}">
                     <div space>
-                        <span class="fa fa-map-marker"></span> <span>{{ user.city.name }}</span>
+                        <span class="fa fa-paper-plane-o"></span> <a href="{{ userEmail }}">{{ user.email }}</a>
                     </div>
-                </template>
-                <template is="dom-if" if="{{ user.group }}">
-                    <div space>
-                        <span class="fa fa-transgender"></span> <span>{{ user.group.name }}</span>
-                    </div>
-                </template>
+                    <template is="dom-if" if="{{ user.promotion }}">
+                        <div space>
+                            <span class="fa fa-graduation-cap"></span> <span>{{ user.promotion.name }}</span>
+                        </div>
+                    </template>
+                    <template is="dom-if" if="{{ user.city }}">
+                        <div space>
+                            <span class="fa fa-map-marker"></span> <span>{{ user.city.localizedName }}</span>
+                        </div>
+                    </template>
+                    <template is="dom-if" if="{{ user.group }}">
+                        <div space>
+                            <span class="fa fa-transgender"></span> <span>{{ user.group.localizedName }}</span>
+                        </div>
+                    </template>
+                </div>
             </div>
-        </div>
+        </template>
+        <!-- End Profile View -->
+
+        <!-- Edit View -->
+        <template is="dom-if" if="{{ editMode }}">
+            <paper-toolbar>
+                <div class="title">
+                    <span>{{ user.firstName }}</span> <span>{{ user.lastName }}</span>
+                </div>
+            </paper-toolbar>
+            <div layout>
+                <div left>
+                    <img src="{{ user.picture }}">
+                </div>
+                <div right>
+                    <div space>
+                        <span class="fa fa-user"></span> <span>{{ user.login }}</span>
+                    </div>
+                    <div space>
+                        <gold-email-input label="Email" auto-validate value="{{ user.email }}"></gold-email-input>
+                    </div>
+                    <template is="dom-if" if="{{ user.city }}">
+                        <div space>
+                            <span class="fa fa-map-marker"></span>
+                            <select id="city">
+                                <template is="dom-repeat" items="{{ cities }}">
+                                    <template is="dom-if" if="{{ !equal(item.name, user.city.name) }}">
+                                        <option value="{{ item.id }}">{{ item.name }}</option>
+                                    </template>
+                                    <template is="dom-if" if="{{ equal(item.name, user.city.name) }}">
+                                        <option value="{{ item.id }}" selected>{{ item.name }}</option>
+                                    </template>
+                                </template>
+                            </select>
+                        </div>
+                    </template>
+                    <div space>
+                        <span class="fa fa-transgender"></span>
+                        <select id="group">
+                            <template is="dom-repeat" items="{{ groups }}">
+                                <template is="dom-if" if="{{ !equal(item.name, user.group.name) }}">
+                                    <option value="{{ item.id }}">{{ item.name }}</option>
+                                </template>
+                                <template is="dom-if" if="{{ equal(item.name, user.group.name) }}">
+                                    <option value="{{ item.id }}" selected>{{ item.name }}</option>
+                                </template>
+                            </template>
+                        </select>
+                    </div>
+                    <div space>
+                        <select id="skills">
+                            <template is="dom-repeat" items="{{ skills }}">
+                                <option>{{ item.name }}</option>
+                            </template>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </template>
+        <!-- End Edit View -->
+
     </template>
 
     <script>
@@ -82,10 +167,30 @@
 
             properties: {
                 user: Object,
-                canEdit: Boolean
+                canEdit: Boolean,
+                editMode: {
+                    value: false,
+                    type: Boolean
+                },
+                cities: {
+                    value: '[]',
+                    type: Array
+                },
+                groups: {
+                    value: '[]',
+                    type: Array
+                },
+                skills: {
+                    value: '[]',
+                    type: Array
+                }
+            },
+            equal: function (a, b) {
+                return a === b;
             },
             ready: function () {
                 this.userEmail = 'mailto:' + this.user.email;
+                this.editLink = '/users/edit/' + this.user.login;
             }
         });
     </script>
