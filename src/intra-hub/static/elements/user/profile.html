@@ -41,20 +41,9 @@
         }
     </style>
     <template>
-
-        <iron-ajax
-                auto
-                method="GET"
-                url="/api/users/me"
-                handle-as="json"
-                last-response="{{ user }}"
-                on-response="handleResponse">
-        </iron-ajax>
-
         <paper-toolbar>
             <h2>
                 <span>{{ user.firstName }}</span> <span>{{ user.lastName }}</span>
-                <span small>-</span> <span small>{{ user.login }}</span>
             </h2>
         </paper-toolbar>
         <div layout>
@@ -92,11 +81,10 @@
             is: 'user-profile',
 
             properties: {
-                user: Object
+                user: Object,
+                canEdit: Boolean
             },
             ready: function () {
-            },
-            handleResponse: function () {
                 this.userEmail = 'mailto:' + this.user.email;
             }
         });

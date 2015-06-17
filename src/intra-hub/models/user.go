@@ -5,6 +5,8 @@ import (
 
 	"github.com/astaxie/beego/orm"
 	"github.com/astaxie/beego/validation"
+    "github.com/beego/i18n"
+    "encoding/json"
 )
 
 const (
@@ -68,6 +70,16 @@ func (u *User) Valid(v *validation.Validation) {
 	if len(u.Password) == 0 {
 		v.SetError("Password", "empty password")
 	}
+}
+
+func (u *User) ToJSON(locale string) (string, error) {
+    u.City.Name = i18n.Tr(locale, u.City.Name)
+    u.Group.Name = i18n.Tr(locale, u.Group.Name)
+    js, err := json.Marshal(u)
+    if err != nil {
+        return "", err
+    }
+    return string(js), nil
 }
 
 func GetUserFields() string {

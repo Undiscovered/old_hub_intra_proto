@@ -36,7 +36,14 @@ func (c *UserController) SingleView() {
 func (c *UserController) MeView() {
     c.RequireLogin()
     c.TplNames = "user/profile.html"
+    jsUser, err := c.user.ToJSON(c.currentLanguage)
+    if err != nil {
+        beego.Error(err)
+        c.Redirect("/home", 301)
+        return
+    }
     c.Data["User"] = c.user
+    c.Data["UserJSON"] = jsUser
     c.Data["Edit"] = true
 }
 

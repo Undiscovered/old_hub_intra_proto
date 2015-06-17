@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>[[ .User.Name ]] [[ .User.Name ]]</title>
+    <title>[[ .User.Name ]]</title>
     <link rel="import" href="/static/elements/layout/page-content.html">
     <link rel="import" href="/static/elements/user/profile.html">
     [[ template "layouts/include-css.html" ]]
@@ -10,7 +10,7 @@
 <body>
 [[ template "layouts/topbar.html" ]]
 <page-content>
-    <user-profile></user-profile>
+    <user-profile can-edit="[[ .Edit ]]" user="[[ .UserJSON ]]"></user-profile>
 </page-content>
 <!--<div class="container-fluid">-->
     <!--<div class="panel panel-default">-->
