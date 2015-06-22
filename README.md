@@ -46,6 +46,7 @@ Replace username and password by the value you need.
 
 ```
 go get -v -t ...
+go get github.com/beego/bee
 ```
 
 
