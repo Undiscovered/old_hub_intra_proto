@@ -18,7 +18,8 @@ func init() {
 type Project struct {
 	Id                     int
 	Name                   string          `json:"name" orm:"unique;size(128)" form:"name"`
-	ShortDescription       string          `json:"shortDescription" orm:"size(128)" form:"shortDescription"`
+	ShortDescription       string          `json:"shortDescription" orm:"size(256)" form:"shortDescription"`
+	CompleteDescription    string          `json:"completeDescription" orm:"null;type(text)" form:"completeDescription"`
 	Status                 *ProjectStatus  `json:"status" orm:"rel(fk)"`
 	Manager                *User           `json:"manager" orm:"null;rel(fk)"`
 	History                []*HistoryItem  `json:"history" orm:"null;rel(m2m)"`
