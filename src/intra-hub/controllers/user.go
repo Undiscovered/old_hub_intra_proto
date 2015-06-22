@@ -11,6 +11,8 @@ import (
 	"github.com/bitly/go-simplejson"
     "strconv"
     "github.com/jmcvetta/randutil"
+    "intra-hub/jsonutils"
+    "encoding/json"
 )
 
 type UserController struct {
@@ -37,6 +39,7 @@ func (c *UserController) MeView() {
     c.RequireLogin()
     c.TplNames = "user/profile.html"
     c.Data["User"] = c.user
+    c.Data["UserJSON"] = c.user.ToJSON(c.currentLanguage)
     c.Data["Edit"] = true
 }
 
@@ -62,11 +65,17 @@ func (c *UserController) EditView() {
         beego.Error(err)
         c.Redirect("/home", 301)
     }
-    c.Data["Cities"] = cities
-	c.Data["Groups"] = models.EveryUserGroups
-	c.Data["User"] = user
+    groups, err := db.GetEveryGroups()
+    if err != nil {
+        beego.Error(err)
+        c.Redirect("/home", 301)
+    }
+    c.Data["User"] = user
     c.Data["Edit"] = user.Login == c.user.Login
-	c.Data["Skills"] = skills
+    c.Data["Cities"] = jsonutils.MarshalUnsafe(cities)
+	c.Data["Groups"] = jsonutils.MarshalUnsafe(groups)
+    c.Data["UserJSON"] = user.ToJSON(c.currentLanguage)
+	c.Data["Skills"] = jsonutils.MarshalUnsafe(skills)
 }
 
 func (c *UserController) Login() {
@@ -89,7 +98,6 @@ func (c *UserController) Login() {
 		c.SetErrorAndRedirect(err)
 		return
 	}
-	beego.Alert(user.Promotion, user.City)
 	c.SetUser(user)
 	c.Redirect("/home", 301)
 }
@@ -194,4 +202,23 @@ func (c *UserController) AddUser() {
 	}
 	go mail.SendUserCreated(user)
     c.Redirect("/admin/users/add", 301)
+}
+
+func (c *UserController) EditUser() {
+    c.RequireLogin()
+    c.EnableRender = false
+    user := &models.User{}
+    if err := json.Unmarshal(c.Ctx.Input.CopyBody(), &user); err != nil {
+        beego.Warn(err)
+        return
+    }
+    if err := db.EditUserByLogin(user.Login, user); err != nil {
+        beego.Warn(err)
+        return
+    }
+}
+
+func (c *UserController) GetMe() {
+    defer c.ServeJson()
+    c.Data["json"] = c.user.Clean()
 }

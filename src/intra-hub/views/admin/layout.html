@@ -3,11 +3,11 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>Admin</title>
-    {{ template "layouts/include-css.html" }}
-    {{ template "layouts/include-js.html" }}
+    [[ template "layouts/include-css.html" ]]
+    [[ template "layouts/include-js.html" ]]
 </head>
 <body>
-{{ template "layouts/topbar.html" }}
+[[ template "layouts/topbar.html" ]]
 
 <div class="container-fluid">
     <div class="panel panel-default">
@@ -25,22 +25,22 @@
             <div class="tab-content">
                 <div id="users" class="tab-pane fade in active">
                     <div class="well">
-                        {{ template "admin/users.html" . }}
+                        [[ template "admin/users.html" . ]]
                     </div>
                 </div>
                 <div id="skills" class="tab-pane fade">
                     <div class="well">
-                        {{ template "admin/skills.html" . }}
+                        [[ template "admin/skills.html" . ]]
                     </div>
                 </div>
                 <div id="themes" class="tab-pane fade">
                     <div class="well">
-                        {{ template "admin/themes.html" . }}
+                        [[ template "admin/themes.html" . ]]
                     </div>
                 </div>
                 <div id="technos" class="tab-pane fade">
                     <div class="well">
-                        {{ template "admin/technos.html" . }}
+                        [[ template "admin/technos.html" . ]]
                     </div>
                 </div>
             </div>

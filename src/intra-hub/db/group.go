@@ -18,3 +18,9 @@ func GetGroupByNames(name string) (*models.Group, error) {
 	group := &models.Group{}
 	return group, QueryGroup().Filter("Name__exact", name).One(group)
 }
+
+func GetEveryGroups() ([]*models.Group, error) {
+    groups := make([]*models.Group, 0)
+    _, err := QueryGroup().All(&groups)
+    return groups, err
+}

@@ -61,6 +61,9 @@ func init() {
 
 	beego.EnableAdmin = true
 
+    beego.TemplateLeft = "[["
+    beego.TemplateRight = "]]"
+
 	// Serve static files
 	beego.SetStaticPath("/css", "static/css")
 	beego.SetStaticPath("/js", "static/js")

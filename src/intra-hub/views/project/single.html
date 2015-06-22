@@ -2,12 +2,12 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>{{ .Project.Name }}</title>
-    {{ template "layouts/include-css.html" }}
+    <title>[[ .Project.Name ]]</title>
+    [[ template "layouts/include-css.html" ]]
 </head>
 
 <body>
-{{ template "layouts/topbar.html" }}
+[[ template "layouts/topbar.html" ]]
 
 <div class="container-fluid">
     <div class="panel panel-default">
@@ -15,31 +15,31 @@
             <a href="/projects/list?page=1&limit=15">
                 <span class="glyphicon glyphicon-chevron-left"> Liste des projets</span>
             </a>
-            <h4>{{ .Project.Name }}</h4>
-            {{ range $element := .Project.Themes }}
-            <span class="label label-{{ randLabel }}">{{ $element.Name }}</span>
-            {{ end }}
+            <h4>[[ .Project.Name ]]</h4>
+            [[ range $element := .Project.Themes ]]
+            <span class="label label-[[ randLabel ]]">[[ $element.Name ]]</span>
+            [[ end ]]
         </div>
         <div class="panel-body">
             <h5>Short Description</h5>
 
             <p style="white-space: pre-line;">
-                {{ .Project.ShortDescription }}
+                [[ .Project.ShortDescription ]]
             </p>
 
             <h5>Membres</h5>
             <ul class="list-group">
-                {{ range $element := .Project.Members }}
+                [[ range $element := .Project.Members ]]
                 <li class="list-group-item">
-                    <img src="{{ $element.Picture }}">
-                    <a href="/users/{{ $element.Login }}"> {{ $element.Name }}</a> - {{ $element.Promotion.Name }}
+                    <img src="[[ $element.Picture ]]">
+                    <a href="/users/[[ $element.Login ]]"> [[ $element.Name ]]</a> - [[ $element.Promotion.Name ]]
                 </li>
-                {{ end }}
+                [[ end ]]
             </ul>
         </div>
     </div>
 </div>
 </body>
 
-{{ template "layouts/include-js.html" }}
+[[ template "layouts/include-js.html" ]]
 </html>

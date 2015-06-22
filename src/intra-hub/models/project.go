@@ -8,6 +8,7 @@ import (
 	"github.com/astaxie/beego/orm"
 	"github.com/astaxie/beego/validation"
 	"github.com/docker/docker/pkg/stringutils"
+	"github.com/saschpe/tribool"
 )
 
 func init() {
@@ -15,24 +16,24 @@ func init() {
 }
 
 type Project struct {
-	Id               int
-	Name             string         `orm:"unique;size(128)" form:"name"`
-	ShortDescription string         `orm:"size(128)" form:"shortDescription"`
-	Status           *ProjectStatus `orm:"rel(fk)"`
-	Manager          *User          `orm:"null;rel(fk)"`
-	History          []*HistoryItem `orm:"null;rel(m2m)"`
-	Members          []*User        `orm:"null;reverse(many)"`
-	Themes           []*Theme       `orm:"null;rel(m2m)"`
-	Created          time.Time      `orm:"auto_now_add;type(datetime)"`
-	Updated          time.Time      `orm:"auto_now;type(datetime)"`
-	Validated        bool           `orm:"validated" form:"validated"`
+	Id                     int
+	Name                   string          `json:"name" orm:"unique;size(128)" form:"name"`
+	ShortDescription       string          `json:"shortDescription" orm:"size(128)" form:"shortDescription"`
+	Status                 *ProjectStatus  `json:"status" orm:"rel(fk)"`
+	Manager                *User           `json:"manager" orm:"null;rel(fk)"`
+	History                []*HistoryItem  `json:"history" orm:"null;rel(m2m)"`
+	Members                []*User         `json:"members" orm:"null;reverse(many)"`
+	Themes                 []*Theme        `json:"themes" orm:"null;rel(m2m)"`
+	Created                time.Time       `json:"created" orm:"auto_now_add;type(datetime)"`
+	Updated                time.Time       `json:"updated" orm:"auto_now;type(datetime)"`
+	PedagogicallyValidated tribool.Tribool `json:"pedagogicallyValidated" form:pedagogicallyValidated"`
 
 	// Non Persistent fields
 
 	ManagerLogin string `orm:"-" form:"managerLogin"`
 	MembersID    string `orm:"-" form:"membersId"`
 	ThemesID     string `orm:"-" form:"themesId"`
-	MemberCount  int    `orm:"-"`
+	MemberCount  int    `json:"memberCount" orm:"-"`
 	StatusName   string `orm:"-" form:"status"`
 }
 

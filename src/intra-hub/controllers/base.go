@@ -97,3 +97,19 @@ func (c *BaseController) RequireLogin() {
         c.Redirect("/login", 301)
     }
 }
+
+func (c *BaseController) TranslateSlice(slice []string) []string {
+    for i, s := range slice {
+        slice[i] = i18n.Tr(c.currentLanguage, s)
+    }
+    return slice
+}
+
+func (c *BaseController) UploadFile(inputName, outputName string) error {
+//    file ,_, err := c.GetFile(inputName)
+//    if err != nil {
+//        return err
+//    }
+//    c.C
+    return nil
+}

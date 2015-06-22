@@ -3,19 +3,19 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>Lancer un Projet</title>
-    {{ template "layouts/include-css.html" }}
+    [[ template "layouts/include-css.html" ]]
 </head>
 <body>
-{{ template "layouts/topbar.html" }}
+[[ template "layouts/topbar.html" ]]
 
 <div class="container-fluid">
-    {{ if .flash.error }}
+    [[ if .flash.error ]]
     <div class="alert alert-danger alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
                 aria-hidden="true">&times;</span></button>
-        {{ .flash.error }}
+        [[ .flash.error ]]
     </div>
-    {{ end }}
+    [[ end ]]
 
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -36,17 +36,17 @@
                     <label for="managerLogin">Assigner un manager</label>
                     <select class="form-control" id="managerLogin" name="managerLogin">
                         <option>--</option>
-                        {{ range $element := .Managers }}
-                        <option>{{ $element.Login }}</option>
-                        {{ end }}
+                        [[ range $element := .Managers ]]
+                        <option>[[ $element.Login ]]</option>
+                        [[ end ]]
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="status">Status du projet</label>
                     <select class="form-control" id="status" name="status">
-                        {{ range $element := .Status }}
-                        <option value="{{ $element }}">{{ i18n $.Lang $element }}</option>
-                        {{ end }}
+                        [[ range $element := .Status ]]
+                        <option value="[[ $element ]]">[[ i18n $.Lang $element ]]</option>
+                        [[ end ]]
                     </select>
                 </div>
                 <div class="form-group">
@@ -54,10 +54,10 @@
                     <input type="hidden" id="themesId" name="themesId">
                     <select id="themes" class="form-control" multiple="true">
                         <option></option>
-                        {{ range $element := .Themes }}
-                        <option value="{{ $element.Id }}">{{ $element.Name }}
+                        [[ range $element := .Themes ]]
+                        <option value="[[ $element.Id ]]">[[ $element.Name ]]
                         </option>
-                        {{ end }}
+                        [[ end ]]
                     </select>
                 </div>
                 <div class="form-group">
@@ -75,7 +75,7 @@
 </div>
 
 </body>
-{{ template "layouts/include-js.html" }}
+[[ template "layouts/include-js.html" ]]
 
 <script type="application/javascript">
     $(document).ready(start);

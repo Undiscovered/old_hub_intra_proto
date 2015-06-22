@@ -2,39 +2,22 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>{{ .User.Name }} {{ .User.Name }}</title>
-    {{ template "layouts/include-css.html" }}
+    <title>[[ .User.Name ]]</title>
+    <link rel="import" href="/static/elements/layout/page-content.html">
+    <link rel="import" href="/static/elements/user/profile.html">
+    [[ template "layouts/include-css.html" ]]
 </head>
 <body>
-{{ template "layouts/topbar.html" }}
-<div class="container-fluid">
-    <div class="panel panel-default">
-        <div class="panel-heading">
+[[ template "layouts/topbar.html" ]]
 
-            {{ if .Edit }}
-            <div>
-                <a href="/users/edit/{{ .User.Login }}" class="btn btn-success">Editer</a>
-            </div>
-            {{ end }}
-            <div style="font-size: 1.5em">
-                <img src="{{ .User.Picture }}">
-                {{ .User.Name }}
-            </div>
+<page-content>
+    <user-profile
+            can-edit="[[ .Edit ]]"
+            user="[[ .UserJSON ]]">
 
-            <div>
-                <span class="fa fa-user text-primary"> {{ .User.Login }}</span>
-            </div>
-            <div>
-                <span class="fa fa-paper-plane text-primary">
-                    <a style="font-size: 16px" href="mailto:{{ .User.Email }}"> {{ .User.Email }}</a>
-                </span>
-            </div>
-        </div>
-        <div class="panel-body">
+    </user-profile>
+</page-content>
 
-        </div>
-    </div>
-</div>
-{{ template "layouts/include-js.html" }}
+[[ template "layouts/include-js.html" ]]
 </body>
 </html>

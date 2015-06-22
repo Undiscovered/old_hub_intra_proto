@@ -22,9 +22,9 @@
             Sign In
         </button>
     </form>
-    {{ if .flash.error }}
-    <div class="alert alert-danger alert-dismissible" role="alert">{{ .flash.error }}</div>
-    {{ end }}
+    [[ if .flash.error ]]
+    <div class="alert alert-danger alert-dismissible" role="alert">[[ .flash.error ]]</div>
+    [[ end ]]
 
 </div>
 </body>

@@ -9,20 +9,20 @@
 
 
 <ul id="list-technos" class="list-group">
-    {{ if not .Technos }}
+    [[ if not .Technos ]]
     <li class="list-group-item active" id="empty">0 technos</li>
-    {{ end }}
-    {{ range $index, $element := .Technos }}
-    <li class="list-group-item" id="{{ $element.Id }}">
-        <span class="label label-{{ randLabel }} s-1x">{{ $element.Name }}</span>
+    [[ end ]]
+    [[ range $index, $element := .Technos ]]
+    <li class="list-group-item" id="[[ $element.Id ]]">
+        <span class="label label-[[ randLabel ]] s-1x">[[ $element.Name ]]</span>
         <span class="pull-right">
             <span class="btn-group btn-group-xs">
-                <button class="btn btn-danger" onclick="deleteTechno({{ $element.Id }})"><span
+                <button class="btn btn-danger" onclick="deleteTechno([[ $element.Id ]])"><span
                         class="fa fa-remove color-white"></span></button>
             </span>
         </span>
     </li>
-    {{ end }}
+    [[ end ]]
 </ul>
 
 <script>

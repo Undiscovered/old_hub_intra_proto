@@ -2,11 +2,11 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>{{ i18n .Lang "TITLE" }}</title>
-    {{ template "layouts/include-css.html" }}
+    <title>[[ i18n .Lang "TITLE" ]]</title>
+    [[ template "layouts/include-css.html" ]]
 </head>
 <body>
-{{ template "layouts/topbar.html" }}
+[[ template "layouts/topbar.html" ]]
 
 <div class="row">
     <div class="col-sm-4 col-xs-4 col-sm-offset-2">
@@ -14,7 +14,7 @@
             <div class="panel panel-default">
                 <div class="panel-header text-center"><h3>Tous les projets</h3></div>
                 <div class="panel-thumbnail">
-                    <img src="/static/img/book_small.jpg" class="center-block img-responsive light-padding">
+                    <img src="/static/img/project.gif" class="center-block img-responsive light-padding">
                 </div>
             </div>
         </a>
@@ -25,7 +25,7 @@
             <div class="panel panel-default">
                 <div class="panel-header text-center"><h3>Appels à projet</h3></div>
                 <div class="panel-thumbnail">
-                    <img src="/static/img/quest_small.png" class="center-block img-responsive light-padding">
+                    <img src="/static/img/LFG.gif" class="center-block img-responsive light-padding">
                 </div>
             </div>
         </a>
@@ -36,7 +36,7 @@
             <div class="panel panel-default">
                 <div class="panel-header text-center"><h3>Panthéon</h3></div>
                 <div class="panel-thumbnail">
-                    <img src="/static/img/pantheon_small.png" class="center-block img-responsive light-padding">
+                    <img src="/static/img/hall.gif" class="center-block img-responsive light-padding">
                 </div>
             </div>
         </a>
@@ -47,7 +47,7 @@
             <div class="panel panel-default">
                 <div class="panel-header text-center"><h3>Lancer un projet</h3></div>
                 <div class="panel-thumbnail">
-                    <img src="/static/img/pirate_little.png" class="center-block img-responsive light-padding">
+                    <img src="/static/img/project.gif" class="center-block img-responsive light-padding">
                 </div>
             </div>
         </a>
@@ -55,7 +55,7 @@
 
 </div>
 
-{{ template "layouts/include-js.html" }}
+[[ template "layouts/include-js.html" ]]
 
 </body>
 </html>
