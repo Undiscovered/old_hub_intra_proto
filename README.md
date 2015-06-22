@@ -3,7 +3,7 @@
 ## MySQL
 
 ```
-Install MYSQL and Go
+Install Mercurial, MYSQL and Go
 
 Create database "intra_hub":
 
