@@ -1,9 +1,11 @@
 <link rel="import" href="/static/bower_components/polymer/polymer.html">
+<link rel="import" href="/static/bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="/static/bower_components/iron-flex-layout/iron-flex-layout.html">
 <link rel="import" href="/static/bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="/static/bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="/static/bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="/static/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/static/bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="/static/bower_components/gold-email-input/gold-email-input.html">
 
 <dom-module id="user-profile">
@@ -25,7 +27,11 @@
             color: #F44336;
         }
 
-        #paper-icon-button::shadow #ripple {
+        paper-fab {
+            background: #43A047;
+        }
+
+        paper-icon-button[blue]::shadow #ripple {
             color: #2196F3;
         }
 
@@ -42,11 +48,15 @@
         }
 
         div[right] {
-        @apply(--layout-flex) @apply(--layout-vertical)
+        @apply(--layout-flex) @apply(--layout-vertical);
         }
 
         [flex] {
-        @apply(--layout-flex)
+        @apply(--layout-flex);
+        }
+
+        [end] {
+        @apply(--layout-end);
         }
 
         div[right] > * {
@@ -181,13 +191,24 @@
                             <template is="dom-repeat" items="{{ user.skills }}">
                                 <div padding-left>
                                     <span>{{ item.name }}</span>
-                                    <paper-icon-button red icon="clear" type="button" on-click="removeSkill"></paper-icon-button>
+                                    <paper-icon-button red icon="clear" type="button"
+                                                       on-click="removeSkill"></paper-icon-button>
                                 </div>
                             </template>
                         </div>
                     </div>
                 </div>
+                <div layout end>
+                    <paper-fab icon="check" on-click="updateUser"></paper-fab>
+                </div>
             </div>
+            <iron-ajax
+                    id="ajaxUser"
+                    url="{{ editLink }}"
+                    method="PUT"
+                    content-type="application/json;charset=utf-8"
+                    handle-as="json"
+                    on-response="handleResponse"></iron-ajax>
         </template>
         <!-- End Edit View -->
 
@@ -223,10 +244,12 @@
             addSkill: function (event) {
                 var skillSelector = this.$$('#skills');
                 var skill = {
-                    id: skillSelector.value,
+                    id: parseInt(skillSelector.value),
                     name: skillSelector.options[skillSelector.selectedIndex].innerHTML
                 };
-                var pos = this.user.skills.map(function(e) { return e.id; }).indexOf(skill.id);
+                var pos = this.user.skills.map(function (e) {
+                    return e.id;
+                }).indexOf(skill.id);
                 if (pos === -1) {
                     this.push('user.skills', skill);
                 }
@@ -235,12 +258,22 @@
                 var skill = event.model.item;
                 this.splice('user.skills', this.user.skills.indexOf(skill), 1);
             },
+            updateUser: function () {
+                this.user.group.id = parseInt(this.$$('#group').value);
+                this.user.city.id = parseInt(this.$$('#city').value);
+                ajax = this.$$('#ajaxUser');
+                ajax.body = JSON.stringify(this.user);
+                ajax.generateRequest();
+            },
+            handleResponse: function() {
+            },
             ready: function () {
                 this.userEmail = 'mailto:' + this.user.email;
                 this.editLink = '/users/edit/' + this.user.login;
                 if (!this.user.skills) {
                     this.user.skills = [];
                 }
+                console.log(this.user.skills);
             }
         });
     </script>

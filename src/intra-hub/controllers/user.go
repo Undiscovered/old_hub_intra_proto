@@ -12,6 +12,7 @@ import (
     "strconv"
     "github.com/jmcvetta/randutil"
     "intra-hub/jsonutils"
+    "encoding/json"
 )
 
 type UserController struct {
@@ -97,7 +98,6 @@ func (c *UserController) Login() {
 		c.SetErrorAndRedirect(err)
 		return
 	}
-	beego.Alert(user.Promotion, user.City)
 	c.SetUser(user)
 	c.Redirect("/home", 301)
 }
@@ -202,6 +202,20 @@ func (c *UserController) AddUser() {
 	}
 	go mail.SendUserCreated(user)
     c.Redirect("/admin/users/add", 301)
+}
+
+func (c *UserController) EditUser() {
+    c.RequireLogin()
+    c.EnableRender = false
+    user := &models.User{}
+    if err := json.Unmarshal(c.Ctx.Input.CopyBody(), &user); err != nil {
+        beego.Warn(err)
+        return
+    }
+    if err := db.EditUserByLogin(user.Login, user); err != nil {
+        beego.Warn(err)
+        return
+    }
 }
 
 func (c *UserController) GetMe() {

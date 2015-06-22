@@ -27,6 +27,30 @@ func AddUser(user *models.User) error {
 	return nil
 }
 
+func EditUserByLogin(login string, user *models.User) error {
+    userDB, err := GetUserByLogin(login)
+    if err != nil {
+        return err
+    }
+    beego.Warn(user.Skills)
+    beego.Warn(userDB)
+    userDB.City = user.City
+    userDB.Promotion = user.Promotion
+    userDB.Group = user.Group
+    userDB.Email = user.Email
+    userDB.Skills = user.Skills
+    o := orm.NewOrm()
+    m2m := o.QueryM2M(userDB, "Skills")
+    if _, err := m2m.Clear(); err != nil {
+        return err
+    }
+    if _, err := m2m.Add(userDB.Skills); err != nil {
+        return err
+    }
+    _, err = orm.NewOrm().Update(userDB)
+    return err
+}
+
 func CheckUserCredentials(user *models.User) (*models.User, error) {
 	userDb, err := GetUserByLogin(user.Login)
 	if err != nil {
@@ -61,6 +85,10 @@ func GetUserByLogin(login string) (*models.User, error) {
 	if err := QueryUser().Filter("Login", login).RelatedSel().One(userDb); err != nil {
 		return nil, err
 	}
+    o := orm.NewOrm()
+    if _, err := o.LoadRelated(userDb, "Skills"); err != nil {
+        return nil, err
+    }
 	return userDb, nil
 }
 
