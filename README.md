@@ -45,16 +45,9 @@ Replace username and password by the value you need.
 ## Dependencies
 
 ```
-go get github.com/astaxie/beego   
-go get github.com/beego/bee
-go get github.com/beego/i18n
-go get github.com/bitly/go-simplejson
-go get golang.org/x/crypto/bcrypt
-go get github.com/soniah/tcgl/sort
-go get github.com/jmcvetta/randutil
+go get -v -t ...
 ```
 
-or just "go get ..."
 
 ## Beego path
 
