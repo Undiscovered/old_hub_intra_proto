@@ -21,6 +21,10 @@
             color: #2196F3;
         }
 
+        [red] {
+            color: #F44336;
+        }
+
         #paper-icon-button::shadow #ripple {
             color: #2196F3;
         }
@@ -170,13 +174,14 @@
                             <span class="fa fa-leanpub"> Skills</span>
                             <select id="skills">
                                 <template is="dom-repeat" items="{{ skills }}">
-                                    <option>{{ item.name }}</option>
+                                    <option value="{{ item.id }}">{{ item.name }}</option>
                                 </template>
                             </select>
                             <paper-icon-button blue icon="add" type="button" on-click="addSkill"></paper-icon-button>
                             <template is="dom-repeat" items="{{ user.skills }}">
                                 <div padding-left>
                                     <span>{{ item.name }}</span>
+                                    <paper-icon-button red icon="clear" type="button" on-click="removeSkill"></paper-icon-button>
                                 </div>
                             </template>
                         </div>
@@ -216,23 +221,26 @@
                 return a === b;
             },
             addSkill: function (event) {
-                console.log(event);
-                this.user.skills.push(event.model.item);
-                console.log(this.user.skills);
+                var skillSelector = this.$$('#skills');
+                var skill = {
+                    id: skillSelector.value,
+                    name: skillSelector.options[skillSelector.selectedIndex].innerHTML
+                };
+                var pos = this.user.skills.map(function(e) { return e.id; }).indexOf(skill.id);
+                if (pos === -1) {
+                    this.push('user.skills', skill);
+                }
+            },
+            removeSkill: function (event) {
+                var skill = event.model.item;
+                this.splice('user.skills', this.user.skills.indexOf(skill), 1);
             },
             ready: function () {
                 this.userEmail = 'mailto:' + this.user.email;
                 this.editLink = '/users/edit/' + this.user.login;
-                this.user.skills = [
-                    {name: 'C++'},
-                    {name: 'Android'},
-                    {name: 'Android'},
-                    {name: 'Android'},
-                    {name: 'Android'},
-                    {name: 'Android'},
-                    {name: 'Android'},
-                    {name: 'Android'}
-                ]
+                if (!this.user.skills) {
+                    this.user.skills = [];
+                }
             }
         });
     </script>
