@@ -104,3 +104,12 @@ func (c *BaseController) TranslateSlice(slice []string) []string {
     }
     return slice
 }
+
+func (c *BaseController) UploadFile(inputName, outputName string) error {
+//    file ,_, err := c.GetFile(inputName)
+//    if err != nil {
+//        return err
+//    }
+//    c.C
+    return nil
+}

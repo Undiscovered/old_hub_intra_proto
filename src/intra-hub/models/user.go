@@ -73,8 +73,12 @@ func (u *User) Valid(v *validation.Validation) {
 }
 
 func (u *User) ToJSON(locale string) string {
-	u.City.LocalizedName = i18n.Tr(locale, u.City.Name)
-	u.Group.LocalizedName = i18n.Tr(locale, u.Group.Name)
+    if u.City != nil {
+        u.City.LocalizedName = i18n.Tr(locale, u.City.Name)
+    }
+    if u.Group != nil {
+        u.Group.LocalizedName = i18n.Tr(locale, u.Group.Name)
+    }
 	return jsonutils.MarshalUnsafe(u)
 }
 
