@@ -2,13 +2,16 @@
 
 ## MySQL
 
-``` mysql
+``` sql
 # Install Mercurial, MYSQL and Go
 
 # Create database "intra_hub":
 
 mysql -uroot
 CREATE DATABASE intra_hub;
+
+# Create Session table.
+
 USE intra_hub;
 CREATE TABLE `session` (
 	`session_key` char(64) NOT NULL,
