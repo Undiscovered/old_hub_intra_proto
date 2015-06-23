@@ -73,6 +73,16 @@ cd src/intra-hub
 bee run
 ```
 
+# Bower Dependencies 
+
+```
+# Install npm, bower
+
+cd src/intra-hub/static
+bower install
+
+```
+
 ## How to load users
 
 Browse to http://localhost:8088/task and run the task named BlowfishCrawler
