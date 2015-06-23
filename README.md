@@ -1,10 +1,10 @@
 # Install
 
+Install MySQL, Go and Mercurial.
+
 ## MySQL
 
 ``` sql
-# Install Mercurial, MYSQL and Go
-
 # Create database "intra_hub":
 
 mysql -uroot
