@@ -3,10 +3,10 @@ package models
 import "github.com/astaxie/beego/orm"
 
 func init() {
-	orm.RegisterModel(&UserSkill{})
+	orm.RegisterModel(&UserSkills{})
 }
 
-type UserSkill struct {
+type UserSkills struct {
 	Id    int
 	User  *User  `orm:"rel(fk)"`
 	Skill *Skill `orm:"rel(fk)"`

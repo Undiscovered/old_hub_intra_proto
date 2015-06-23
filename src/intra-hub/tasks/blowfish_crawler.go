@@ -84,7 +84,7 @@ func newUser(blowfish string) (*models.User, string) {
 			lastName = nameSplitted[1]
 		}
 	}
-    group := studentGroup
+	group := studentGroup
 	user := &models.User{
 		Login:     lineSplitted[0],
 		FirstName: strings.Title(firstName),
@@ -94,9 +94,9 @@ func newUser(blowfish string) (*models.User, string) {
 		Email:     lineSplitted[0] + "@epitech.eu",
 	}
 	if g := specialUsersinfo[user.Login]; g != nil {
-        group = g
+		group = g
 	}
-    user.Group = group
+	user.Group = group
 	return user, lineSplitted[3]
 }
 
@@ -123,16 +123,16 @@ func blowFishCrawler() error {
 		// Set Promotion
 		groupName = mapGroup[groupName]
 		if promotion := mapPromotions[groupName]; promotion == nil {
-            promotion = &models.Promotion{Name: groupName}
-            if _, id, err := o.ReadOrCreate(promotion, "Name"); err == nil {
-                promotion.Id = int(id)
-                user.Promotion = promotion
-                mapPromotions[groupName] = promotion
-            } else {
-                beego.Critical(err)
-                o.Rollback()
-                return err
-            }
+			promotion = &models.Promotion{Name: groupName}
+			if _, id, err := o.ReadOrCreate(promotion, "Name"); err == nil {
+				promotion.Id = int(id)
+				user.Promotion = promotion
+				mapPromotions[groupName] = promotion
+			} else {
+				beego.Critical(err)
+				o.Rollback()
+				return err
+			}
 		} else {
 			user.Promotion = promotion
 		}
@@ -143,35 +143,35 @@ func blowFishCrawler() error {
 		}
 		if city := mapCities[cityName]; city == nil {
 			city = &models.City{Name: cityName}
-            if _, id, err := o.ReadOrCreate(city, "Name"); err == nil {
-                city.Id = int(id)
-                user.City = city
-                mapCities[cityName] = city
-            } else {
-                beego.Critical(err)
-                o.Rollback()
-                return err
-            }
+			if _, id, err := o.ReadOrCreate(city, "Name"); err == nil {
+				city.Id = int(id)
+				user.City = city
+				mapCities[cityName] = city
+			} else {
+				beego.Critical(err)
+				o.Rollback()
+				return err
+			}
 		} else {
 			user.City = city
 		}
 		r, err := o.Raw("INSERT INTO user ("+models.GetUserFields()+") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE password=?", user.Values(), user.Password).Exec()
 		if err != nil {
-            beego.Critical(err)
+			beego.Critical(err)
 			o.Rollback()
 			return err
 		}
 		rowsAffected, err := r.RowsAffected()
 		if err != nil {
-            beego.Critical(err)
-            o.Rollback()
+			beego.Critical(err)
+			o.Rollback()
 			return err
 		}
 		if rowsAffected != 0 {
 			lastId, err := r.LastInsertId()
 			if err != nil {
-                beego.Critical(err)
-                o.Rollback()
+				beego.Critical(err)
+				o.Rollback()
 				return err
 			}
 			user.Id = int(lastId)

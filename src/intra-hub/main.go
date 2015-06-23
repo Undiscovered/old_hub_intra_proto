@@ -13,6 +13,7 @@ import (
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
+	_ "github.com/astaxie/beego/session/mysql"
 	"github.com/beego/i18n"
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -58,11 +59,13 @@ func init() {
 
 	// Set session on
 	beego.SessionOn = true
+	beego.SessionProvider = driverSQL
+	beego.SessionSavePath = username + ":" + password + "@/" + databaseName + optionsDatabaseConnections
 
 	beego.EnableAdmin = true
 
-    beego.TemplateLeft = "[["
-    beego.TemplateRight = "]]"
+	beego.TemplateLeft = "[["
+	beego.TemplateRight = "]]"
 
 	// Serve static files
 	beego.SetStaticPath("/css", "static/css")

@@ -5,10 +5,10 @@ import (
 
 	"intra-hub/models"
 
+	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"golang.org/x/crypto/bcrypt"
-    "fmt"
 )
 
 const (
@@ -28,27 +28,27 @@ func AddUser(user *models.User) error {
 }
 
 func EditUserByLogin(login string, user *models.User) error {
-    userDB, err := GetUserByLogin(login)
-    if err != nil {
-        return err
-    }
-    beego.Warn(user.Skills)
-    beego.Warn(userDB)
-    userDB.City = user.City
-    userDB.Promotion = user.Promotion
-    userDB.Group = user.Group
-    userDB.Email = user.Email
-    userDB.Skills = user.Skills
-    o := orm.NewOrm()
-    m2m := o.QueryM2M(userDB, "Skills")
-    if _, err := m2m.Clear(); err != nil {
-        return err
-    }
-    if _, err := m2m.Add(userDB.Skills); err != nil {
-        return err
-    }
-    _, err = orm.NewOrm().Update(userDB)
-    return err
+	userDB, err := GetUserByLogin(login)
+	if err != nil {
+		return err
+	}
+	beego.Warn(user.Skills)
+	beego.Warn(userDB)
+	userDB.City = user.City
+	userDB.Promotion = user.Promotion
+	userDB.Group = user.Group
+	userDB.Email = user.Email
+	userDB.Skills = user.Skills
+	o := orm.NewOrm()
+	m2m := o.QueryM2M(userDB, "Skills")
+	if _, err := m2m.Clear(); err != nil {
+		return err
+	}
+	if _, err := m2m.Add(userDB.Skills); err != nil {
+		return err
+	}
+	_, err = orm.NewOrm().Update(userDB)
+	return err
 }
 
 func CheckUserCredentials(user *models.User) (*models.User, error) {
@@ -59,8 +59,8 @@ func CheckUserCredentials(user *models.User) (*models.User, error) {
 	if err := bcrypt.CompareHashAndPassword([]byte(userDb.Password), []byte(user.Password)); err != nil {
 		return nil, err
 	} else if userDb.Password == "" {
-        return nil, fmt.Errorf("password not set")
-    }
+		return nil, fmt.Errorf("password not set")
+	}
 	return userDb, nil
 }
 
@@ -80,42 +80,47 @@ func GetManagers() (managers []*models.User, err error) {
 	return
 }
 
+func GetManagersOrAdmin() (managers []*models.User, err error) {
+    _, err = QueryUser().Filter("Group__Name__in", []string{models.UserGroupManager, models.UserGroupAdmin}).All(&managers)
+    return
+}
+
 func GetUserByLogin(login string) (*models.User, error) {
 	userDb := &models.User{}
 	if err := QueryUser().Filter("Login", login).RelatedSel().One(userDb); err != nil {
 		return nil, err
 	}
-    o := orm.NewOrm()
-    if _, err := o.LoadRelated(userDb, "Skills"); err != nil {
-        return nil, err
-    }
+	o := orm.NewOrm()
+	if _, err := o.LoadRelated(userDb, "Skills"); err != nil {
+		return nil, err
+	}
 	return userDb, nil
 }
 
 func ActivateUser(id int, token, password string) (*models.User, error) {
-    userDb := &models.User{}
-    o := orm.NewOrm()
-    if err := o.QueryTable(UserTable).Filter("Id", id).Filter("Token", token).RelatedSel().One(userDb); err != nil {
-        return nil, err
-    }
-    userDb.Token = ""
-    hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-    if err != nil {
-        return nil, err
-    }
-    userDb.Password = string(hash)
-    if _, err := o.Update(userDb); err != nil {
-        return nil, err
-    }
-    return userDb, nil
+	userDb := &models.User{}
+	o := orm.NewOrm()
+	if err := o.QueryTable(UserTable).Filter("Id", id).Filter("Token", token).RelatedSel().One(userDb); err != nil {
+		return nil, err
+	}
+	userDb.Token = ""
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return nil, err
+	}
+	userDb.Password = string(hash)
+	if _, err := o.Update(userDb); err != nil {
+		return nil, err
+	}
+	return userDb, nil
 }
 
 func CheckUserExists(id int, token string) error {
-    userDb := &models.User{}
-    if err := QueryUser().Filter("Id", id).Filter("Token", token).One(userDb); err != nil {
-        return err
-    }
-    return nil
+	userDb := &models.User{}
+	if err := QueryUser().Filter("Id", id).Filter("Token", token).One(userDb); err != nil {
+		return err
+	}
+	return nil
 }
 
 func loadEveryInfoOfUsers(users []*models.User) error {

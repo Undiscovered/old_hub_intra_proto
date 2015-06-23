@@ -15,7 +15,7 @@ const (
 var (
 	EveryProjectStatus = []string{ProjectStatusWaitingManager, ProjectStatusToFormalize,
 		ProjectStatusPitchRequired, ProjectStatusInProgress,
-        ProjectStatusWaitingForOralDefense, ProjectStatusCreditsGiven,
+		ProjectStatusWaitingForOralDefense, ProjectStatusCreditsGiven,
 		ProjectStatusAbandoned}
 )
 

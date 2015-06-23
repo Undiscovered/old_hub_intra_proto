@@ -20,7 +20,7 @@ func GetGroupByNames(name string) (*models.Group, error) {
 }
 
 func GetEveryGroups() ([]*models.Group, error) {
-    groups := make([]*models.Group, 0)
-    _, err := QueryGroup().All(&groups)
-    return groups, err
+	groups := make([]*models.Group, 0)
+	_, err := QueryGroup().All(&groups)
+	return groups, err
 }

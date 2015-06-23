@@ -7,6 +7,6 @@ func init() {
 }
 
 type Promotion struct {
-	Id   int `json:"id"`
+	Id   int    `json:"id"`
 	Name string `json:"name" orm:"unique;size(128)"`
 }

@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>Lancer un Projet</title>
+    <title>[[ .Project.Name ]]</title>
     [[ template "layouts/include-css.html" ]]
 </head>
 <body>
@@ -19,23 +19,25 @@
 
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h4>Lancer un projet</h4>
+            <h4>Editer un projet</h4>
         </div>
         <div class="panel-body">
             <form method="post" action="/projects/add">
                 <div class="form-group">
                     <label for="name">Name</label>
-                    <input class="form-control" placeholder="Name" id="name" name="name" type="text" required="">
+                    <input class="form-control" placeholder="Name" id="name" name="name" type="text"
+                           value="[[ .Project.Name ]]" required="">
                 </div>
                 <div class="form-group">
                     <label for="shortDescription">Courte description</label>
                     <input class="form-control" id="shortDescription" placeholder="Courte description" type="text"
-                           name="shortDescription" required="">
+                           name="shortDescription" value="[[ .Project.ShortDescription ]]" required="">
                 </div>
                 <div class="form-group">
                     <label for="completeDescription">Description complete</label>
                     <textarea class="form-control" id="completeDescription" rows="8" placeholder="Description complete"
-                              name="completeDescription" required=""></textarea>
+                              name="completeDescription" value="[[ .Project.CompleteDescription ]]"
+                              required=""></textarea>
                 </div>
 
                 <div class="form-group">
@@ -43,7 +45,9 @@
                     <select class="form-control" id="managerLogin" name="managerLogin">
                         <option>--</option>
                         [[ range $element := .Managers ]]
-                        <option>[[ $element.Login ]]</option>
+                        <option [[ if $.Project.IsManager $element.Login ]] selected="selected" [[ end ]]>
+                            [[ $element.Login ]]
+                        </option>
                         [[ end ]]
                     </select>
                 </div>
@@ -51,7 +55,10 @@
                     <label for="status">Status du projet</label>
                     <select class="form-control" id="status" name="status">
                         [[ range $element := .Status ]]
-                        <option value="[[ $element ]]">[[ i18n $.Lang $element ]]</option>
+                        <option [[ if $element $.Project.Status.Name]] selected="selected" [[ end ]]
+                                value="[[ $element ]]">
+                            [[ i18n $.Lang $element ]]
+                        </option>
                         [[ end ]]
                     </select>
                 </div>
@@ -90,9 +97,6 @@
         </div>
     </div>
 </div>
-
-</body>
-[[ template "layouts/include-js.html" ]]
 
 <script type="application/javascript">
     $(document).ready(start);
@@ -210,4 +214,6 @@
     }
 </script>
 
+</body>
+[[ template "layouts/include-js.html" ]]
 </html>

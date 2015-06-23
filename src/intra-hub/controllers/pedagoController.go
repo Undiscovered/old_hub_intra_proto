@@ -1,9 +1,9 @@
 package controllers
 
 type PedagoController struct {
-    BaseController
+	BaseController
 }
 
 func (c *PedagoController) ValidateProjectView() {
-    c.TplNames = "pedago/project-validation.html"
+	c.TplNames = "pedago/project-validation.html"
 }

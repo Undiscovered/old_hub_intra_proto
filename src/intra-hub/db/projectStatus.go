@@ -20,6 +20,6 @@ func GetProjectStatusByNames(names ...string) (groups []*models.ProjectStatus, e
 }
 
 func GetProjectStatusByName(name string) (*models.ProjectStatus, error) {
-    status := &models.ProjectStatus{}
-    return status, QueryProjectStatus().Filter("Name__exact", name).One(status)
+	status := &models.ProjectStatus{}
+	return status, QueryProjectStatus().Filter("Name__exact", name).One(status)
 }

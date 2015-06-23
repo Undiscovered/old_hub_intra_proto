@@ -11,6 +11,10 @@ const (
 	ProjectsTable = "project"
 )
 
+func QueryProjects() orm.QuerySeter {
+    return orm.NewOrm().QueryTable(ProjectsTable)
+}
+
 func GetProjectsPaginated(page, limit int, queryFilter map[string]interface{}) (itemPaginated *models.ItemPaginated, err error) {
 	projects := make([]*models.Project, 0)
 	o := orm.NewOrm()
@@ -85,47 +89,18 @@ func GetProjectsPaginated(page, limit int, queryFilter map[string]interface{}) (
 
 func GetProjectByIDOrName(nameOrId string) (*models.Project, error) {
 	project := &models.Project{}
-	o := orm.NewOrm()
-	q := o.QueryTable(ProjectsTable)
-	beego.Warn(nameOrId)
-	if err := q.SetCond(orm.NewCondition().Or("Id", nameOrId).Or("Name", nameOrId)).RelatedSel().One(project); err != nil {
+	if err := QueryProjects().SetCond(orm.NewCondition().Or("Id", nameOrId).Or("Name", nameOrId)).RelatedSel().One(project); err != nil {
 		return nil, err
 	}
-	if _, err := o.LoadRelated(project, "Members"); err != nil {
-		return nil, err
-	}
-	if err := loadEveryInfoOfUsers(project.Members); err != nil {
-		return nil, err
-	}
-	if _, err := o.LoadRelated(project, "History"); err != nil {
-		return nil, err
-	}
-	if _, err := o.LoadRelated(project, "Themes"); err != nil {
-		return nil, err
-	}
-	return project, nil
+    return loadProjectInfo(project)
 }
 
 func GetProjectByID(id int) (*models.Project, error) {
 	project := &models.Project{}
-	o := orm.NewOrm()
-	q := o.QueryTable(ProjectsTable)
-	if err := q.Filter("Id", id).RelatedSel().One(project); err != nil {
+	if err := QueryProjects().Filter("Id", id).RelatedSel().One(project); err != nil {
 		return nil, err
 	}
-	if _, err := o.LoadRelated(project, "Members"); err != nil {
-		return nil, err
-	}
-	if err := loadEveryInfoOfUsers(project.Members); err != nil {
-		return nil, err
-	}
-	if _, err := o.LoadRelated(project, "History"); err != nil {
-		return nil, err
-	}
-	if _, err := o.LoadRelated(project, "Themes"); err != nil {
-		return nil, err
-	}
-	return project, nil
+    return loadProjectInfo(project)
 }
 
 func AddAndGetProject(project *models.Project) (*models.Project, error) {
@@ -133,12 +108,12 @@ func AddAndGetProject(project *models.Project) (*models.Project, error) {
 	if err := o.Begin(); err != nil {
 		return nil, err
 	}
-    status, err := GetProjectStatusByName(project.StatusName)
-    if err != nil {
-        o.Rollback()
-        return nil, err
-    }
-    project.Status = status
+	status, err := GetProjectStatusByName(project.StatusName)
+	if err != nil {
+		o.Rollback()
+		return nil, err
+	}
+	project.Status = status
 	id, err := o.Insert(project)
 	if err != nil {
 		o.Rollback()
@@ -159,13 +134,39 @@ func AddAndGetProject(project *models.Project) (*models.Project, error) {
 	if len(project.Themes) != 0 {
 		if _, err := o.QueryM2M(project, "Themes").Add(project.Themes); err != nil {
 			o.Rollback()
-
+            return nil, err
 		}
 	}
-	if _, err := o.QueryM2M(project, "History").Add(historyItem); err != nil {
+    if len(project.Technos) != 0 {
+        if _, err := o.QueryM2M(project, "Technos").Add(project.Technos); err != nil {
+            o.Rollback()
+            return nil, err
+        }
+    }
+    if _, err := o.QueryM2M(project, "History").Add(historyItem); err != nil {
 		o.Rollback()
 		return nil, err
 	}
 	o.Commit()
 	return GetProjectByID(int(id))
+}
+
+func loadProjectInfo(project *models.Project) (*models.Project, error) {
+    o := orm.NewOrm()
+    if _, err := o.LoadRelated(project, "Members"); err != nil {
+        return nil, err
+    }
+    if err := loadEveryInfoOfUsers(project.Members); err != nil {
+        return nil, err
+    }
+    if _, err := o.LoadRelated(project, "History"); err != nil {
+        return nil, err
+    }
+    if _, err := o.LoadRelated(project, "Themes"); err != nil {
+        return nil, err
+    }
+    if _, err := o.LoadRelated(project, "Technos"); err != nil {
+        return nil, err
+    }
+    return project, nil
 }

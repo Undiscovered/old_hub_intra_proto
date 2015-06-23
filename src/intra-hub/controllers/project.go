@@ -91,6 +91,17 @@ func (c *ProjectController) ListView() {
 	c.Data["ShowGoToLast"] = paginatedItems.PagesToShow[len(paginatedItems.PagesToShow)-1] != paginatedItems.TotalPageCount
 }
 
+func (c *ProjectController) EditView() {
+    c.TplNames = "project/edit.html"
+    project, err := db.GetProjectByIDOrName(c.GetString(":nameOrId"))
+    if err != nil {
+        beego.Error(err)
+        c.Redirect("/projects/list?page=1&limit=15", 301)
+        return
+    }
+    c.Data["Project"] = project
+}
+
 func (c *ProjectController) SingleView() {
 	c.TplNames = "project/single.html"
 	project, err := db.GetProjectByIDOrName(c.GetString(":nameOrId"))
@@ -104,7 +115,7 @@ func (c *ProjectController) SingleView() {
 
 func (c *ProjectController) AddView() {
 	c.TplNames = "project/add.html"
-	managers, err := db.GetManagers()
+	managers, err := db.GetManagersOrAdmin()
 	if err != nil {
 		beego.Error(err)
 		c.flash.Data["error"] = err.Error()
@@ -116,7 +127,14 @@ func (c *ProjectController) AddView() {
 		c.flash.Data["error"] = err.Error()
 		return
 	}
+    skills, err := db.GetEverySkills()
+    if err != nil {
+        beego.Error(err)
+        c.flash.Data["error"] = err.Error()
+        return
+    }
 	c.Data["Themes"] = themes
+    c.Data["Technos"] = skills
 	c.Data["Status"] = models.EveryProjectStatus
 	c.Data["Managers"] = managers
 }
@@ -148,7 +166,6 @@ func (c *ProjectController) Add() {
 		}
 		project.Manager = manager
 	}
-	beego.Warn(project.Themes, project.ThemesID)
 	project, err := db.AddAndGetProject(project)
 	if err != nil {
 		beego.Error(err)

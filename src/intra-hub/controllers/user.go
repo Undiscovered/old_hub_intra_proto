@@ -6,13 +6,13 @@ import (
 	"intra-hub/models"
 	"intra-hub/services/mail"
 
+	"encoding/json"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/validation"
 	"github.com/bitly/go-simplejson"
-    "strconv"
-    "github.com/jmcvetta/randutil"
-    "intra-hub/jsonutils"
-    "encoding/json"
+	"github.com/jmcvetta/randutil"
+	"intra-hub/jsonutils"
+	"strconv"
 )
 
 type UserController struct {
@@ -33,14 +33,15 @@ func (c *UserController) SingleView() {
 		return
 	}
 	c.Data["User"] = user
+    c.Data["UserJSON"] = user.ToJSON(c.currentLanguage)
 }
 
 func (c *UserController) MeView() {
-    c.RequireLogin()
-    c.TplNames = "user/profile.html"
-    c.Data["User"] = c.user
-    c.Data["UserJSON"] = c.user.ToJSON(c.currentLanguage)
-    c.Data["Edit"] = true
+	c.RequireLogin()
+	c.TplNames = "user/profile.html"
+	c.Data["User"] = c.user
+	c.Data["UserJSON"] = c.user.ToJSON(c.currentLanguage)
+	c.Data["Edit"] = true
 }
 
 func (c *UserController) LoginView() {
@@ -48,33 +49,33 @@ func (c *UserController) LoginView() {
 }
 
 func (c *UserController) EditView() {
-    c.RequireLogin()
+	c.RequireLogin()
 	c.TplNames = "user/edit.html"
 	user, err := db.GetUserByLogin(c.GetString(":login", ""))
 	if err != nil {
 		beego.Error(err)
 		c.Redirect("/home", 301)
 	}
-    cities, err := db.GetEveryCities()
-    if err != nil {
-        beego.Error(err)
-        c.Redirect("/home", 301)
-    }
+	cities, err := db.GetEveryCities()
+	if err != nil {
+		beego.Error(err)
+		c.Redirect("/home", 301)
+	}
 	skills, err := db.GetEverySkills()
-    if err != nil {
-        beego.Error(err)
-        c.Redirect("/home", 301)
-    }
-    groups, err := db.GetEveryGroups()
-    if err != nil {
-        beego.Error(err)
-        c.Redirect("/home", 301)
-    }
-    c.Data["User"] = user
-    c.Data["Edit"] = user.Login == c.user.Login
-    c.Data["Cities"] = jsonutils.MarshalUnsafe(cities)
+	if err != nil {
+		beego.Error(err)
+		c.Redirect("/home", 301)
+	}
+	groups, err := db.GetEveryGroups()
+	if err != nil {
+		beego.Error(err)
+		c.Redirect("/home", 301)
+	}
+	c.Data["User"] = user
+	c.Data["Edit"] = user.Login == c.user.Login
+	c.Data["Cities"] = jsonutils.MarshalUnsafe(cities)
 	c.Data["Groups"] = jsonutils.MarshalUnsafe(groups)
-    c.Data["UserJSON"] = user.ToJSON(c.currentLanguage)
+	c.Data["UserJSON"] = user.ToJSON(c.currentLanguage)
 	c.Data["Skills"] = jsonutils.MarshalUnsafe(skills)
 }
 
@@ -138,87 +139,87 @@ func (c *UserController) SearchUser() {
 
 func (c *UserController) ActivateUserView() {
 	c.TplNames = "user/reset-password.html"
-    token := c.GetString(":token")
-    id, err := strconv.Atoi(c.GetString(":id"))
-    if err != nil {
-        beego.Error(err)
-        c.SetErrorAndRedirect(err)
-        return
-    }
-    if err := db.CheckUserExists(id, token); err != nil {
-        beego.Error(err)
-        c.DestroySession()
-        c.Redirect("/login", 301)
-        return
-    }
-    c.Data["Id"] = id
-    c.Data["Token"] = token
+	token := c.GetString(":token")
+	id, err := strconv.Atoi(c.GetString(":id"))
+	if err != nil {
+		beego.Error(err)
+		c.SetErrorAndRedirect(err)
+		return
+	}
+	if err := db.CheckUserExists(id, token); err != nil {
+		beego.Error(err)
+		c.DestroySession()
+		c.Redirect("/login", 301)
+		return
+	}
+	c.Data["Id"] = id
+	c.Data["Token"] = token
 }
 
 func (c *UserController) ActivateUser() {
-    c.EnableRender = false
-    password := c.GetString("password")
-    token := c.GetString(":token")
-    id, err := strconv.Atoi(c.GetString(":id"))
-    if err != nil {
-        beego.Error(err)
-        c.SetErrorAndRedirect(err)
-        return
-    }
-    user, err := db.ActivateUser(id, token, password)
-    if err != nil {
-        beego.Error(err)
-        c.SetErrorAndRedirect(err)
-        return
-    }
-    c.SetUser(user)
-    c.Redirect("/home", 301)
+	c.EnableRender = false
+	password := c.GetString("password")
+	token := c.GetString(":token")
+	id, err := strconv.Atoi(c.GetString(":id"))
+	if err != nil {
+		beego.Error(err)
+		c.SetErrorAndRedirect(err)
+		return
+	}
+	user, err := db.ActivateUser(id, token, password)
+	if err != nil {
+		beego.Error(err)
+		c.SetErrorAndRedirect(err)
+		return
+	}
+	c.SetUser(user)
+	c.Redirect("/home", 301)
 }
 
 func (c *UserController) AddUser() {
-    c.redirectURL = "/admin/users/add"
+	c.redirectURL = "/admin/users/add"
 	user := &models.User{}
 	if err := c.ParseForm(user); err != nil {
 		c.SetErrorAndRedirect(err)
 		return
 	}
 	if user.Login == "" {
-        c.SetErrorAndRedirect(fmt.Errorf("login not specified"))
+		c.SetErrorAndRedirect(fmt.Errorf("login not specified"))
 		return
 	}
 	if user.Email == "" {
 		c.SetErrorAndRedirect(fmt.Errorf("wrong email format"))
 		return
 	}
-    randString, err := randutil.AlphaString(9)
-    if err != nil {
-        c.SetErrorAndRedirect(err)
-        return
-    }
-    user.Token = randString
+	randString, err := randutil.AlphaString(9)
+	if err != nil {
+		c.SetErrorAndRedirect(err)
+		return
+	}
+	user.Token = randString
 	if err := db.AddUser(user); err != nil {
 		c.SetErrorAndRedirect(err)
 		return
 	}
 	go mail.SendUserCreated(user)
-    c.Redirect("/admin/users/add", 301)
+	c.Redirect("/admin/users/add", 301)
 }
 
 func (c *UserController) EditUser() {
-    c.RequireLogin()
-    c.EnableRender = false
-    user := &models.User{}
-    if err := json.Unmarshal(c.Ctx.Input.CopyBody(), &user); err != nil {
-        beego.Warn(err)
-        return
-    }
-    if err := db.EditUserByLogin(user.Login, user); err != nil {
-        beego.Warn(err)
-        return
-    }
+	c.RequireLogin()
+	c.EnableRender = false
+	user := &models.User{}
+	if err := json.Unmarshal(c.Ctx.Input.CopyBody(), &user); err != nil {
+		beego.Warn(err)
+		return
+	}
+	if err := db.EditUserByLogin(user.Login, user); err != nil {
+		beego.Warn(err)
+		return
+	}
 }
 
 func (c *UserController) GetMe() {
-    defer c.ServeJson()
-    c.Data["json"] = c.user.Clean()
+	defer c.ServeJson()
+	c.Data["json"] = c.user.Clean()
 }

@@ -38,8 +38,8 @@ type User struct {
 	Promotion   *Promotion `json:"promotion" orm:"null;rel(fk)"`
 	City        *City      `json:"city" orm:"null;rel(fk)"`
 	Group       *Group     `json:"group" orm:"null;rel(fk)"`
-	Projects    []*Project `json:"projects" orm:"rel(m2m)"`
-	Skills      []*Skill   `json:"skills" orm:"rel(m2m);rel_through(intra-hub/models.UserSkill)"`
+	Projects    []*Project `json:"projects" orm:"rel(m2m);rel_through(intra-hub/models.UserProjects)"`
+	Skills      []*Skill   `json:"skills" orm:"rel(m2m);rel_through(intra-hub/models.UserSkills)"`
 }
 
 func (u *User) Clean() *User {
@@ -73,12 +73,12 @@ func (u *User) Valid(v *validation.Validation) {
 }
 
 func (u *User) ToJSON(locale string) string {
-    if u.City != nil {
-        u.City.LocalizedName = i18n.Tr(locale, u.City.Name)
-    }
-    if u.Group != nil {
-        u.Group.LocalizedName = i18n.Tr(locale, u.Group.Name)
-    }
+	if u.City != nil {
+		u.City.LocalizedName = i18n.Tr(locale, u.City.Name)
+	}
+	if u.Group != nil {
+		u.Group.LocalizedName = i18n.Tr(locale, u.Group.Name)
+	}
 	return jsonutils.MarshalUnsafe(u)
 }
 

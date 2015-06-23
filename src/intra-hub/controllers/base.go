@@ -9,12 +9,16 @@ import (
 
 	"github.com/astaxie/beego"
 	"github.com/beego/i18n"
+    "encoding/gob"
 )
 
 const (
 	sessionUserKey = "0xd3ob4"
 )
 
+func init() {
+    gob.Register(&models.User{})
+}
 var (
 	jsonOK = map[string]interface{}{"status": "OK"}
 )
@@ -35,8 +39,8 @@ type BaseController struct {
 }
 
 func (c *BaseController) Prepare() {
-    // Set Default redirect URL
-    c.redirectURL = c.Ctx.Input.Request.URL.Path
+	// Set Default redirect URL
+	c.redirectURL = c.Ctx.Input.Request.URL.Path
 
 	// Set Language
 	c.currentLanguage = "fr-FR"
@@ -93,23 +97,23 @@ func (c *BaseController) SetErrorAndRedirect(err error) {
 }
 
 func (c *BaseController) RequireLogin() {
-    if !c.isLogged {
-        c.Redirect("/login", 301)
-    }
+	if !c.isLogged {
+		c.Redirect("/login", 301)
+	}
 }
 
 func (c *BaseController) TranslateSlice(slice []string) []string {
-    for i, s := range slice {
-        slice[i] = i18n.Tr(c.currentLanguage, s)
-    }
-    return slice
+	for i, s := range slice {
+		slice[i] = i18n.Tr(c.currentLanguage, s)
+	}
+	return slice
 }
 
 func (c *BaseController) UploadFile(inputName, outputName string) error {
-//    file ,_, err := c.GetFile(inputName)
-//    if err != nil {
-//        return err
-//    }
-//    c.C
-    return nil
+	//    file ,_, err := c.GetFile(inputName)
+	//    if err != nil {
+	//        return err
+	//    }
+	//    c.C
+	return nil
 }
