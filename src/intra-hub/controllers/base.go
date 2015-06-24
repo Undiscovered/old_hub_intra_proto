@@ -10,6 +10,7 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/beego/i18n"
     "encoding/gob"
+    "encoding/json"
 )
 
 const (
@@ -74,9 +75,14 @@ func (c *BaseController) Prepare() {
 		labels := []string{"success", "warning", "danger", "info", "primary", "default"}
 		return labels[rand.Intn(len(labels))]
 	}
+    toJSON := func(val interface{}) string {
+        js, _ := json.Marshal(val)
+        return string(js)
+    }
 	beego.AddFuncMap("incr", incr)
 	beego.AddFuncMap("decr", decr)
 	beego.AddFuncMap("randLabel", randomizeLabel)
+    beego.AddFuncMap("toJSON", toJSON)
 
 	// If the matching controller is a NestedPreparer, we call the NestedPrepare function
 	// To ensure that this Prepare function is called first (it is done to prevent overriding of

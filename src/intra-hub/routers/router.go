@@ -32,6 +32,7 @@ func init() {
 	beego.Router("/projects", &controllers.ProjectController{}, "get:IntroView")
 	beego.Router("/projects/list", &controllers.ProjectController{}, "get:ListView")
 	beego.Router("/projects/add", &controllers.ProjectController{}, "get:AddView;post:Add")
+    beego.Router("/projects/edit", &controllers.ProjectController{}, "post:Edit")
     beego.Router("/projects/edit/:nameOrId", &controllers.ProjectController{}, "get:EditView")
     beego.Router("/projects/:nameOrId", &controllers.ProjectController{}, "get:SingleView")
 

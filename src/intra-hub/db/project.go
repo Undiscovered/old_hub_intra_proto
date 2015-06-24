@@ -5,6 +5,8 @@ import (
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
+
+	"time"
 )
 
 const (
@@ -12,7 +14,7 @@ const (
 )
 
 func QueryProjects() orm.QuerySeter {
-    return orm.NewOrm().QueryTable(ProjectsTable)
+	return orm.NewOrm().QueryTable(ProjectsTable)
 }
 
 func GetProjectsPaginated(page, limit int, queryFilter map[string]interface{}) (itemPaginated *models.ItemPaginated, err error) {
@@ -92,7 +94,7 @@ func GetProjectByIDOrName(nameOrId string) (*models.Project, error) {
 	if err := QueryProjects().SetCond(orm.NewCondition().Or("Id", nameOrId).Or("Name", nameOrId)).RelatedSel().One(project); err != nil {
 		return nil, err
 	}
-    return loadProjectInfo(project)
+	return loadProjectInfo(project)
 }
 
 func GetProjectByID(id int) (*models.Project, error) {
@@ -100,7 +102,7 @@ func GetProjectByID(id int) (*models.Project, error) {
 	if err := QueryProjects().Filter("Id", id).RelatedSel().One(project); err != nil {
 		return nil, err
 	}
-    return loadProjectInfo(project)
+	return loadProjectInfo(project)
 }
 
 func AddAndGetProject(project *models.Project) (*models.Project, error) {
@@ -124,49 +126,106 @@ func AddAndGetProject(project *models.Project) (*models.Project, error) {
 		o.Rollback()
 		return nil, err
 	}
-	project.Id = int(id)
-	if len(project.Members) != 0 {
-		if _, err := o.QueryM2M(project, "Members").Add(project.Members); err != nil {
-			o.Rollback()
-			return nil, err
-		}
-	}
-	if len(project.Themes) != 0 {
-		if _, err := o.QueryM2M(project, "Themes").Add(project.Themes); err != nil {
-			o.Rollback()
-            return nil, err
-		}
-	}
-    if len(project.Technos) != 0 {
-        if _, err := o.QueryM2M(project, "Technos").Add(project.Technos); err != nil {
-            o.Rollback()
-            return nil, err
-        }
-    }
-    if _, err := o.QueryM2M(project, "History").Add(historyItem); err != nil {
+	if err := setProjectRelation(project, historyItem); err != nil {
 		o.Rollback()
 		return nil, err
 	}
+	project.Id = int(id)
 	o.Commit()
 	return GetProjectByID(int(id))
 }
 
 func loadProjectInfo(project *models.Project) (*models.Project, error) {
-    o := orm.NewOrm()
-    if _, err := o.LoadRelated(project, "Members"); err != nil {
+	o := orm.NewOrm()
+	if _, err := o.LoadRelated(project, "Members"); err != nil {
+		return nil, err
+	}
+	if err := loadEveryInfoOfUsers(project.Members); err != nil {
+		return nil, err
+	}
+	if _, err := o.LoadRelated(project, "History"); err != nil {
+		return nil, err
+	}
+	if _, err := o.LoadRelated(project, "Themes"); err != nil {
+		return nil, err
+	}
+	if _, err := o.LoadRelated(project, "Technos"); err != nil {
+		return nil, err
+	}
+	return project, nil
+}
+
+func EditAndGetProject(project *models.Project) (*models.Project, error) {
+	o := orm.NewOrm()
+	if err := o.Begin(); err != nil {
+		return nil, err
+	}
+	status, err := GetProjectStatusByName(project.StatusName)
+	if err != nil {
+		o.Rollback()
+		return nil, err
+	}
+	project.Status = status
+	now := time.Now()
+	params := orm.Params{
+		"name":                project.Name,
+		"shortDescription":    project.ShortDescription,
+		"completeDescription": project.CompleteDescription,
+		"updated":             now,
+		"status_id":           status.Id,
+	}
+	if project.Manager != nil {
+		params["manager_id"] = project.Manager.Id
+	}
+	if _, err := o.QueryTable(ProjectsTable).Filter("Id", project.Id).Update(params); err != nil {
+        o.Rollback()
         return nil, err
     }
-    if err := loadEveryInfoOfUsers(project.Members); err != nil {
-        return nil, err
-    }
-    if _, err := o.LoadRelated(project, "History"); err != nil {
-        return nil, err
-    }
-    if _, err := o.LoadRelated(project, "Themes"); err != nil {
-        return nil, err
-    }
-    if _, err := o.LoadRelated(project, "Technos"); err != nil {
-        return nil, err
-    }
-    return project, nil
+	historyItem, err := AddAndGetHistoryEvent(models.HistoryItemTypeCreated, project)
+	if err != nil {
+		o.Rollback()
+		return nil, err
+	}
+	if err := clearProjectRelation(project); err != nil {
+		o.Rollback()
+		return nil, err
+	}
+	if err := setProjectRelation(project, historyItem); err != nil {
+		o.Rollback()
+		return nil, err
+	}
+	o.Commit()
+	return GetProjectByID(project.Id)
+}
+
+func setProjectRelation(project *models.Project, historyItem *models.HistoryItem) error {
+	o := orm.NewOrm()
+	if len(project.Members) != 0 {
+		if _, err := o.QueryM2M(project, "Members").Add(project.Members); err != nil {
+			return err
+		}
+	}
+	if len(project.Themes) != 0 {
+		if _, err := o.QueryM2M(project, "Themes").Add(project.Themes); err != nil {
+			return err
+		}
+	}
+	if len(project.Technos) != 0 {
+		if _, err := o.QueryM2M(project, "Technos").Add(project.Technos); err != nil {
+			return err
+		}
+	}
+	if _, err := o.QueryM2M(project, "History").Add(historyItem); err != nil {
+		return err
+	}
+	return nil
+}
+
+func clearProjectRelation(project *models.Project) error {
+	o := orm.NewOrm()
+	o.QueryM2M(project, "Members").Remove()
+	o.QueryM2M(project, "Themes").Remove()
+	o.QueryM2M(project, "Technos").Remove()
+	o.QueryM2M(project, "History").Remove()
+	return nil
 }

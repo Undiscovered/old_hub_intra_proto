@@ -7,6 +7,7 @@
 </head>
 <body>
 [[ template "layouts/topbar.html" ]]
+[[ template "layouts/include-js.html" ]]
 
 <div class="container-fluid">
     [[ if .flash.error ]]
@@ -22,7 +23,8 @@
             <h4>Editer un projet</h4>
         </div>
         <div class="panel-body">
-            <form method="post" action="/projects/add">
+            <form method="post" action="/projects/edit">
+                <input type="hidden" name="id" value="[[ .Project.Id ]]">
                 <div class="form-group">
                     <label for="name">Name</label>
                     <input class="form-control" placeholder="Name" id="name" name="name" type="text"
@@ -55,7 +57,7 @@
                     <label for="status">Status du projet</label>
                     <select class="form-control" id="status" name="status">
                         [[ range $element := .Status ]]
-                        <option [[ if $element $.Project.Status.Name]] selected="selected" [[ end ]]
+                        <option [[ if eq $element $.Project.Status.Name ]] selected="selected" [[ end ]]
                                 value="[[ $element ]]">
                             [[ i18n $.Lang $element ]]
                         </option>
@@ -68,7 +70,8 @@
                     <select id="themes" class="form-control" multiple="true">
                         <option></option>
                         [[ range $element := .Themes ]]
-                        <option value="[[ $element.Id ]]">[[ $element.Name ]]
+                        <option [[ if $.Project.HasTheme $element.Id ]] selected="selected" [[ end ]]
+                                value="[[ $element.Id ]]">[[ $element.Name ]]
                         </option>
                         [[ end ]]
                     </select>
@@ -79,20 +82,31 @@
                     <select id="technos" class="form-control" multiple="true">
                         <option></option>
                         [[ range $element := .Technos ]]
-                        <option value="[[ $element.Id ]]">[[ $element.Name ]]
+                        <option [[ if $.Project.HasTechno $element.Id ]] selected="selected" [[ end ]]
+                                value="[[ $element.Id ]]">[[ $element.Name ]]
                         </option>
                         [[ end ]]
                     </select>
                 </div>
                 <div class="form-group">
+                    <label>Membres</label>
                     <input type="hidden" id="membersId" name="membersId">
                     <input class="form-control" placeholder="Ajouter un membre" type="text" id="autocomplete"/>
                     <ul id="logins" class="list-group">
-
+                        [[ range $element := $.Project.Members ]]
+                        <li id="[[ $element.Id ]]" class="list-group-item">
+                            <div>
+                                <img class="img-responsive" src="[[ $element.Picture ]]">
+                                [[ $element.Login ]]
+                                <span onclick="deleteLogin('[[ $element.Login ]]', '[[ $element.Id ]]')"
+                                      class="pull-right glyphicon glyphicon-remove"></span>
+                            </div>
+                        </li>
+                        [[ end ]]
                     </ul>
                 </div>
 
-                <button class="btn btn-primary" type="submit">Creer le projet</button>
+                <button class="btn btn-primary" type="submit">Editer le projet</button>
             </form>
         </div>
     </div>
@@ -102,19 +116,24 @@
     $(document).ready(start);
 
     function start() {
+        var members = JSON.parse("[[ toJSON .Project.Members ]]");
+        var themes = JSON.parse("[[ toJSON .Project.Themes ]]");
+        var technos = JSON.parse("[[ toJSON .Project.Technos ]]");
+        members.forEach(function (member) {
+            addMember(member.id);
+        });
+        themes.forEach(function (theme) {
+            addTheme(theme.id);
+        });
+        technos.forEach(function (techno) {
+            addTechno(techno.id);
+        });
         var themesSelect = $('#themes');
         themesSelect.select2({
             placeholder: 'Themes'
         });
         themesSelect.on('select2:select', function (event) {
-            var themeSelect = $('#themesId');
-            var themeId = event.params.data.id;
-            var currentIds = themeSelect.attr('value');
-            if (!currentIds) {
-                themeSelect.attr('value', themeId);
-            } else {
-                themeSelect.attr('value', currentIds + ',' + themeId);
-            }
+            addTheme(event.params.data.id);
         });
         themesSelect.on('select2:unselect', function (event) {
             var themeSelect = $('#themesId');
@@ -134,14 +153,7 @@
             placeholder: 'Technos'
         });
         technoSelect.on('select2:select', function (event) {
-            var technoSelect = $('#technosId');
-            var id = event.params.data.id;
-            var currentIds = technoSelect.attr('value');
-            if (!currentIds) {
-                technoSelect.attr('value', id);
-            } else {
-                technoSelect.attr('value', currentIds + ',' + id);
-            }
+            addTechno(event.params.data.id);
         });
         technoSelect.on('select2:unselect', function (event) {
             var technoSelect = $('#technosId');
@@ -180,13 +192,7 @@
                 }
             },
             select: function (event, object) {
-                var membersId = $('#membersId');
-                var currentIds = membersId.attr('value');
-                if (!currentIds) {
-                    membersId.attr('value', object.item.id);
-                } else {
-                    membersId.attr('value', currentIds + ',' + object.item.id);
-                }
+                addMember(object.item.id);
                 $('#logins').append(generateListItem(object.item));
                 $('#autocomplete').val('');
                 return false;
@@ -198,6 +204,36 @@
         var deleteButton = '<span ' + 'onclick="deleteLogin(\'' + user.login + '\', \'' + user.id + '\')"' + 'class="pull-right glyphicon glyphicon-remove"></span>';
         var image = '<img class="img-responsive" src="' + user.picture + '">';
         return '<li id="' + user.login + '" class="list-group-item"><div>' + image + user.login + deleteButton + '</div></li>';
+    }
+
+    function addMember(id) {
+        var membersId = $('#membersId');
+        var currentIds = membersId.attr('value');
+        if (!currentIds) {
+            membersId.attr('value', id);
+        } else {
+            membersId.attr('value', currentIds + ',' + id);
+        }
+    }
+
+    function addTheme(id) {
+        var themeSelect = $('#themesId');
+        var currentIds = themeSelect.attr('value');
+        if (!currentIds) {
+            themeSelect.attr('value', id);
+        } else {
+            themeSelect.attr('value', currentIds + ',' + id);
+        }
+    }
+
+    function addTechno(id) {
+        var technoSelect = $('#technosId');
+        var currentIds = technoSelect.attr('value');
+        if (!currentIds) {
+            technoSelect.attr('value', id);
+        } else {
+            technoSelect.attr('value', currentIds + ',' + id);
+        }
     }
 
     function deleteLogin(login, id) {
@@ -215,5 +251,4 @@
 </script>
 
 </body>
-[[ template "layouts/include-js.html" ]]
 </html>

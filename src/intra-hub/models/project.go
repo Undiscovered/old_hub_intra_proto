@@ -5,10 +5,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"github.com/astaxie/beego/validation"
 	"github.com/docker/docker/pkg/stringutils"
-    "github.com/astaxie/beego"
 )
 
 func init() {
@@ -16,7 +16,7 @@ func init() {
 }
 
 type Project struct {
-	Id                  int
+	Id                  int            `form:"id"`
 	Name                string         `json:"name" orm:"unique;size(128)" form:"name"`
 	ShortDescription    string         `json:"shortDescription" orm:"size(256)" form:"shortDescription"`
 	CompleteDescription string         `json:"completeDescription" orm:"null;type(text)" form:"completeDescription"`
@@ -74,7 +74,25 @@ func (p *Project) Promotions() (s string) {
 }
 
 func (p *Project) IsManager(login string) bool {
-    return p.Manager != nil && p.Manager.Login == login
+	return p.Manager != nil && p.Manager.Login == login
+}
+
+func (p *Project) HasTechno(technoID int) bool {
+	for _, t := range p.Technos {
+		if t.Id == technoID {
+			return true
+		}
+	}
+	return false
+}
+
+func (p *Project) HasTheme(themeID int) bool {
+	for _, t := range p.Themes {
+		if t.Id == themeID {
+			return true
+		}
+	}
+	return false
 }
 
 func (p *Project) Valid(v *validation.Validation) {
@@ -92,12 +110,12 @@ func (p *Project) Valid(v *validation.Validation) {
 	members := strings.Split(p.MembersID, ",")
 LoopMembers:
 	for _, memberId := range members {
-        if memberId == "" {
-            continue
-        }
+		if memberId == "" {
+			continue
+		}
 		id, err := strconv.ParseInt(memberId, 10, 64)
 		if err != nil {
-            beego.Warn(memberId, err)
+			beego.Warn(memberId, err)
 			v.SetError("MembersID", err.Error())
 			return
 		}
@@ -113,12 +131,12 @@ LoopMembers:
 	themes := strings.Split(p.ThemesID, ",")
 LoopTheme:
 	for _, themeId := range themes {
-        if themeId == "" {
-            continue
-        }
+		if themeId == "" {
+			continue
+		}
 		id, err := strconv.ParseInt(themeId, 10, 64)
 		if err != nil {
-            beego.Warn(themeId, err)
+			beego.Warn(themeId, err)
 			v.SetError("ThemesID", err.Error())
 			return
 		}
@@ -128,21 +146,21 @@ LoopTheme:
 			}
 		}
 		p.Themes = append(p.Themes, &Theme{Id: int(id)})
-    }
+	}
 
 	// Convert the string ThemeID to an array of Theme.
 	// ThemeID has the format 1,2,3,4 etc.
 	technos := strings.Split(p.TechnosID, ",")
 LoopTechno:
 	for _, technoID := range technos {
-        if technoID == "" {
-            continue
-        }
-        beego.Warn(technoID)
+		if technoID == "" {
+			continue
+		}
+		beego.Warn(technoID)
 		id, err := strconv.ParseInt(technoID, 10, 64)
 		if err != nil {
-            beego.Warn(technoID, err)
-            v.SetError("TechnosID", err.Error())
+			beego.Warn(technoID, err)
+			v.SetError("TechnosID", err.Error())
 			return
 		}
 		for _, techno := range p.Technos {

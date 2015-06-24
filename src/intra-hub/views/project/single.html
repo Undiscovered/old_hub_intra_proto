@@ -13,7 +13,10 @@
     <div class="panel panel-default">
         <div class="panel-heading">
             <a href="/projects/list?page=1&limit=15">
-                <span class="glyphicon glyphicon-chevron-left"> Liste des projets</span>
+                <span class="fa fa-chevron-left"> Liste des projets</span>
+            </a>
+            <a href="/projects/edit/[[ .Project.Name ]]" class="pull-right">
+                <span class="fa fa-pencil"> Editer</span>
             </a>
             <h4>[[ .Project.Name ]]</h4>
             [[ if .Project.Themes ]]

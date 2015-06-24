@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 
 	"intra-hub/db"
@@ -92,14 +91,36 @@ func (c *ProjectController) ListView() {
 }
 
 func (c *ProjectController) EditView() {
-    c.TplNames = "project/edit.html"
-    project, err := db.GetProjectByIDOrName(c.GetString(":nameOrId"))
-    if err != nil {
-        beego.Error(err)
-        c.Redirect("/projects/list?page=1&limit=15", 301)
-        return
-    }
-    c.Data["Project"] = project
+	c.TplNames = "project/edit.html"
+	project, err := db.GetProjectByIDOrName(c.GetString(":nameOrId"))
+	if err != nil {
+		beego.Error(err)
+		c.Redirect("/projects/list?page=1&limit=15", 301)
+		return
+	}
+	managers, err := db.GetManagersOrAdmin()
+	if err != nil {
+		beego.Error(err)
+		c.flash.Data["error"] = err.Error()
+		return
+	}
+	themes, err := db.GetEveryThemes()
+	if err != nil {
+		beego.Error(err)
+		c.flash.Data["error"] = err.Error()
+		return
+	}
+	skills, err := db.GetEverySkills()
+	if err != nil {
+		beego.Error(err)
+		c.flash.Data["error"] = err.Error()
+		return
+	}
+	c.Data["Themes"] = themes
+	c.Data["Technos"] = skills
+	c.Data["Status"] = models.EveryProjectStatus
+	c.Data["Managers"] = managers
+	c.Data["Project"] = project
 }
 
 func (c *ProjectController) SingleView() {
@@ -127,20 +148,19 @@ func (c *ProjectController) AddView() {
 		c.flash.Data["error"] = err.Error()
 		return
 	}
-    skills, err := db.GetEverySkills()
-    if err != nil {
-        beego.Error(err)
-        c.flash.Data["error"] = err.Error()
-        return
-    }
+	skills, err := db.GetEverySkills()
+	if err != nil {
+		beego.Error(err)
+		c.flash.Data["error"] = err.Error()
+		return
+	}
 	c.Data["Themes"] = themes
-    c.Data["Technos"] = skills
+	c.Data["Technos"] = skills
 	c.Data["Status"] = models.EveryProjectStatus
 	c.Data["Managers"] = managers
 }
 
 func (c *ProjectController) Add() {
-	c.TplNames = "project/add.html"
 	project := &models.Project{}
 	if err := c.ParseForm(project); err != nil {
 		beego.Error(err)
@@ -172,5 +192,40 @@ func (c *ProjectController) Add() {
 		c.SetErrorAndRedirect(err)
 		return
 	}
-	c.Redirect("/projects/"+strconv.FormatInt(int64(project.Id), 10), 301)
+	c.Redirect("/projects/"+project.Name, 301)
+}
+
+func (c *ProjectController) Edit() {
+	project := &models.Project{}
+	if err := c.ParseForm(project); err != nil {
+		beego.Error(err)
+		c.SetErrorAndRedirect(err)
+		return
+	}
+	valid := validation.Validation{}
+	if b, err := valid.Valid(project); err != nil {
+		beego.Error(err)
+		c.SetErrorAndRedirect(err)
+		return
+	} else if !b {
+		beego.Error(valid.Errors[0])
+		c.SetErrorAndRedirect(fmt.Errorf(valid.Errors[0].String()))
+		return
+	}
+	if project.ManagerLogin != "--" {
+		manager, err := db.GetUserByLogin(project.ManagerLogin)
+		if err != nil {
+			beego.Error(err)
+			c.SetErrorAndRedirect(err)
+			return
+		}
+		project.Manager = manager
+	}
+	if _, err := db.EditAndGetProject(project); err != nil {
+		beego.Error(err)
+		c.SetErrorAndRedirect(err)
+		return
+	}
+
+	c.Redirect("/projects/"+project.Name, 301)
 }
