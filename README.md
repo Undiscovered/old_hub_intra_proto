@@ -1,15 +1,24 @@
 # Install
 
+Install MySQL, Go and Mercurial.
+
 ## MySQL
 
-```
-Install Mercurial, MYSQL and Go
-
-Create database "intra_hub":
+``` sql
+# Create database "intra_hub":
 
 mysql -uroot
-> CREATE DATABASE intra_hub;
+CREATE DATABASE intra_hub;
 
+# Create Session table.
+
+USE intra_hub;
+CREATE TABLE `session` (
+	`session_key` char(64) NOT NULL,
+	`session_data` blob,
+	`session_expiry` int(11) unsigned NOT NULL,
+	PRIMARY KEY (`session_key`)
+	) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 ```
 
 ## ConfPerso
@@ -71,6 +80,16 @@ bee run
 ```
 cd src/intra-hub
 bee run
+```
+
+# Bower Dependencies 
+
+```
+# Install npm, bower
+
+cd src/intra-hub/static
+bower install
+
 ```
 
 ## How to load users
