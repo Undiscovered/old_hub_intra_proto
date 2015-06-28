@@ -22,6 +22,7 @@
     "paper-input": "PolymerElements/paper-input#^1.0.0",
     "gold-email-input": "PolymerElements/gold-email-input#^1.0.0",
     "paper-menu": "PolymerElements/paper-menu#^1.0.0",
-    "paper-fab": "PolymerElements/paper-fab#^1.0.0"
+    "paper-fab": "PolymerElements/paper-fab#^1.0.0",
+    "gold-phone-input": "PolymerElements/gold-phone-input#^1.0.0"
   }
 }

@@ -32,21 +32,18 @@ func EditUserByLogin(login string, user *models.User) error {
 	if err != nil {
 		return err
 	}
-	beego.Warn(user.Skills)
-	beego.Warn(userDB)
 	userDB.City = user.City
 	userDB.Promotion = user.Promotion
 	userDB.Group = user.Group
 	userDB.Email = user.Email
 	userDB.Skills = user.Skills
-	o := orm.NewOrm()
-	m2m := o.QueryM2M(userDB, "Skills")
-	if _, err := m2m.Clear(); err != nil {
-		return err
-	}
-	if _, err := m2m.Add(userDB.Skills); err != nil {
-		return err
-	}
+    userDB.PhoneNumber = user.PhoneNumber
+    if err := clearUserRelation(userDB); err != nil {
+        return err
+    }
+    if err := setUserRelation(userDB); err != nil {
+        return err
+    }
 	_, err = orm.NewOrm().Update(userDB)
 	return err
 }
@@ -148,4 +145,26 @@ func loadEveryInfoOfUsers(users []*models.User) error {
 		}
 	}
 	return nil
+}
+
+func setUserRelation(user *models.User) error {
+    o := orm.NewOrm()
+    if len(user.Skills) != 0 {
+        if _, err := o.QueryM2M(user, "Skills").Add(user.Skills); err != nil {
+            return err
+        }
+    }
+    return nil
+}
+
+func clearUserRelation(user *models.User) error {
+    var err error
+    defer func() {
+        if r := recover(); r != nil {
+            err = r.(error)
+        }
+    }()
+    o := orm.NewOrm()
+    o.QueryM2M(user, "Skills").Remove()
+    return err
 }

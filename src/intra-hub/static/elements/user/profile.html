@@ -7,6 +7,7 @@
 <link rel="import" href="/static/bower_components/paper-input/paper-input.html">
 <link rel="import" href="/static/bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="/static/bower_components/gold-email-input/gold-email-input.html">
+<link rel="import" href="/static/bower_components/gold-phone-input/gold-phone-input.html">
 
 <dom-module id="user-profile">
 
@@ -103,6 +104,11 @@
                     <div space>
                         <span class="fa fa-paper-plane-o"></span> <a href="{{ userEmail }}">{{ user.email }}</a>
                     </div>
+                    <template is="dom-if" if="{{ user.phoneNumber }}">
+                        <div space>
+                            <span class="fa fa-phone"></span> <span>{{ user.phoneNumber }}</span>
+                        </div>
+                    </template>
                     <template is="dom-if" if="{{ user.promotion }}">
                         <div space>
                             <span class="fa fa-graduation-cap"></span> <span>{{ user.promotion.name }}</span>
@@ -118,7 +124,7 @@
                             <span class="fa fa-transgender"></span> <span>{{ user.group.localizedName }}</span>
                         </div>
                     </template>
-                    <template is="dom-if" if="{{ user.skills }}">
+                    <template is="dom-if" if="{{ notEqual(this.user.skills.length, 0) }}">
                         <div space>
                             <span class="fa fa-leanpub"> Skills</span>
                             <template is="dom-repeat" items="{{ user.skills }}">
@@ -150,6 +156,10 @@
                     </div>
                     <div space>
                         <gold-email-input label="Email" auto-validate value="{{ user.email }}"></gold-email-input>
+                    </div>
+                    <div space>
+                        <gold-phone-input label="Phone Number" value="{{ user.phoneNumber }}" country-code="33"
+                                          phone-number-pattern="X-XX-XX-XX-XX"></gold-phone-input>
                     </div>
                     <template is="dom-if" if="{{ user.city }}">
                         <div space>
@@ -241,6 +251,9 @@
             equal: function (a, b) {
                 return a === b;
             },
+            notEqual: function (a, b) {
+                return a !== b;
+            },
             addSkill: function (event) {
                 var skillSelector = this.$$('#skills');
                 var skill = {
@@ -261,11 +274,12 @@
             updateUser: function () {
                 this.user.group.id = parseInt(this.$$('#group').value);
                 this.user.city.id = parseInt(this.$$('#city').value);
+                this.user.phoneNumber = '+33' + this.user.phoneNumber;
                 ajax = this.$$('#ajaxUser');
                 ajax.body = JSON.stringify(this.user);
                 ajax.generateRequest();
             },
-            handleResponse: function() {
+            handleResponse: function () {
             },
             ready: function () {
                 this.userEmail = 'mailto:' + this.user.email;
@@ -273,7 +287,7 @@
                 if (!this.user.skills) {
                     this.user.skills = [];
                 }
-                console.log(this.user.skills);
+                console.log(this.user);
             }
         });
     </script>

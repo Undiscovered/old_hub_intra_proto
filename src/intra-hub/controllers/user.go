@@ -217,6 +217,9 @@ func (c *UserController) EditUser() {
 		beego.Warn(err)
 		return
 	}
+    if user.Login == c.user.Login {
+        c.SetUser(user)
+    }
 }
 
 func (c *UserController) GetMe() {
