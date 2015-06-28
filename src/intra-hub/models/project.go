@@ -26,6 +26,7 @@ type Project struct {
 	Members             []*User        `json:"members" orm:"null;reverse(many);rel_through(intra-hub/models.UserProjects)"`
 	Themes              []*Theme       `json:"themes" orm:"null;rel(m2m)"`
 	Technos             []*Skill       `json:"themes" orm:"null;rel(m2m)"`
+	Comments            []*Comment     `json:"comments" orm:"null;rel(m2m)"`
 	Created             time.Time      `json:"created" orm:"auto_now_add;type(datetime)"`
 	Updated             time.Time      `json:"updated" orm:"auto_now;type(datetime)"`
 
