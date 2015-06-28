@@ -222,10 +222,16 @@ func setProjectRelation(project *models.Project, historyItem *models.HistoryItem
 }
 
 func clearProjectRelation(project *models.Project) error {
+    var err error
+    defer func() {
+        if r := recover(); r != nil {
+            err = r.(error)
+        }
+    }()
 	o := orm.NewOrm()
 	o.QueryM2M(project, "Members").Remove()
 	o.QueryM2M(project, "Themes").Remove()
 	o.QueryM2M(project, "Technos").Remove()
 	o.QueryM2M(project, "History").Remove()
-	return nil
+	return err
 }
