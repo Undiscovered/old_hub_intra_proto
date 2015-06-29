@@ -9,14 +9,20 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"golang.org/x/crypto/bcrypt"
+    "github.com/saschpe/tribool"
 )
 
 const (
 	UserTable = "user"
+    UserProjectTable = "user_projects"
 )
 
 func QueryUser() orm.QuerySeter {
 	return orm.NewOrm().QueryTable(UserTable)
+}
+
+func QueryUserProject() orm.QuerySeter {
+    return orm.NewOrm().QueryTable(UserProjectTable)
 }
 
 func AddUser(user *models.User) error {
@@ -118,6 +124,26 @@ func CheckUserExists(id int, token string) error {
 		return err
 	}
 	return nil
+}
+
+func GetEveryUserProjectsByValidation(pedagogicallyValidation tribool.Tribool) (userProjects []*models.UserProjects, err error) {
+    userProjects = make([]*models.UserProjects, 0)
+    o := orm.NewOrm()
+    _, err = o.QueryTable(UserProjectTable).Filter("PedagogicallyValidated", pedagogicallyValidation).All(&userProjects)
+    for _, u := range userProjects {
+        if _, err := o.LoadRelated(u, "Project"); err != nil {
+            return nil, err
+        }
+        if _, err := o.LoadRelated(u, "User"); err != nil {
+            return nil, err
+        }
+    }
+    return
+}
+
+func ValidatePedagogicallyUser(userID int, projectID int, pedagogicallyValidation tribool.Tribool) error {
+    _, err := QueryUserProject().Update(orm.Params{"pedagogically_validated": pedagogicallyValidation})
+    return err
 }
 
 func loadEveryInfoOfUsers(users []*models.User) error {

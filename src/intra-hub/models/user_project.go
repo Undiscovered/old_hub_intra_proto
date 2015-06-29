@@ -11,7 +11,7 @@ func init() {
 
 type UserProjects struct {
 	Id                     int
-	User                   *User    `orm:"rel(fk)"`
-	Project                *Project `orm:"rel(fk)"`
-	PedagogicallyValidated tribool.Tribool
+	User                   *User           `orm:"rel(fk)"`
+	Project                *Project        `orm:"rel(fk)"`
+	PedagogicallyValidated tribool.Tribool `orm:"default(1)"`
 }
