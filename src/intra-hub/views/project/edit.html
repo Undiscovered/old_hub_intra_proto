@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>[[ .Project.Name ]]</title>
+    <title>[[ .Project.Name ]] - Edition</title>
     [[ template "layouts/include-css.html" ]]
 </head>
 <body>
@@ -20,11 +20,12 @@
 
     <div class="panel panel-default">
         <div class="panel-heading">
-            <h4>Editer un projet</h4>
+            Editer le projet
         </div>
         <div class="panel-body">
             <form method="post" action="/projects/edit">
                 <input type="hidden" name="id" value="[[ .Project.Id ]]">
+
                 <div class="form-group">
                     <label for="name">Name</label>
                     <input class="form-control" placeholder="Name" id="name" name="name" type="text"

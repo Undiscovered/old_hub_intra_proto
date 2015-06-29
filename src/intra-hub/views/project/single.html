@@ -18,6 +18,18 @@
             <a href="/projects/edit/[[ .Project.Name ]]" class="pull-right">
                 <span class="fa fa-pencil"> Editer</span>
             </a>
+            <ul class="nav nav-tabs">
+                <li role="presentation" class="active">
+                    <a href="/projects/[[ .Project.Name ]]">[[ .Project.Name ]]</a>
+                </li>
+                <li role="presentation">
+                    <a href="/projects/[[ .Project.Name ]]/comments" role="button" data-toggle="modal">
+                        <span class="label label-primary">[[ len .Project.Comments ]]</span>
+                        Commentaires
+                    </a>
+                </li>
+            </ul>
+
             <h4>[[ .Project.Name ]]</h4>
             [[ if .Project.Themes ]]
             <div>

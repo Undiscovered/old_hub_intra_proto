@@ -11,6 +11,7 @@ import (
 
 const (
 	ProjectsTable = "project"
+    CommentsTable = "comments"
 )
 
 func QueryProjects() orm.QuerySeter {
@@ -135,6 +136,17 @@ func AddAndGetProject(project *models.Project) (*models.Project, error) {
 	return GetProjectByID(int(id))
 }
 
+func AddCommentToProject(comment *models.Comment, project *models.Project) error {
+    o := orm.NewOrm()
+    id, err := o.Insert(comment)
+    if err != nil {
+        return err
+    }
+    comment.Id = int(id)
+    _, err = o.QueryM2M(project, "Comments").Add(comment)
+    return err
+}
+
 func loadProjectInfo(project *models.Project) (*models.Project, error) {
 	o := orm.NewOrm()
 	if _, err := o.LoadRelated(project, "Members"); err != nil {
@@ -152,6 +164,14 @@ func loadProjectInfo(project *models.Project) (*models.Project, error) {
 	if _, err := o.LoadRelated(project, "Technos"); err != nil {
 		return nil, err
 	}
+    if _, err := o.LoadRelated(project, "Comments"); err != nil {
+        return nil, err
+    }
+    for _, c := range project.Comments {
+        if _, err := o.LoadRelated(c, "Author"); err != nil {
+            return nil, err
+        }
+    }
 	return project, nil
 }
 
