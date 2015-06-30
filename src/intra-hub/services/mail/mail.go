@@ -49,9 +49,8 @@ func sendMail(to string, subject, body string) {
 	config := `{"username":"` + confperso.EmailUsername + `","password":"` + confperso.EmailPassword + `","host":"` +
 		confperso.EmailHost + `","port":` + confperso.EmailHostPort + `}`
 	email := utils.NewEMail(config)
-	beego.Warn(subject)
-	email.Subject = subject
-	email.Auth = auth
+    email.Subject = subject
+    email.Auth = auth
 	email.To = []string{to}
 	email.HTML = body
 	email.From = confperso.EmailUsername
