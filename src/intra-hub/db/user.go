@@ -8,13 +8,13 @@ import (
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
+	"github.com/saschpe/tribool"
 	"golang.org/x/crypto/bcrypt"
-    "github.com/saschpe/tribool"
 )
 
 const (
-	UserTable = "user"
-    UserProjectTable = "user_projects"
+	UserTable        = "user"
+	UserProjectTable = "user_projects"
 )
 
 func QueryUser() orm.QuerySeter {
@@ -22,7 +22,7 @@ func QueryUser() orm.QuerySeter {
 }
 
 func QueryUserProject() orm.QuerySeter {
-    return orm.NewOrm().QueryTable(UserProjectTable)
+	return orm.NewOrm().QueryTable(UserProjectTable)
 }
 
 func AddUser(user *models.User) error {
@@ -43,13 +43,13 @@ func EditUserByLogin(login string, user *models.User) error {
 	userDB.Group = user.Group
 	userDB.Email = user.Email
 	userDB.Skills = user.Skills
-    userDB.PhoneNumber = user.PhoneNumber
-    if err := clearUserRelation(userDB); err != nil {
-        return err
-    }
-    if err := setUserRelation(userDB); err != nil {
-        return err
-    }
+	userDB.PhoneNumber = user.PhoneNumber
+	if err := clearUserRelation(userDB); err != nil {
+		return err
+	}
+	if err := setUserRelation(userDB); err != nil {
+		return err
+	}
 	_, err = orm.NewOrm().Update(userDB)
 	return err
 }
@@ -84,8 +84,8 @@ func GetManagers() (managers []*models.User, err error) {
 }
 
 func GetManagersOrAdmin() (managers []*models.User, err error) {
-    _, err = QueryUser().Filter("Group__Name__in", []string{models.UserGroupManager, models.UserGroupAdmin}).All(&managers)
-    return
+	_, err = QueryUser().Filter("Group__Name__in", []string{models.UserGroupManager, models.UserGroupAdmin}).All(&managers)
+	return
 }
 
 func GetUserByLogin(login string) (*models.User, error) {
@@ -127,23 +127,24 @@ func CheckUserExists(id int, token string) error {
 }
 
 func GetEveryUserProjectsByValidation(pedagogicallyValidation tribool.Tribool) (userProjects []*models.UserProjects, err error) {
-    userProjects = make([]*models.UserProjects, 0)
-    o := orm.NewOrm()
-    _, err = o.QueryTable(UserProjectTable).Filter("PedagogicallyValidated", pedagogicallyValidation).All(&userProjects)
-    for _, u := range userProjects {
-        if _, err := o.LoadRelated(u, "Project"); err != nil {
-            return nil, err
-        }
-        if _, err := o.LoadRelated(u, "User"); err != nil {
-            return nil, err
-        }
-    }
-    return
+	userProjects = make([]*models.UserProjects, 0)
+	o := orm.NewOrm()
+	_, err = o.QueryTable(UserProjectTable).Filter("PedagogicallyValidated", pedagogicallyValidation).All(&userProjects)
+	for _, u := range userProjects {
+		if _, err := o.LoadRelated(u, "Project"); err != nil {
+			return nil, err
+		}
+		if _, err := o.LoadRelated(u, "User"); err != nil {
+			return nil, err
+		}
+	}
+	return
 }
 
 func ValidatePedagogicallyUser(userID int, projectID int, pedagogicallyValidation tribool.Tribool) error {
-    _, err := QueryUserProject().Update(orm.Params{"pedagogically_validated": pedagogicallyValidation})
-    return err
+	_, err := QueryUserProject().Filter("user_id", userID).Filter("project_id", projectID).
+		Update(orm.Params{"pedagogically_validated": pedagogicallyValidation})
+	return err
 }
 
 func loadEveryInfoOfUsers(users []*models.User) error {
@@ -174,23 +175,23 @@ func loadEveryInfoOfUsers(users []*models.User) error {
 }
 
 func setUserRelation(user *models.User) error {
-    o := orm.NewOrm()
-    if len(user.Skills) != 0 {
-        if _, err := o.QueryM2M(user, "Skills").Add(user.Skills); err != nil {
-            return err
-        }
-    }
-    return nil
+	o := orm.NewOrm()
+	if len(user.Skills) != 0 {
+		if _, err := o.QueryM2M(user, "Skills").Add(user.Skills); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func clearUserRelation(user *models.User) error {
-    var err error
-    defer func() {
-        if r := recover(); r != nil {
-            err = r.(error)
-        }
-    }()
-    o := orm.NewOrm()
-    o.QueryM2M(user, "Skills").Remove()
-    return err
+	var err error
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
+	}()
+	o := orm.NewOrm()
+	o.QueryM2M(user, "Skills").Remove()
+	return err
 }
