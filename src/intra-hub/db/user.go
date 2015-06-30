@@ -43,7 +43,10 @@ func EditUserByLogin(login string, user *models.User) error {
 	userDB.Group = user.Group
 	userDB.Email = user.Email
 	userDB.Skills = user.Skills
+	userDB.Themes = user.Themes
 	userDB.PhoneNumber = user.PhoneNumber
+	userDB.LastName = user.LastName
+	userDB.FirstName = user.FirstName
 	if err := clearUserRelation(userDB); err != nil {
 		return err
 	}
@@ -181,6 +184,12 @@ func setUserRelation(user *models.User) error {
 			return err
 		}
 	}
+	if len(user.Themes) != 0 {
+		if _, err := o.QueryM2M(user, "Themes").Add(user.Themes); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -192,6 +201,7 @@ func clearUserRelation(user *models.User) error {
 		}
 	}()
 	o := orm.NewOrm()
-	o.QueryM2M(user, "Skills").Remove()
+	o.QueryM2M(user, "Skills").Clear()
+	o.QueryM2M(user, "Themes").Clear()
 	return err
 }

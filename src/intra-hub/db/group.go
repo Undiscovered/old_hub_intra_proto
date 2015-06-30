@@ -14,9 +14,9 @@ func QueryGroup() orm.QuerySeter {
 	return orm.NewOrm().QueryTable(GroupTable)
 }
 
-func GetGroupByNames(name string) (*models.Group, error) {
+func GetGroupByName(name string) (*models.Group, error) {
 	group := &models.Group{}
-	return group, QueryGroup().Filter("Name__exact", name).One(group)
+	return group, QueryGroup().Filter("Name", name).One(group)
 }
 
 func GetEveryGroups() ([]*models.Group, error) {

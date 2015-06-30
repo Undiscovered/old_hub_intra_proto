@@ -249,9 +249,9 @@ func clearProjectRelation(project *models.Project) error {
         }
     }()
 	o := orm.NewOrm()
-	o.QueryM2M(project, "Members").Remove()
-	o.QueryM2M(project, "Themes").Remove()
-	o.QueryM2M(project, "Technos").Remove()
-	o.QueryM2M(project, "History").Remove()
+	o.QueryM2M(project, "Members").Clear()
+	o.QueryM2M(project, "Themes").Clear()
+	o.QueryM2M(project, "Technos").Clear()
+	o.QueryM2M(project, "History").Clear()
 	return err
 }

@@ -124,7 +124,7 @@
                             <span class="fa fa-transgender"></span> <span>{{ user.group.localizedName }}</span>
                         </div>
                     </template>
-                    <template is="dom-if" if="{{ notEqual(this.user.skills.length, 0) }}">
+                    <template is="dom-if" if="{{ notEqual(user.skills.length, 0) }}">
                         <div space>
                             <span class="fa fa-leanpub"> Skills</span>
                             <template is="dom-repeat" items="{{ user.skills }}">
@@ -134,6 +134,17 @@
                             </template>
                         </div>
                     </template>
+                    <template is="dom-if" if="{{ notEqual(user.themes.length, 0) }}">
+                        <div space>
+                            <span class="fa fa-globe"> Themes</span>
+                            <template is="dom-repeat" items="{{ user.themes }}">
+                                <div padding-left>
+                                    <span>{{ item.name }}</span>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+
                 </div>
             </div>
         </template>
@@ -190,23 +201,38 @@
                         </select>
                     </div>
                     <div space>
-                        <div space>
-                            <span class="fa fa-leanpub"> Skills</span>
-                            <select id="skills">
-                                <template is="dom-repeat" items="{{ skills }}">
-                                    <option value="{{ item.id }}">{{ item.name }}</option>
-                                </template>
-                            </select>
-                            <paper-icon-button blue icon="add" type="button" on-click="addSkill"></paper-icon-button>
-                            <template is="dom-repeat" items="{{ user.skills }}">
-                                <div padding-left>
-                                    <span>{{ item.name }}</span>
-                                    <paper-icon-button red icon="clear" type="button"
-                                                       on-click="removeSkill"></paper-icon-button>
-                                </div>
+                        <span class="fa fa-leanpub"> Skills</span>
+                        <select id="skills">
+                            <template is="dom-repeat" items="{{ skills }}">
+                                <option value="{{ item.id }}">{{ item.name }}</option>
                             </template>
-                        </div>
+                        </select>
+                        <paper-icon-button blue icon="add" type="button" on-click="addSkill"></paper-icon-button>
+                        <template is="dom-repeat" items="{{ user.skills }}">
+                            <div padding-left>
+                                <span>{{ item.name }}</span>
+                                <paper-icon-button red icon="clear" type="button"
+                                                   on-click="removeSkill"></paper-icon-button>
+                            </div>
+                        </template>
                     </div>
+                    <div space>
+                        <span class="fa fa-globe"> Themes</span>
+                        <select id="themes">
+                            <template is="dom-repeat" items="{{ themes }}">
+                                <option value="{{ item.id }}">{{ item.name }}</option>
+                            </template>
+                        </select>
+                        <paper-icon-button blue icon="add" type="button" on-click="addTheme"></paper-icon-button>
+                        <template is="dom-repeat" items="{{ user.themes }}">
+                            <div padding-left>
+                                <span>{{ item.name }}</span>
+                                <paper-icon-button red icon="clear" type="button"
+                                                   on-click="removeTheme"></paper-icon-button>
+                            </div>
+                        </template>
+                    </div>
+
                 </div>
                 <div layout end>
                     <paper-fab icon="check" on-click="updateUser"></paper-fab>
@@ -246,15 +272,33 @@
                 skills: {
                     value: '[]',
                     type: Array
+                },
+                themes: {
+                    value: '[]',
+                    type: Array
                 }
             },
             equal: function (a, b) {
                 return a === b;
             },
             notEqual: function (a, b) {
+                console.log(a, b);
                 return a !== b;
             },
-            addSkill: function (event) {
+            addTheme: function () {
+                var themeSelector = this.$$('#themes');
+                var theme = {
+                    id: parseInt(themeSelector.value),
+                    name: themeSelector.options[themeSelector.selectedIndex].innerHTML
+                };
+                var pos = this.user.themes.map(function (e) {
+                    return e.id;
+                }).indexOf(theme.id);
+                if (pos === -1) {
+                    this.push('user.themes', theme);
+                }
+            },
+            addSkill: function () {
                 var skillSelector = this.$$('#skills');
                 var skill = {
                     id: parseInt(skillSelector.value),
@@ -267,6 +311,10 @@
                     this.push('user.skills', skill);
                 }
             },
+            removeTheme: function (event) {
+                var theme = event.model.item;
+                this.splice('user.themes', this.user.themes.indexOf(theme), 1);
+            },
             removeSkill: function (event) {
                 var skill = event.model.item;
                 this.splice('user.skills', this.user.skills.indexOf(skill), 1);
@@ -274,12 +322,15 @@
             updateUser: function () {
                 this.user.group.id = parseInt(this.$$('#group').value);
                 this.user.city.id = parseInt(this.$$('#city').value);
-                this.user.phoneNumber = '+33' + this.user.phoneNumber;
-                ajax = this.$$('#ajaxUser');
+                if (this.user.phoneNumber) {
+                    this.user.phoneNumber = '+33' + this.user.phoneNumber;
+                }
+                var ajax = this.$$('#ajaxUser');
                 ajax.body = JSON.stringify(this.user);
                 ajax.generateRequest();
             },
-            handleResponse: function () {
+            handleResponse: function (event) {
+                console.log(event);
             },
             ready: function () {
                 this.userEmail = 'mailto:' + this.user.email;
@@ -287,6 +338,10 @@
                 if (!this.user.skills) {
                     this.user.skills = [];
                 }
+                if (!this.user.themes) {
+                    this.user.themes = [];
+                }
+                console.log(this.user);
             }
         });
     </script>

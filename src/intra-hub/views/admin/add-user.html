@@ -33,9 +33,9 @@
                 </div>
                 <div class="form-group">
                     <label for="role">Role</label>
-                    <select id="role" class="form-control">
+                    <select id="role" class="form-control" name="groupId">
                         [[ range $element := .Groups ]]
-                        <option>[[ i18n $.Lang $element ]]</option>
+                        <option value="[[ $element.Id ]]">[[ i18n $.Lang $element.Name ]]</option>
                         [[ end ]]
                     </select>
                 </div>

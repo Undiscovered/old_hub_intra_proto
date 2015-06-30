@@ -21,7 +21,12 @@ type UserController struct {
 
 func (c *UserController) AddView() {
 	c.TplNames = "admin/add-user.html"
-	c.Data["Groups"] = models.EveryUserGroups
+    groups, err := db.GetEveryGroups()
+    if err != nil {
+        c.Redirect("/", 301)
+        return
+    }
+	c.Data["Groups"] = groups
 }
 
 func (c *UserController) SingleView() {
@@ -71,12 +76,18 @@ func (c *UserController) EditView() {
 		beego.Error(err)
 		c.Redirect("/home", 301)
 	}
+    themes, err := db.GetEveryThemes()
+    if err != nil {
+        beego.Error(err)
+        c.Redirect("/home", 301)
+    }
 	c.Data["User"] = user
 	c.Data["Edit"] = user.Login == c.user.Login
 	c.Data["Cities"] = jsonutils.MarshalUnsafe(cities)
 	c.Data["Groups"] = jsonutils.MarshalUnsafe(groups)
 	c.Data["UserJSON"] = user.ToJSON(c.currentLanguage)
-	c.Data["Skills"] = jsonutils.MarshalUnsafe(skills)
+    c.Data["Skills"] = jsonutils.MarshalUnsafe(skills)
+    c.Data["Themes"] = jsonutils.MarshalUnsafe(themes)
 }
 
 func (c *UserController) Login() {
@@ -191,6 +202,7 @@ func (c *UserController) AddUser() {
 		c.SetErrorAndRedirect(fmt.Errorf("wrong email format"))
 		return
 	}
+    user.Group = &models.Group{Id: user.GroupID}
 	randString, err := randutil.AlphaString(9)
 	if err != nil {
 		c.SetErrorAndRedirect(err)

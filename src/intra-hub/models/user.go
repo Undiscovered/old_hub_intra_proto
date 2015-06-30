@@ -40,6 +40,11 @@ type User struct {
 	Group       *Group     `json:"group" orm:"null;rel(fk)"`
 	Projects    []*Project `json:"projects" orm:"rel(m2m);rel_through(intra-hub/models.UserProjects)"`
 	Skills      []*Skill   `json:"skills" orm:"rel(m2m);rel_through(intra-hub/models.UserSkills)"`
+	Themes      []*Theme   `json:"themes" orm:"rel(m2m);rel_through(intra-hub/models.UserThemes)"`
+
+	// Non Persistent fields
+
+	GroupID int `form:"groupId" orm:"-"`
 }
 
 func (u *User) Clean() *User {

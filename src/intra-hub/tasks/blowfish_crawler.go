@@ -192,14 +192,14 @@ func loadUsersFiles() error {
 	}
 	defer specialUsersFile.Close()
 	scannerManager := bufio.NewScanner(specialUsersFile)
-	group, err := db.GetGroupByNames(models.UserGroupStudent)
+	group, err := db.GetGroupByName(models.UserGroupStudent)
 	if err != nil {
 		return err
 	}
 	studentGroup = group
 	for scannerManager.Scan() {
 		lineSplitted := strings.Split(scannerManager.Text(), "=")
-		group, err := db.GetGroupByNames(lineSplitted[1])
+		group, err := db.GetGroupByName(lineSplitted[1])
 		if err != nil {
 			return err
 		}
