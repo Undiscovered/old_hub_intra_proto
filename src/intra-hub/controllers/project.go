@@ -139,7 +139,7 @@ func (c *ProjectController) AddView() {
 	managers, err := db.GetManagersOrAdmin()
 	if err != nil {
 		beego.Error(err)
-        c.flash.Data["error"] = err.Error()
+		c.flash.Data["error"] = err.Error()
 		return
 	}
 	themes, err := db.GetEveryThemes()
@@ -231,28 +231,33 @@ func (c *ProjectController) Edit() {
 }
 
 func (c *ProjectController) CommentView() {
-    c.TplNames = "project/comment.html"
-    project, err := db.GetProjectByIDOrName(c.GetString(":nameOrId"))
-    if err != nil {
-        beego.Error(err)
-        c.Redirect("/projects/list?page=1&limit=15", 301)
-        return
-    }
-    c.Data["Project"] = project
+	c.TplNames = "project/comment.html"
+	project, err := db.GetProjectByIDOrName(c.GetString(":nameOrId"))
+	if err != nil {
+		beego.Error(err)
+		c.Redirect("/projects/list?page=1&limit=15", 301)
+		return
+	}
+	c.Data["Project"] = project
 }
 func (c *ProjectController) AddComment() {
-    project, err := db.GetProjectByIDOrName(c.GetString(":nameOrId"))
-    if err != nil {
-        beego.Error(err)
-        c.Redirect("/projects/list?page=1&limit=15", 301)
-        return
-    }
-    defer c.Redirect("/projects/" + project.Name + "/comments", 301)
-    comment := &models.Comment{}
-    if err := c.ParseForm(comment); err != nil {
-        beego.Error(err)
-        return
-    }
-    comment.Author = c.user
-    db.AddCommentToProject(comment, project)
+	project, err := db.GetProjectByIDOrName(c.GetString(":nameOrId"))
+	if err != nil {
+		beego.Error(err)
+		c.Redirect("/projects/list?page=1&limit=15", 301)
+		return
+	}
+	defer c.Redirect("/projects/"+project.Name+"/comments", 301)
+	comment := &models.Comment{}
+	if err := c.ParseForm(comment); err != nil {
+		beego.Error(err)
+		return
+	}
+	comment.Author = c.user
+	db.AddCommentToProject(comment, project)
+}
+
+func (c *ProjectController) CheckName() {
+	c.EnableRender = false
+    c.Ctx.Output.Body([]byte("true"))
 }

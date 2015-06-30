@@ -103,10 +103,12 @@ func newUser(blowfish string) (*models.User, string) {
 func blowFishCrawler() error {
 	beego.Informational("BlowFish run")
 	if err := loadUsersFiles(); err != nil {
+        beego.Error(err)
 		return err
 	}
 	blowfish, location, mapGroup, err := crawlFiles()
 	if err != nil {
+        beego.Error(err)
 		return err
 	}
 	defer blowfish.Close()
@@ -129,9 +131,9 @@ func blowFishCrawler() error {
 				user.Promotion = promotion
 				mapPromotions[groupName] = promotion
 			} else {
-				beego.Critical(err)
 				o.Rollback()
-				return err
+                beego.Error(err)
+                return err
 			}
 		} else {
 			user.Promotion = promotion
@@ -148,8 +150,8 @@ func blowFishCrawler() error {
 				user.City = city
 				mapCities[cityName] = city
 			} else {
-				beego.Critical(err)
 				o.Rollback()
+                beego.Error(err)
 				return err
 			}
 		} else {
@@ -157,22 +159,22 @@ func blowFishCrawler() error {
 		}
 		r, err := o.Raw("INSERT INTO user ("+models.GetUserFields()+") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE password=?", user.Values(), user.Password).Exec()
 		if err != nil {
-			beego.Critical(err)
 			o.Rollback()
-			return err
+            beego.Error(err)
+            return err
 		}
 		rowsAffected, err := r.RowsAffected()
 		if err != nil {
-			beego.Critical(err)
 			o.Rollback()
-			return err
+            beego.Error(err)
+            return err
 		}
 		if rowsAffected != 0 {
 			lastId, err := r.LastInsertId()
 			if err != nil {
-				beego.Critical(err)
 				o.Rollback()
-				return err
+                beego.Error(err)
+                return err
 			}
 			user.Id = int(lastId)
 		}

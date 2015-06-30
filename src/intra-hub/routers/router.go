@@ -30,7 +30,8 @@ func init() {
 	beego.Router("/users", &controllers.UserController{}, "post:AddUser")
 
 	beego.Router("/projects", &controllers.ProjectController{}, "get:IntroView")
-	beego.Router("/projects/list", &controllers.ProjectController{}, "get:ListView")
+    beego.Router("/projects/list", &controllers.ProjectController{}, "get:ListView")
+    beego.Router("/projects/checkname", &controllers.ProjectController{}, "get:CheckName")
 	beego.Router("/projects/add", &controllers.ProjectController{}, "get:AddView;post:Add")
     beego.Router("/projects/edit", &controllers.ProjectController{}, "post:Edit")
     beego.Router("/projects/comments", &controllers.ProjectController{}, "post:AddComment")

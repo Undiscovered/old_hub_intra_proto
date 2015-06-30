@@ -22,7 +22,7 @@
             <h4>Lancer un projet</h4>
         </div>
         <div class="panel-body">
-            <form method="post" action="/projects/add">
+            <form id="form" method="post" action="/projects/add">
                 <div class="form-group">
                     <label for="name">Name</label>
                     <input class="form-control" placeholder="Name" id="name" name="name" type="text" required="">
@@ -93,6 +93,7 @@
 
 </body>
 [[ template "layouts/include-js.html" ]]
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.13.1/jquery.validate.js"></script>
 
 <script type="application/javascript">
     $(document).ready(start);
@@ -186,6 +187,23 @@
                 $('#logins').append(generateListItem(object.item));
                 $('#autocomplete').val('');
                 return false;
+            }
+        });
+
+        $("form").validate();
+        $('#name').validate({
+            onsubmit: true,
+            onfocusout: true,
+            rules: {
+                name: {
+                    required: true,
+                    remote: {
+                        url: 'projects/checkname'
+                    }
+                },
+                messages: {
+                    name: 'Name is already taken'
+                }
             }
         });
     }
