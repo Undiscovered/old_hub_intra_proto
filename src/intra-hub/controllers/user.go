@@ -37,6 +37,7 @@ func (c *UserController) SingleView() {
 		c.Redirect("/home", 301)
 		return
 	}
+    beego.Warn(user.Skills[1])
 	c.Data["User"] = user
     c.Data["UserJSON"] = user.ToJSON(c.currentLanguage)
 }

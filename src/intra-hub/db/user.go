@@ -96,11 +96,8 @@ func GetUserByLogin(login string) (*models.User, error) {
 	if err := QueryUser().Filter("Login", login).RelatedSel().One(userDb); err != nil {
 		return nil, err
 	}
-	o := orm.NewOrm()
-	if _, err := o.LoadRelated(userDb, "Skills"); err != nil {
-		return nil, err
-	}
-	return userDb, nil
+    err := loadUserInfo(userDb)
+	return userDb, err
 }
 
 func ActivateUser(id int, token, password string) (*models.User, error) {
@@ -157,11 +154,7 @@ func loadEveryInfoOfUsers(users []*models.User) error {
 		wg.Add(1)
 		go func(w *sync.WaitGroup, user *models.User) {
 			defer wg.Done()
-			o := orm.NewOrm()
-			if _, err := o.LoadRelated(user, "City"); err != nil {
-				errorChan <- err
-			}
-			if _, err := o.LoadRelated(user, "Promotion"); err != nil {
+			if err := loadUserInfo(user); err != nil {
 				errorChan <- err
 			}
 		}(&wg, u)
@@ -173,6 +166,25 @@ func loadEveryInfoOfUsers(users []*models.User) error {
 		case err := <-errorChan:
 			return err
 		}
+	}
+	return nil
+}
+
+func loadUserInfo(user *models.User) error {
+	o := orm.NewOrm()
+	if _, err := o.LoadRelated(user, "City"); err != nil {
+		return err
+	}
+	if _, err := o.LoadRelated(user, "Promotion"); err != nil {
+		return err
+	}
+//    o.Raw(`SELECT skill.id, skill.name, user_skills.level, user_skills.user_id, user_skills.skill_id
+//            FROM user_skills INNER JOIN skill
+//            WHERE skill.id IN (?, ?)
+//            AND user_id = ?
+//            GROUP BY name`, )
+	if _, err := o.LoadRelated(user, "Skills"); err != nil {
+		return err
 	}
 	return nil
 }
