@@ -1,0 +1,66 @@
+<link rel="import" href="/static/bower_components/iron-icons/iron-icons.html">
+
+<dom-module id="star-rating">
+    <style>
+        .rating {
+            display: inline-block;
+            margin: 0;
+            padding: 0;
+        }
+
+        li {
+            padding: 1px;
+            color: #ddd;
+            font-size: 20px;
+            text-shadow: .05em .05em #aaa;
+            list-style-type: none;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+    </style>
+    <template>
+
+        <ul class="rating">
+            <template is="dom-repeat" items="{{ stars }}">
+                <li on-click="setStar"><i class$="{{ computeClass }}"></i></li>
+            </template>
+        </ul>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'star-rating',
+
+            properties: {
+                max: {
+                    value: 5
+                },
+                rating: {
+                    value: 0
+                },
+                computeClass: {
+                    value: function (event, a) {
+                        console.log('SET CLASS', event, a);
+                    }
+                }
+            },
+            computeClass: function (event) {
+                console.log('SET CLASS', event);
+                return 'fa fa-star';
+            },
+            setStar: function (event) {
+                console.log(event);
+            },
+            ready: function () {
+                this.stars = [];
+                for (var i = 0; i < this.max; ++i) {
+                    var star = {
+                        light: i <= this.rating
+                    };
+                    this.stars.push(star);
+                }
+            }
+        });
+    </script>
+</dom-module>

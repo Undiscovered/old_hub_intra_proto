@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
+	"github.com/pikanezi/mapslice"
 	"github.com/saschpe/tribool"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -96,7 +97,7 @@ func GetUserByLogin(login string) (*models.User, error) {
 	if err := QueryUser().Filter("Login", login).RelatedSel().One(userDb); err != nil {
 		return nil, err
 	}
-    err := loadUserInfo(userDb)
+	err := loadUserInfo(userDb)
 	return userDb, err
 }
 
@@ -178,14 +179,15 @@ func loadUserInfo(user *models.User) error {
 	if _, err := o.LoadRelated(user, "Promotion"); err != nil {
 		return err
 	}
-//    o.Raw(`SELECT skill.id, skill.name, user_skills.level, user_skills.user_id, user_skills.skill_id
-//            FROM user_skills INNER JOIN skill
-//            WHERE skill.id IN (?, ?)
-//            AND user_id = ?
-//            GROUP BY name`, )
-	if _, err := o.LoadRelated(user, "Skills"); err != nil {
+    skills := make([]*models.Skill, 0)
+	beego.Warn(mapslice.MapSliceToIntUnsafe(user.Skills, "Id"))
+	if _, err := o.Raw(`SELECT skill.id, skill.name, user_skills.level, user_skills.user_id, user_skills.skill_id
+            FROM user_skills INNER JOIN skill
+            WHERE user_skills.skill_id = skill.id
+            AND user_id = ?`, mapslice.MapSliceToIntUnsafe(user.Skills, "Id"), user.Id).QueryRows(&skills); err != nil {
 		return err
 	}
+	user.Skills = skills
 	return nil
 }
 

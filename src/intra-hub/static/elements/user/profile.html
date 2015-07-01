@@ -8,7 +8,7 @@
 <link rel="import" href="/static/bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="/static/bower_components/gold-email-input/gold-email-input.html">
 <link rel="import" href="/static/bower_components/gold-phone-input/gold-phone-input.html">
-
+<link rel="import" href="/static/elements/user/star-rating.html">
 <dom-module id="user-profile">
 
     <style>
@@ -130,6 +130,7 @@
                             <template is="dom-repeat" items="{{ user.skills }}">
                                 <div padding-left>
                                     <span>{{ item.name }}</span>
+                                    <star-rating></star-rating>
                                 </div>
                             </template>
                         </div>
@@ -282,7 +283,6 @@
                 return a === b;
             },
             notEqual: function (a, b) {
-                console.log(a, b);
                 return a !== b;
             },
             addTheme: function () {
@@ -330,7 +330,6 @@
                 ajax.generateRequest();
             },
             handleResponse: function (event) {
-                console.log(event);
             },
             ready: function () {
                 this.userEmail = 'mailto:' + this.user.email;
@@ -341,7 +340,6 @@
                 if (!this.user.themes) {
                     this.user.themes = [];
                 }
-                console.log(this.user);
             }
         });
     </script>
