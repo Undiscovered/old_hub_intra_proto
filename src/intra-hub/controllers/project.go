@@ -16,11 +16,7 @@ type ProjectController struct {
 }
 
 func (c *ProjectController) NestedPrepare() {
-	//	if !c.isLogged {
-	//		beego.Warn("Not Logged")
-	//		c.Redirect("/", 301)
-	//		return
-	//	}
+	c.RequireLogin()
 }
 
 func (c *ProjectController) IntroView() {
@@ -91,6 +87,7 @@ func (c *ProjectController) ListView() {
 }
 
 func (c *ProjectController) EditView() {
+	c.RequireManager()
 	c.TplNames = "project/edit.html"
 	project, err := db.GetProjectByIDOrName(c.GetString(":nameOrId"))
 	if err != nil {
@@ -135,6 +132,7 @@ func (c *ProjectController) SingleView() {
 }
 
 func (c *ProjectController) AddView() {
+	c.RequireManager()
 	c.TplNames = "project/add.html"
 	managers, err := db.GetManagersOrAdmin()
 	if err != nil {
@@ -161,6 +159,7 @@ func (c *ProjectController) AddView() {
 }
 
 func (c *ProjectController) Add() {
+	c.RequireManager()
 	project := &models.Project{}
 	if err := c.ParseForm(project); err != nil {
 		beego.Error(err)
@@ -196,6 +195,7 @@ func (c *ProjectController) Add() {
 }
 
 func (c *ProjectController) Edit() {
+	c.RequireManager()
 	project := &models.Project{}
 	if err := c.ParseForm(project); err != nil {
 		beego.Error(err)
@@ -231,6 +231,7 @@ func (c *ProjectController) Edit() {
 }
 
 func (c *ProjectController) CommentView() {
+	c.RequireManager()
 	c.TplNames = "project/comment.html"
 	project, err := db.GetProjectByIDOrName(c.GetString(":nameOrId"))
 	if err != nil {
@@ -240,7 +241,9 @@ func (c *ProjectController) CommentView() {
 	}
 	c.Data["Project"] = project
 }
+
 func (c *ProjectController) AddComment() {
+	c.RequireManager()
 	project, err := db.GetProjectByIDOrName(c.GetString(":nameOrId"))
 	if err != nil {
 		beego.Error(err)
@@ -259,5 +262,5 @@ func (c *ProjectController) AddComment() {
 
 func (c *ProjectController) CheckName() {
 	c.EnableRender = false
-    c.Ctx.Output.Body([]byte("true"))
+	c.Ctx.Output.Body([]byte("true"))
 }

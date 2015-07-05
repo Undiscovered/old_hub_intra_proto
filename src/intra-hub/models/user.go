@@ -3,6 +3,7 @@ package models
 import (
 	"strconv"
 
+	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"github.com/astaxie/beego/validation"
 	"github.com/beego/i18n"
@@ -45,6 +46,19 @@ type User struct {
 	// Non Persistent fields
 
 	GroupID int `form:"groupId" orm:"-"`
+}
+
+func (u *User) IsAdmin() bool {
+	return u.Group.Name == UserGroupAdmin
+}
+
+func (u *User) IsManager() bool {
+	return u.Group.Name == UserGroupAdmin || u.Group.Name == UserGroupManager
+}
+
+func (u *User) IsPedago() bool {
+	beego.Warn(u)
+	return u.Group.Name == UserGroupAdmin || u.Group.Name == UserGroupManager || u.Group.Name == UserGroupPedago
 }
 
 func (u *User) Clean() *User {

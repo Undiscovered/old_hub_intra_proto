@@ -15,9 +15,7 @@ func (c *HomeController) RootRedirection() {
 }
 
 func (c *HomeController) HomeView() {
-	//    if !c.isLogged {
-	//        c.Redirect("/login", 301)
-	//    }
+	c.RequireLogin()
 	c.TplNames = "index.html"
 	c.Data["User"] = c.user
 }

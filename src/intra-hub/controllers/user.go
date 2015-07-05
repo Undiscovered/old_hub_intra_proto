@@ -20,16 +20,18 @@ type UserController struct {
 }
 
 func (c *UserController) AddView() {
+	c.RequireAdmin()
 	c.TplNames = "admin/add-user.html"
-    groups, err := db.GetEveryGroups()
-    if err != nil {
-        c.Redirect("/", 301)
-        return
-    }
+	groups, err := db.GetEveryGroups()
+	if err != nil {
+		c.Redirect("/", 301)
+		return
+	}
 	c.Data["Groups"] = groups
 }
 
 func (c *UserController) SingleView() {
+	c.RequireLogin()
 	c.TplNames = "user/profile.html"
 	user, err := db.GetUserByLogin(c.GetString(":id", ""))
 	if err != nil {
@@ -37,9 +39,9 @@ func (c *UserController) SingleView() {
 		c.Redirect("/home", 301)
 		return
 	}
-    beego.Warn(user.Skills[1])
+	beego.Warn(user.Skills[1])
 	c.Data["User"] = user
-    c.Data["UserJSON"] = user.ToJSON(c.currentLanguage)
+	c.Data["UserJSON"] = user.ToJSON(c.currentLanguage)
 }
 
 func (c *UserController) MeView() {
@@ -62,6 +64,9 @@ func (c *UserController) EditView() {
 		beego.Error(err)
 		c.Redirect("/home", 301)
 	}
+	if c.user.Login != user.Login && !c.user.IsManager() {
+		c.Redirect("/home", 301)
+	}
 	cities, err := db.GetEveryCities()
 	if err != nil {
 		beego.Error(err)
@@ -77,18 +82,18 @@ func (c *UserController) EditView() {
 		beego.Error(err)
 		c.Redirect("/home", 301)
 	}
-    themes, err := db.GetEveryThemes()
-    if err != nil {
-        beego.Error(err)
-        c.Redirect("/home", 301)
-    }
+	themes, err := db.GetEveryThemes()
+	if err != nil {
+		beego.Error(err)
+		c.Redirect("/home", 301)
+	}
 	c.Data["User"] = user
 	c.Data["Edit"] = user.Login == c.user.Login
 	c.Data["Cities"] = jsonutils.MarshalUnsafe(cities)
 	c.Data["Groups"] = jsonutils.MarshalUnsafe(groups)
 	c.Data["UserJSON"] = user.ToJSON(c.currentLanguage)
-    c.Data["Skills"] = jsonutils.MarshalUnsafe(skills)
-    c.Data["Themes"] = jsonutils.MarshalUnsafe(themes)
+	c.Data["Skills"] = jsonutils.MarshalUnsafe(skills)
+	c.Data["Themes"] = jsonutils.MarshalUnsafe(themes)
 }
 
 func (c *UserController) Login() {
@@ -121,6 +126,7 @@ func (c *UserController) Logout() {
 }
 
 func (c *UserController) SearchUser() {
+	c.RequireLogin()
 	c.EnableRender = false
 	jsonBody, err := simplejson.NewJson(c.Ctx.Input.CopyBody())
 	if err != nil {
@@ -189,6 +195,7 @@ func (c *UserController) ActivateUser() {
 }
 
 func (c *UserController) AddUser() {
+	c.RequireManager()
 	c.redirectURL = "/admin/users/add"
 	user := &models.User{}
 	if err := c.ParseForm(user); err != nil {
@@ -203,7 +210,7 @@ func (c *UserController) AddUser() {
 		c.SetErrorAndRedirect(fmt.Errorf("wrong email format"))
 		return
 	}
-    user.Group = &models.Group{Id: user.GroupID}
+	user.Group = &models.Group{Id: user.GroupID}
 	randString, err := randutil.AlphaString(9)
 	if err != nil {
 		c.SetErrorAndRedirect(err)
@@ -226,13 +233,16 @@ func (c *UserController) EditUser() {
 		beego.Warn(err)
 		return
 	}
+	if c.user.Login != user.Login && !c.user.IsManager() {
+		c.Redirect("/home", 301)
+	}
 	if err := db.EditUserByLogin(user.Login, user); err != nil {
 		beego.Warn(err)
 		return
 	}
-    if user.Login == c.user.Login {
-        c.SetUser(user)
-    }
+	if user.Login == c.user.Login {
+		c.SetUser(user)
+	}
 }
 
 func (c *UserController) GetMe() {

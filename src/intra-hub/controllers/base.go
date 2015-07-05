@@ -84,7 +84,7 @@ func (c *BaseController) Prepare() {
 		return string(js)
 	}
 	datefr := func(val time.Time) string {
-        return dateformat.FormatLocale(val, dateFormat, dateformat.French)
+		return dateformat.FormatLocale(val, dateFormat, dateformat.French)
 	}
 	beego.AddFuncMap("incr", incr)
 	beego.AddFuncMap("decr", decr)
@@ -116,6 +116,32 @@ func (c *BaseController) RequireLogin() {
 	}
 }
 
+func (c *BaseController) RequireAdmin() {
+	c.RequireLogin()
+	if !c.user.IsAdmin() {
+		c.flash.Data["error"] = "forbidden"
+		c.flash.Store(&c.Controller)
+		c.Redirect("/home", 303)
+	}
+}
+
+func (c *BaseController) RequireManager() {
+	c.RequireLogin()
+	if !c.user.IsManager() {
+		c.flash.Data["error"] = "forbidden"
+		c.flash.Store(&c.Controller)
+		c.Redirect("/home", 303)
+	}
+}
+
+func (c *BaseController) RequirePedago() {
+	c.RequireLogin()
+	if !c.user.IsPedago() {
+		c.flash.Data["error"] = "forbidden"
+		c.flash.Store(&c.Controller)
+		c.Redirect("/home", 303)
+	}
+}
 func (c *BaseController) TranslateSlice(slice []string) []string {
 	for i, s := range slice {
 		slice[i] = i18n.Tr(c.currentLanguage, s)

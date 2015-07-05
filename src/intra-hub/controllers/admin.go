@@ -9,6 +9,10 @@ type AdminController struct {
 	BaseController
 }
 
+func (c *ProjectController) NestedPrepare() {
+	c.RequireManager()
+}
+
 func (c *AdminController) Get() {
 	c.TplNames = "admin/layout.html"
 	themes, err := db.GetEveryThemes()

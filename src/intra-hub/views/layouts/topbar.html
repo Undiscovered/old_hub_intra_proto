@@ -23,23 +23,29 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">SpeedBar
                         <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
+                        [[ if .UserLogged.IsManager ]]
                         <li><a href="/projects/add">
                             <span class="glyphicon glyphicon-plus"></span> Lancer un Projet
                         </a></li>
+                        [[ end ]]
                         <li><a href="/projects/list?limit=15&page=1">
                             <span class="glyphicon glyphicon-th-list"></span> Tous les projets
                         </a></li>
+                        [[ if .UserLogged.IsPedago ]]
                         <li><a href="/pedago/validation/indeterminate">
                             <span class="glyphicon glyphicon-ok-circle"></span> Validation Pedagogique
                         </a></li>
+                        [[ end ]]
                     </ul>
                 </li>
                 <li><a href="/me" title="Profil" data-toggle="tooltip" data-placement="bottom">
                     <span class="glyphicon glyphicon-user"></span>
                 </a></li>
+                [[ if .UserLogged.IsAdmin ]]
                 <li><a href="/admin" title="Admin" data-toggle="tooltip" data-placement="bottom">
                     <span class="glyphicon glyphicon-star"></span>
                 </a></li>
+                [[ end ]]
                 <li><a href="/logout" class="off" title="Deconnexion"><i class="glyphicon glyphicon-off"></i></a></li>
             </ul>
         </div>

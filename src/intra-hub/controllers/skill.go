@@ -15,6 +15,13 @@ type SkillController struct {
 }
 
 func (c *SkillController) Post() {
+	if !c.user.IsManager() {
+		jsonErr := simplejson.New()
+		jsonErr.Set("error", "forbidden")
+		c.Data["json"] = jsonErr
+		c.ServeJson()
+		return
+	}
 	skill := &models.Skill{}
 	if err := json.Unmarshal(c.Ctx.Input.CopyBody(), skill); err != nil {
 		beego.Error(err)
@@ -38,6 +45,13 @@ func (c *SkillController) Post() {
 }
 
 func (c *SkillController) Delete() {
+	if !c.user.IsManager() {
+		jsonErr := simplejson.New()
+		jsonErr.Set("error", "forbidden")
+		c.Data["json"] = jsonErr
+		c.ServeJson()
+		return
+	}
 	skillID, err := c.GetInt(":id", -1)
 	if err != nil {
 		beego.Error(err)

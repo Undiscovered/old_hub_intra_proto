@@ -6,7 +6,7 @@
     [[ template "layouts/include-css.html" ]]
 </head>
 <body>
-[[ template "layouts/topbar.html" ]]
+[[ template "layouts/topbar.html" . ]]
 
 <div class="row">
     <div class="col-sm-4 col-xs-4 col-sm-offset-2">
@@ -42,6 +42,7 @@
         </a>
     </div>
 
+    [[ if .UserLogged.IsManager ]]
     <div class="col-sm-4 col-xs-4 ">
         <a href="/projects/add" class="clean">
             <div class="panel panel-default">
@@ -52,7 +53,8 @@
             </div>
         </a>
     </div>
-
+    [[ end ]]
+    
 </div>
 
 [[ template "layouts/include-js.html" ]]

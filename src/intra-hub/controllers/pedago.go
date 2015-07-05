@@ -10,6 +10,10 @@ type PedagoController struct {
 	BaseController
 }
 
+func (c *ProjectController) NestedPrepare() {
+	c.RequirePedago()
+}
+
 func (c *PedagoController) ValidateProjectView() {
 	c.TplNames = "pedago/project-validation.html"
 	validationStr := c.GetString(":validation")

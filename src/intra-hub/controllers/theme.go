@@ -15,6 +15,13 @@ type ThemeController struct {
 }
 
 func (c *ThemeController) Post() {
+	if !c.user.IsManager() {
+		jsonErr := simplejson.New()
+		jsonErr.Set("error", "forbidden")
+		c.Data["json"] = jsonErr
+		c.ServeJson()
+		return
+	}
 	theme := &models.Theme{}
 	if err := json.Unmarshal(c.Ctx.Input.CopyBody(), theme); err != nil {
 		beego.Error(err)
@@ -38,6 +45,13 @@ func (c *ThemeController) Post() {
 }
 
 func (c *ThemeController) Delete() {
+	if !c.user.IsManager() {
+		jsonErr := simplejson.New()
+		jsonErr.Set("error", "forbidden")
+		c.Data["json"] = jsonErr
+		c.ServeJson()
+		return
+	}
 	themeID, err := c.GetInt(":id", -1)
 	if err != nil {
 		beego.Error(err)
