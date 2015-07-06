@@ -6,7 +6,6 @@ import (
 	"intra-hub/models"
 
 	"fmt"
-	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"github.com/pikanezi/mapslice"
 	"github.com/saschpe/tribool"
@@ -150,11 +149,11 @@ func ValidatePedagogicallyUser(userID int, projectID int, pedagogicallyValidatio
 
 func loadEveryInfoOfUsers(users []*models.User) error {
 	wg := sync.WaitGroup{}
-	errorChan := make(chan error)
+	errorChan := make(chan error, 1)
 	for _, u := range users {
 		wg.Add(1)
 		go func(w *sync.WaitGroup, user *models.User) {
-			defer wg.Done()
+            defer wg.Done()
 			if err := loadUserInfo(user); err != nil {
 				errorChan <- err
 			}
@@ -162,7 +161,6 @@ func loadEveryInfoOfUsers(users []*models.User) error {
 	}
 	wg.Wait()
 	if len(errorChan) > 0 {
-		beego.Error("ERROR", errorChan)
 		select {
 		case err := <-errorChan:
 			return err
@@ -180,7 +178,6 @@ func loadUserInfo(user *models.User) error {
 		return err
 	}
 	skills := make([]*models.Skill, 0)
-	beego.Warn(mapslice.MapSliceToIntUnsafe(user.Skills, "Id"))
 	if _, err := o.Raw(`SELECT skill.id, skill.name, user_skills.level, user_skills.user_id, user_skills.skill_id
             FROM user_skills INNER JOIN skill
             WHERE user_skills.skill_id = skill.id
