@@ -179,7 +179,7 @@ func loadUserInfo(user *models.User) error {
 	if _, err := o.LoadRelated(user, "Promotion"); err != nil {
 		return err
 	}
-    skills := make([]*models.Skill, 0)
+	skills := make([]*models.Skill, 0)
 	beego.Warn(mapslice.MapSliceToIntUnsafe(user.Skills, "Id"))
 	if _, err := o.Raw(`SELECT skill.id, skill.name, user_skills.level, user_skills.user_id, user_skills.skill_id
             FROM user_skills INNER JOIN skill
@@ -194,13 +194,23 @@ func loadUserInfo(user *models.User) error {
 func setUserRelation(user *models.User) error {
 	o := orm.NewOrm()
 	if len(user.Skills) != 0 {
-		if _, err := o.QueryM2M(user, "Skills").Add(user.Skills); err != nil {
-			return err
+		for _, sk := range user.Skills {
+			uk := &models.UserSkills{
+				User:  user,
+				Skill: sk,
+				Level: sk.Level,
+			}
+			o.Insert(uk)
 		}
 	}
 	if len(user.Themes) != 0 {
-		if _, err := o.QueryM2M(user, "Themes").Add(user.Themes); err != nil {
-			return err
+		for _, th := range user.Themes {
+			ut := &models.UserThemes{
+				User:  user,
+				Theme: th,
+				Level: th.Level,
+			}
+			o.Insert(ut)
 		}
 	}
 

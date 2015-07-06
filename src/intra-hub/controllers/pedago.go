@@ -10,7 +10,7 @@ type PedagoController struct {
 	BaseController
 }
 
-func (c *ProjectController) NestedPrepare() {
+func (c *PedagoController) NestedPrepare() {
 	c.RequirePedago()
 }
 

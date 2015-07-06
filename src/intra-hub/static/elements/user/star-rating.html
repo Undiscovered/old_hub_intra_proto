@@ -18,12 +18,19 @@
             cursor: pointer;
         }
 
+        .gold {
+            color: #ffd700;
+        }
+
+        .clickable {
+            cursor: pointer;
+        }
     </style>
     <template>
 
         <ul class="rating">
-            <template is="dom-repeat" items="{{ stars }}">
-                <li on-click="setStar"><i class$="{{ computeClass }}"></i></li>
+            <template id="stars" is="dom-repeat" items="{{ stars }}">
+                <li on-click="setStar"><i class$="{{ computeClass(index, rating) }}"></i></li>
             </template>
         </ul>
     </template>
@@ -37,28 +44,40 @@
                     value: 5
                 },
                 rating: {
-                    value: 0
+                    value: 0,
+                    notify: true
                 },
-                computeClass: {
-                    value: function (event, a) {
-                        console.log('SET CLASS', event, a);
-                    }
+                showEmpty: {
+                    type: Boolean,
+                    value: true
+                },
+                edit: {
+                    type: Boolean,
+                    value: false
                 }
             },
-            computeClass: function (event) {
-                console.log('SET CLASS', event);
-                return 'fa fa-star';
+            computeClass: function (index) {
+                var clazz = '';
+                if (index < this.rating) {
+                    clazz += 'gold ';
+                }
+                if (this.showEmpty || index < this.rating) {
+                    clazz += 'fa fa-star ';
+                }
+                if (this.edit) {
+                    clazz += 'clickable ';
+                }
+                return clazz;
             },
             setStar: function (event) {
-                console.log(event);
+                if (this.edit) {
+                    this.rating = event.model.index + 1;
+                }
             },
             ready: function () {
                 this.stars = [];
                 for (var i = 0; i < this.max; ++i) {
-                    var star = {
-                        light: i <= this.rating
-                    };
-                    this.stars.push(star);
+                    this.stars.push({});
                 }
             }
         });

@@ -130,7 +130,7 @@
                             <template is="dom-repeat" items="{{ user.skills }}">
                                 <div padding-left>
                                     <span>{{ item.name }}</span>
-                                    <star-rating></star-rating>
+                                    <star-rating rating="{{ item.level }}" show-empty="false"></star-rating>
                                 </div>
                             </template>
                         </div>
@@ -141,6 +141,7 @@
                             <template is="dom-repeat" items="{{ user.themes }}">
                                 <div padding-left>
                                     <span>{{ item.name }}</span>
+                                    <star-rating rating="{{ item.level }}" show-empty="false"></star-rating>
                                 </div>
                             </template>
                         </div>
@@ -212,6 +213,7 @@
                         <template is="dom-repeat" items="{{ user.skills }}">
                             <div padding-left>
                                 <span>{{ item.name }}</span>
+                                <star-rating rating="{{ item.level }}" edit></star-rating>
                                 <paper-icon-button red icon="clear" type="button"
                                                    on-click="removeSkill"></paper-icon-button>
                             </div>
@@ -228,6 +230,7 @@
                         <template is="dom-repeat" items="{{ user.themes }}">
                             <div padding-left>
                                 <span>{{ item.name }}</span>
+                                <star-rating rating="{{ item.level }}" edit></star-rating>
                                 <paper-icon-button red icon="clear" type="button"
                                                    on-click="removeTheme"></paper-icon-button>
                             </div>
@@ -289,7 +292,8 @@
                 var themeSelector = this.$$('#themes');
                 var theme = {
                     id: parseInt(themeSelector.value),
-                    name: themeSelector.options[themeSelector.selectedIndex].innerHTML
+                    name: themeSelector.options[themeSelector.selectedIndex].innerHTML,
+                    level: 1
                 };
                 var pos = this.user.themes.map(function (e) {
                     return e.id;
@@ -302,7 +306,8 @@
                 var skillSelector = this.$$('#skills');
                 var skill = {
                     id: parseInt(skillSelector.value),
-                    name: skillSelector.options[skillSelector.selectedIndex].innerHTML
+                    name: skillSelector.options[skillSelector.selectedIndex].innerHTML,
+                    level: 1
                 };
                 var pos = this.user.skills.map(function (e) {
                     return e.id;
@@ -340,6 +345,7 @@
                 if (!this.user.themes) {
                     this.user.themes = [];
                 }
+                console.log(this.user);
             }
         });
     </script>

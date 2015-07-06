@@ -9,7 +9,7 @@ type AdminController struct {
 	BaseController
 }
 
-func (c *ProjectController) NestedPrepare() {
+func (c *AdminController) NestedPrepare() {
 	c.RequireManager()
 }
 
