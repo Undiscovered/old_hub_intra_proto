@@ -6,6 +6,7 @@ import (
 	"intra-hub/models"
 
 	"fmt"
+	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"github.com/pikanezi/mapslice"
 	"github.com/saschpe/tribool"
@@ -141,6 +142,125 @@ func SetManagerProjects(user *models.User) error {
 	return err
 }
 
+func GetUsersPaginated(page, limit int, queryFilter map[string]interface{}) (*models.ItemPaginated, error) {
+	queryHelper := make(map[string]string)
+	values := make(map[string]interface{}, 0)
+	for key, value := range queryFilter {
+		beego.Warn(key, value)
+		switch key {
+		case "promotions":
+			s := value.([]string)
+			if s[0] == "" {
+				continue
+			}
+			questionMarks := ""
+			for range s {
+				questionMarks += "?, "
+			}
+			if questionMarks != "" {
+				questionMarks = questionMarks[:len(questionMarks)-2]
+			}
+			queryHelper[key] = fmt.Sprintf("AND user.promotion_id IN (%s)", questionMarks)
+			values[key] = value.([]string)
+		case "cities":
+			s := value.([]string)
+			if s[0] == "" {
+				continue
+			}
+			questionMarks := ""
+			for range s {
+				questionMarks += "?, "
+			}
+			if questionMarks != "" {
+				questionMarks = questionMarks[:len(questionMarks)-2]
+			}
+			queryHelper[key] = fmt.Sprintf("AND user.city_id IN (%s)", questionMarks)
+			values[key] = value.([]string)
+		case "skills":
+			s := value.([]string)
+			if s[0] == "" {
+				continue
+			}
+			questionMarks := ""
+			for range s {
+				questionMarks += "?, "
+			}
+			if questionMarks != "" {
+				questionMarks = questionMarks[:len(questionMarks)-2]
+			}
+			queryHelper[key] = fmt.Sprintf("AND user_skills.skill_id IN (%s)", questionMarks)
+			values[key] = value.([]string)
+		case "themes":
+			s := value.([]string)
+			if s[0] == "" {
+				continue
+			}
+			questionMarks := ""
+			for range s {
+				questionMarks += "?, "
+			}
+			if questionMarks != "" {
+				questionMarks = questionMarks[:len(questionMarks)-2]
+			}
+			queryHelper[key] = fmt.Sprintf("AND user_themes.theme_id IN (%s)", questionMarks)
+			values[key] = value.([]string)
+		case "name":
+			if value.(string) == "" {
+				continue
+			}
+			queryHelper[key] = `AND (user.first_name LIKE ? OR
+user.last_name LIKE ? OR
+user.login LIKE ? OR
+CONCAT(user.first_name, ' ', user.last_name) LIKE ?)`
+			values[key] = []string{value.(string), value.(string), value.(string), value.(string)}
+		}
+	}
+	beego.Warn(queryHelper)
+	o := orm.NewOrm()
+	raw := fmt.Sprintf(`SELECT
+user.id, user.login, user.first_name, user.last_name, user.email, user.picture, user.promotion_id, user.city_id,
+user_skills.user_id AS skills_user_id,
+user_themes.user_id AS themes_user_id,
+user_projects.user_id
+FROM user
+INNER JOIN user_skills, user_themes, user_projects
+WHERE (user_skills.user_id = user.id
+OR user_themes.user_id = user.id
+OR user_projects.user_id = user.id)
+%s
+%s
+%s
+%s
+%s
+GROUP BY user.id`, queryHelper["promotions"], queryHelper["cities"], queryHelper["skills"], queryHelper["themes"], queryHelper["name"])
+	finalValues := make([]string, 0)
+	for _, v := range values {
+		switch v.(type) {
+		case []string:
+			finalValues = append(finalValues, v.([]string)...)
+		case string:
+			finalValues = append(finalValues, v.(string))
+		}
+	}
+	users := make([]*models.User, 0)
+	if _, err := o.Raw(raw, finalValues).QueryRows(&users); err != nil {
+		return nil, err
+	}
+	for _, u := range users {
+		if err := LoadUserInfo(u); err != nil {
+			return nil, err
+		}
+	}
+	itemPaginated := &models.ItemPaginated{
+		Items:          users,
+		ItemCount:      len(users),
+		TotalItemCount: len(users),
+		CurrentPage:    page + 1,
+		TotalPageCount: len(users)/limit + 1,
+	}
+	return itemPaginated, nil
+}
+
 func LoadUserInfo(user *models.User) error {
 	o := orm.NewOrm()
 	if _, err := o.LoadRelated(user, "City"); err != nil {
@@ -157,6 +277,14 @@ func LoadUserInfo(user *models.User) error {
 		return err
 	}
 	user.Skills = skills
+	themes := make([]*models.Theme, 0)
+	if _, err := o.Raw(`SELECT theme.id, theme.name, user_themes.level, user_themes.user_id, user_themes.theme_id
+            FROM user_themes INNER JOIN theme
+            WHERE user_themes.theme_id = theme.id
+            AND user_id = ?`, mapslice.MapSliceToIntUnsafe(user.Themes, "Id"), user.Id).QueryRows(&themes); err != nil {
+		return err
+	}
+	user.Themes = themes
 	return nil
 }
 

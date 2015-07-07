@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>Liste des Projets</title>
+    <title>Staff</title>
     [[ template "layouts/include-css.html" ]]
 </head>
 <body>
@@ -40,6 +40,7 @@
                         <td>[[ $element.Email ]]</td>
                         <td>[[ $element.Promotion.Name ]]</td>
                         <td>[[ $element.DaysWorked ]]</td>
+                        <td>[[ $element.City.Name ]]</td>
                         [[ if $.UserLogged.IsManager ]]
                         <td>[[ $element.PhoneNumber ]]</td>
                         <td> [[ len $element.ProjectsManaged ]]</td>

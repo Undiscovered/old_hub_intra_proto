@@ -25,6 +25,8 @@ func init() {
 
 	beego.Router("/staff", &controllers.StaffController{}, "get:ListView")
 
+	beego.Router("/students", &controllers.UserController{}, "get:ListStudentView")
+
 	beego.Router("/users/activate/:id/:token", &controllers.UserController{}, "get:ActivateUserView;post:ActivateUser")
 	beego.Router("/users/edit/:login", &controllers.UserController{}, "get:EditView;put:EditUser")
 	beego.Router("/users/search", &controllers.UserController{}, "post:SearchUser")

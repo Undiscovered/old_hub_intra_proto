@@ -13,6 +13,7 @@ import (
 	"github.com/jmcvetta/randutil"
 	"intra-hub/jsonutils"
 	"strconv"
+	"strings"
 )
 
 type UserController struct {
@@ -277,4 +278,71 @@ func (c *UserController) EditUser() {
 func (c *UserController) GetMe() {
 	defer c.ServeJson()
 	c.Data["json"] = c.user.Clean()
+}
+
+func (c *UserController) ListStudentView() {
+	c.TplNames = "student/list.html"
+	handleError := func(err error) {
+		beego.Error(err)
+		c.SetErrorAndRedirect(err)
+	}
+	queryFilter := make(map[string]interface{})
+	queryFilter["promotions"] = strings.Split(c.GetString("promotions", ""), ",")
+	queryFilter["cities"] = strings.Split(c.GetString("cities", ""), ",")
+	queryFilter["skills"] = strings.Split(c.GetString("skills", ""), ",")
+	queryFilter["themes"] = strings.Split(c.GetString("themes", ""), ",")
+	queryFilter["name"] = c.GetString("name", "")
+	page, err := c.GetInt("page")
+	if err != nil {
+		handleError(err)
+		return
+	}
+	limit, err := c.GetInt("limit")
+	if err != nil {
+		handleError(err)
+		return
+	}
+	if page <= 0 {
+		c.Redirect(fmt.Sprintf("/students?page=1&limit=%d", limit), 301)
+		return
+	}
+	if limit == 0 {
+		limit = 25
+	}
+	paginatedItems, err := db.GetUsersPaginated(page, limit, queryFilter)
+	if err != nil {
+		handleError(err)
+		return
+	}
+	paginatedItems.SetPagesToShow()
+	promotions, err := db.GetEveryPromotion()
+	if err != nil {
+		handleError(err)
+		return
+	}
+	cities, err := db.GetEveryCities()
+	if err != nil {
+		handleError(err)
+		return
+	}
+	skills, err := db.GetEverySkills()
+	if err != nil {
+		handleError(err)
+		return
+	}
+	themes, err := db.GetEveryThemes()
+	if err != nil {
+		handleError(err)
+		return
+	}
+	c.Data["Cities"] = cities
+	c.Data["Promotions"] = promotions
+	c.Data["Skills"] = skills
+	c.Data["Themes"] = themes
+	c.Data["Limit"] = limit
+	c.Data["PaginatedItems"] = paginatedItems
+	c.Data["HasNextPage"] = paginatedItems.CurrentPage+1 <= paginatedItems.TotalPageCount
+	c.Data["HasPreviousPage"] = paginatedItems.CurrentPage != 1
+	c.Data["ShowGoToFirst"] = paginatedItems.PagesToShow[0] != 1
+	c.Data["ShowGoToLast"] = paginatedItems.PagesToShow[len(paginatedItems.PagesToShow)-1] != paginatedItems.TotalPageCount
 }

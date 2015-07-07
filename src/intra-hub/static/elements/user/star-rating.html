@@ -25,6 +25,10 @@
         .clickable {
             cursor: pointer;
         }
+
+        .not-clickable {
+            cursor: default;
+        }
     </style>
     <template>
 
@@ -48,7 +52,6 @@
                     notify: true
                 },
                 showEmpty: {
-                    type: Boolean,
                     value: true
                 },
                 edit: {
@@ -66,6 +69,8 @@
                 }
                 if (this.edit) {
                     clazz += 'clickable ';
+                } else {
+                    clazz += 'not-clickable';
                 }
                 return clazz;
             },

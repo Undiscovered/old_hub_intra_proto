@@ -8,15 +8,19 @@ function switchActiveTab() {
     var projects = $('#projects');
     var hub = $('#hub');
     var staff = $('#staff');
+    var students = $('#students');
     projects.removeClass('active');
     hub.removeClass('active');
     staff.removeClass('active');
+    students.removeClass('active');
     if (~path.indexOf('projects') !== 0) {
         projects.addClass('active');
     } else if (~path.indexOf('hub')) {
         hub.addClass('active');
     } else if (~path.indexOf('staff')) {
-        staff.addClass('staff');
+        staff.addClass('active');
+    } else if (~path.indexOf('students')) {
+        students.addClass('active');
     }
 }
 
