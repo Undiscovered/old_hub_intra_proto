@@ -34,27 +34,13 @@ func AddUser(user *models.User) error {
 }
 
 func EditUserByLogin(login string, user *models.User) error {
-	userDB, err := GetUserByLogin(login)
-	if err != nil {
+	if err := clearUserRelation(user); err != nil {
 		return err
 	}
-	userDB.City = user.City
-	userDB.Promotion = user.Promotion
-	userDB.Group = user.Group
-	userDB.Email = user.Email
-	userDB.Skills = user.Skills
-	userDB.Themes = user.Themes
-	userDB.PhoneNumber = user.PhoneNumber
-	userDB.LastName = user.LastName
-	userDB.FirstName = user.FirstName
-	userDB.Picture = user.Picture
-	if err := clearUserRelation(userDB); err != nil {
+	if err := setUserRelation(user); err != nil {
 		return err
 	}
-	if err := setUserRelation(userDB); err != nil {
-		return err
-	}
-	_, err = orm.NewOrm().Update(userDB)
+	_, err := orm.NewOrm().Update(user)
 	return err
 }
 
@@ -97,7 +83,7 @@ func GetUserByLogin(login string) (*models.User, error) {
 	if err := QueryUser().Filter("Login", login).RelatedSel().One(userDb); err != nil {
 		return nil, err
 	}
-	err := loadUserInfo(userDb)
+	err := LoadUserInfo(userDb)
 	return userDb, err
 }
 
@@ -148,29 +134,14 @@ func ValidatePedagogicallyUser(userID int, projectID int, pedagogicallyValidatio
 	return err
 }
 
-func loadEveryInfoOfUsers(users []*models.User) error {
-	wg := sync.WaitGroup{}
-	errorChan := make(chan error, 1)
-	for _, u := range users {
-		wg.Add(1)
-		go func(w *sync.WaitGroup, user *models.User) {
-			defer wg.Done()
-			if err := loadUserInfo(user); err != nil {
-				errorChan <- err
-			}
-		}(&wg, u)
-	}
-	wg.Wait()
-	if len(errorChan) > 0 {
-		select {
-		case err := <-errorChan:
-			return err
-		}
-	}
-	return nil
+func SetManagerProjects(user *models.User) error {
+	var projects []*models.Project
+	_, err := QueryProjects().Filter("Manager", user).All(&projects)
+	user.ProjectsManaged = projects
+	return err
 }
 
-func loadUserInfo(user *models.User) error {
+func LoadUserInfo(user *models.User) error {
 	o := orm.NewOrm()
 	if _, err := o.LoadRelated(user, "City"); err != nil {
 		return err
@@ -186,6 +157,28 @@ func loadUserInfo(user *models.User) error {
 		return err
 	}
 	user.Skills = skills
+	return nil
+}
+
+func loadEveryInfoOfUsers(users []*models.User) error {
+	wg := sync.WaitGroup{}
+	errorChan := make(chan error, 1)
+	for _, u := range users {
+		wg.Add(1)
+		go func(w *sync.WaitGroup, user *models.User) {
+			defer wg.Done()
+			if err := LoadUserInfo(user); err != nil {
+				errorChan <- err
+			}
+		}(&wg, u)
+	}
+	wg.Wait()
+	if len(errorChan) > 0 {
+		select {
+		case err := <-errorChan:
+			return err
+		}
+	}
 	return nil
 }
 

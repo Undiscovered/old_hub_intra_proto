@@ -12,6 +12,7 @@
 
 <page-content>
     <user-profile edit-mode
+                  is-admin="[[ .UserLogged.IsAdmin ]]"
                   can-edit="[[ .Edit ]]"
                   user="[[ .UserJSON ]]"
                   cities="[[ .Cities ]]"

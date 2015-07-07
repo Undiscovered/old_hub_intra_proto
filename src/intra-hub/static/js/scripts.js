@@ -7,12 +7,16 @@ function switchActiveTab() {
     var path = window.location.pathname;
     var projects = $('#projects');
     var hub = $('#hub');
+    var staff = $('#staff');
     projects.removeClass('active');
     hub.removeClass('active');
+    staff.removeClass('active');
     if (~path.indexOf('projects') !== 0) {
         projects.addClass('active');
-    } else {
+    } else if (~path.indexOf('hub')) {
         hub.addClass('active');
+    } else if (~path.indexOf('staff')) {
+        staff.addClass('staff');
     }
 }
 

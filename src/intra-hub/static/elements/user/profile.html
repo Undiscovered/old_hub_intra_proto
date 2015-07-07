@@ -195,19 +195,21 @@
                             </select>
                         </div>
                     </template>
-                    <div space>
-                        <span class="fa fa-transgender"></span>
-                        <select id="group">
-                            <template is="dom-repeat" items="{{ groups }}">
-                                <template is="dom-if" if="{{ !equal(item.name, user.group.name) }}">
-                                    <option value="{{ item.id }}">{{ item.name }}</option>
+                    <template is="dom-if" if="{{ isAdmin }}">
+                        <div space>
+                            <span class="fa fa-transgender"></span>
+                            <select id="group">
+                                <template is="dom-repeat" items="{{ groups }}">
+                                    <template is="dom-if" if="{{ !equal(item.name, user.group.name) }}">
+                                        <option value="{{ item.id }}">{{ item.name }}</option>
+                                    </template>
+                                    <template is="dom-if" if="{{ equal(item.name, user.group.name) }}">
+                                        <option value="{{ item.id }}" selected>{{ item.name }}</option>
+                                    </template>
                                 </template>
-                                <template is="dom-if" if="{{ equal(item.name, user.group.name) }}">
-                                    <option value="{{ item.id }}" selected>{{ item.name }}</option>
-                                </template>
-                            </template>
-                        </select>
-                    </div>
+                            </select>
+                        </div>
+                    </template>
                     <div space>
                         <span class="fa fa-leanpub"> Skills</span>
                         <select id="skills">
@@ -243,6 +245,22 @@
                         </template>
                     </div>
 
+                    <div space>
+                        <span class="fa fa-calendar"> Planning</span>
+                        <select id="planning">
+                            <template is="dom-repeat" items="{{ planning }}">
+                                <option value="{{ item }}">{{ item }}</option>
+                            </template>
+                        </select>
+                        <paper-icon-button blue icon="add" type="button" on-click="addDay"></paper-icon-button>
+                        <template is="dom-repeat" items="{{ user.planning }}">
+                            <div padding-left>
+                                <span>{{ item }}</span>
+                                <paper-icon-button red icon="clear" type="button"
+                                                   on-click="removeDay"></paper-icon-button>
+                            </div>
+                        </template>
+                    </div>
                 </div>
                 <div layout end>
                     <paper-fab icon="check" on-click="updateUser"></paper-fab>
@@ -270,6 +288,10 @@
             properties: {
                 user: Object,
                 canEdit: Boolean,
+                isAdmin: {
+                    value: false,
+                    type: Boolean
+                },
                 editMode: {
                     value: false,
                     type: Boolean
@@ -346,6 +368,29 @@
             handleResponse: function (event) {
                 this.$$('#toast').show();
             },
+            addDay: function () {
+                var daySelector = this.$$('#planning');
+                var day = daySelector.value;
+                if (this.user.planning.indexOf(day) === -1) {
+                    this.push('user.planning', day);
+                    this.updateDaysWorked();
+                }
+            },
+            removeDay: function () {
+                var day = event.model.item;
+                this.splice('user.planning', this.user.planning.indexOf(day), 1);
+                this.updateDaysWorked();
+            },
+            updateDaysWorked: function () {
+                var vm = this;
+                vm.user.daysWorked = '';
+                vm.user.planning.forEach(function (day) {
+                    if (day) {
+                        vm.user.daysWorked += day + ',';
+                    }
+                });
+                vm.user.daysWorked = vm.user.daysWorked.slice(0, -1);
+            },
             ready: function () {
                 this.userEmail = 'mailto:' + this.user.email;
                 this.editLink = '/users/edit/' + this.user.login;
@@ -355,7 +400,12 @@
                 if (!this.user.themes) {
                     this.user.themes = [];
                 }
-                console.log(this.user);
+                if (this.user.daysWorked === '') {
+                    this.user.planning = [];
+                } else {
+                    this.user.planning = this.user.daysWorked.split(',');
+                }
+                this.planning = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
             }
         });
     </script>

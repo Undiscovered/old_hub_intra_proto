@@ -257,6 +257,14 @@ func (c *UserController) EditUser() {
 	if c.user.Login != user.Login && !c.user.IsManager() {
 		c.Redirect("/home", 301)
 	}
+	userDB, err := db.GetUserByLogin(user.Login)
+	if err != nil {
+		beego.Warn(err)
+		return
+	}
+	if !userDB.IsAdmin() {
+		user.Group = userDB.Group
+	}
 	if err := db.EditUserByLogin(user.Login, user); err != nil {
 		beego.Warn(err)
 		return

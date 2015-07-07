@@ -69,7 +69,9 @@ func crawlFiles() (bodyBlowFish io.ReadCloser, bodyLocation io.ReadCloser, mapGr
 	mapGroup = make(map[string]string)
 	for scanner.Scan() {
 		lineSplitted := strings.Split(scanner.Text(), ":")
-		mapGroup[lineSplitted[2]] = lineSplitted[0]
+		if len(lineSplitted) > 2 {
+			mapGroup[lineSplitted[2]] = lineSplitted[0]
+		}
 	}
 	return
 }

@@ -35,6 +35,7 @@ type User struct {
 	PhoneNumber string     `json:"phoneNumber" orm:"size(16)" form:"phoneNumber"`
 	Token       string     `json:"token,omitempty" orm:"size(128)"`
 	Tech4Derog  bool       `json:"tech4Derog" form:"tech4Derog"`
+	DaysWorked  string     `json:"daysWorked" form:"daysWorked"`
 	Promotion   *Promotion `json:"promotion" orm:"null;rel(fk)"`
 	City        *City      `json:"city" orm:"null;rel(fk)"`
 	Group       *Group     `json:"group" orm:"null;rel(fk)"`
@@ -44,8 +45,9 @@ type User struct {
 
 	// Non Persistent fields
 
-	GroupID int `form:"groupId" orm:"-"`
-	CityID  int `form:"cityId" orm:"-"`
+	GroupID         int        `form:"groupId" orm:"-"`
+	CityID          int        `form:"cityId" orm:"-"`
+	ProjectsManaged []*Project `json:"projectsManaged" orm:"-"`
 }
 
 func (u *User) IsAdmin() bool {
