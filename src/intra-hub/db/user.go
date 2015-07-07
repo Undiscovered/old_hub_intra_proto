@@ -47,6 +47,7 @@ func EditUserByLogin(login string, user *models.User) error {
 	userDB.PhoneNumber = user.PhoneNumber
 	userDB.LastName = user.LastName
 	userDB.FirstName = user.FirstName
+	userDB.Picture = user.Picture
 	if err := clearUserRelation(userDB); err != nil {
 		return err
 	}
@@ -153,7 +154,7 @@ func loadEveryInfoOfUsers(users []*models.User) error {
 	for _, u := range users {
 		wg.Add(1)
 		go func(w *sync.WaitGroup, user *models.User) {
-            defer wg.Done()
+			defer wg.Done()
 			if err := loadUserInfo(user); err != nil {
 				errorChan <- err
 			}

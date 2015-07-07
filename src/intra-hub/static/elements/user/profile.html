@@ -5,6 +5,7 @@
 <link rel="import" href="/static/bower_components/paper-toolbar/paper-toolbar.html">
 <link rel="import" href="/static/bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="/static/bower_components/paper-input/paper-input.html">
+<link rel="import" href="/static/bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="/static/bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="/static/bower_components/gold-email-input/gold-email-input.html">
 <link rel="import" href="/static/bower_components/gold-phone-input/gold-phone-input.html">
@@ -14,6 +15,8 @@
     <style>
         img {
             border: solid #f0f0f0 2px;
+            width: 150px;
+            height: auto;
         }
 
         [white] {
@@ -168,10 +171,13 @@
                         <span class="fa fa-user"></span> <span>{{ user.login }}</span>
                     </div>
                     <div space>
+                        <paper-input label="Image" value="{{ user.picture }}"></paper-input>
+                    </div>
+                    <div space>
                         <gold-email-input label="Email" auto-validate value="{{ user.email }}"></gold-email-input>
                     </div>
                     <div space>
-                        <gold-phone-input label="Phone Number" value="{{ user.phoneNumber }}" country-code="33"
+                        <gold-phone-input label="Numero de telephone" value="{{ user.phoneNumber }}" country-code="33"
                                           phone-number-pattern="X-XX-XX-XX-XX"></gold-phone-input>
                     </div>
                     <template is="dom-if" if="{{ user.city }}">
@@ -249,6 +255,9 @@
                     content-type="application/json;charset=utf-8"
                     handle-as="json"
                     on-response="handleResponse"></iron-ajax>
+            <paper-toast id="toast" text="Utilisateur mis a jour">
+
+            </paper-toast>
         </template>
         <!-- End Edit View -->
 
@@ -335,6 +344,7 @@
                 ajax.generateRequest();
             },
             handleResponse: function (event) {
+                this.$$('#toast').show();
             },
             ready: function () {
                 this.userEmail = 'mailto:' + this.user.email;

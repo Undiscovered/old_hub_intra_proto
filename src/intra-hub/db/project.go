@@ -11,11 +11,15 @@ import (
 
 const (
 	ProjectsTable = "project"
-    CommentsTable = "comments"
+	CommentsTable = "comments"
 )
 
 func QueryProjects() orm.QuerySeter {
 	return orm.NewOrm().QueryTable(ProjectsTable)
+}
+
+func CheckProjectExists(name string) bool {
+	return QueryProjects().Filter("Name", name).Exist()
 }
 
 func GetProjectsPaginated(page, limit int, queryFilter map[string]interface{}) (itemPaginated *models.ItemPaginated, err error) {
@@ -137,14 +141,14 @@ func AddAndGetProject(project *models.Project) (*models.Project, error) {
 }
 
 func AddCommentToProject(comment *models.Comment, project *models.Project) error {
-    o := orm.NewOrm()
-    id, err := o.Insert(comment)
-    if err != nil {
-        return err
-    }
-    comment.Id = int(id)
-    _, err = o.QueryM2M(project, "Comments").Add(comment)
-    return err
+	o := orm.NewOrm()
+	id, err := o.Insert(comment)
+	if err != nil {
+		return err
+	}
+	comment.Id = int(id)
+	_, err = o.QueryM2M(project, "Comments").Add(comment)
+	return err
 }
 
 func loadProjectInfo(project *models.Project) (*models.Project, error) {
@@ -164,14 +168,14 @@ func loadProjectInfo(project *models.Project) (*models.Project, error) {
 	if _, err := o.LoadRelated(project, "Technos"); err != nil {
 		return nil, err
 	}
-    if _, err := o.LoadRelated(project, "Comments"); err != nil {
-        return nil, err
-    }
-    for _, c := range project.Comments {
-        if _, err := o.LoadRelated(c, "Author"); err != nil {
-            return nil, err
-        }
-    }
+	if _, err := o.LoadRelated(project, "Comments"); err != nil {
+		return nil, err
+	}
+	for _, c := range project.Comments {
+		if _, err := o.LoadRelated(c, "Author"); err != nil {
+			return nil, err
+		}
+	}
 	return project, nil
 }
 
@@ -198,9 +202,9 @@ func EditAndGetProject(project *models.Project) (*models.Project, error) {
 		params["manager_id"] = project.Manager.Id
 	}
 	if _, err := o.QueryTable(ProjectsTable).Filter("Id", project.Id).Update(params); err != nil {
-        o.Rollback()
-        return nil, err
-    }
+		o.Rollback()
+		return nil, err
+	}
 	historyItem, err := AddAndGetHistoryEvent(models.HistoryItemTypeCreated, project)
 	if err != nil {
 		o.Rollback()
@@ -242,12 +246,12 @@ func setProjectRelation(project *models.Project, historyItem *models.HistoryItem
 }
 
 func clearProjectRelation(project *models.Project) error {
-    var err error
-    defer func() {
-        if r := recover(); r != nil {
-            err = r.(error)
-        }
-    }()
+	var err error
+	defer func() {
+		if r := recover(); r != nil {
+			err = r.(error)
+		}
+	}()
 	o := orm.NewOrm()
 	o.QueryM2M(project, "Members").Clear()
 	o.QueryM2M(project, "Themes").Clear()

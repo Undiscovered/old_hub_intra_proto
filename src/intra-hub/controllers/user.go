@@ -27,6 +27,12 @@ func (c *UserController) AddView() {
 		c.Redirect("/", 301)
 		return
 	}
+	cities, err := db.GetEveryCities()
+	if err != nil {
+		c.Redirect("/", 301)
+		return
+	}
+	c.Data["Cities"] = cities
 	c.Data["Groups"] = groups
 }
 
@@ -39,7 +45,6 @@ func (c *UserController) SingleView() {
 		c.Redirect("/home", 301)
 		return
 	}
-	beego.Warn(user.Skills[1])
 	c.Data["User"] = user
 	c.Data["UserJSON"] = user.ToJSON(c.currentLanguage)
 }
@@ -202,6 +207,14 @@ func (c *UserController) AddUser() {
 		c.SetErrorAndRedirect(err)
 		return
 	}
+	if user.FirstName == "" {
+		c.SetErrorAndRedirect(fmt.Errorf("first name not specified"))
+		return
+	}
+	if user.LastName == "" {
+		c.SetErrorAndRedirect(fmt.Errorf("last name not specified"))
+		return
+	}
 	if user.Login == "" {
 		c.SetErrorAndRedirect(fmt.Errorf("login not specified"))
 		return
@@ -210,7 +223,14 @@ func (c *UserController) AddUser() {
 		c.SetErrorAndRedirect(fmt.Errorf("wrong email format"))
 		return
 	}
+	promo, err := db.GetPromotionByName(models.ExternalPromotion)
+	if err != nil {
+		c.SetErrorAndRedirect(err)
+		return
+	}
+	user.Promotion = promo
 	user.Group = &models.Group{Id: user.GroupID}
+	user.City = &models.City{Id: user.CityID}
 	randString, err := randutil.AlphaString(9)
 	if err != nil {
 		c.SetErrorAndRedirect(err)
@@ -222,6 +242,7 @@ func (c *UserController) AddUser() {
 		return
 	}
 	go mail.SendUserCreated(user)
+	c.flash.Data["success"] = "User created"
 	c.Redirect("/admin/users/add", 301)
 }
 

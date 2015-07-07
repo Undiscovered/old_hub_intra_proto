@@ -103,12 +103,12 @@ func newUser(blowfish string) (*models.User, string) {
 func blowFishCrawler() error {
 	beego.Informational("BlowFish run")
 	if err := loadUsersFiles(); err != nil {
-        beego.Error(err)
+		beego.Error(err)
 		return err
 	}
 	blowfish, location, mapGroup, err := crawlFiles()
 	if err != nil {
-        beego.Error(err)
+		beego.Error(err)
 		return err
 	}
 	defer blowfish.Close()
@@ -117,14 +117,14 @@ func blowFishCrawler() error {
 	scannerLocation := bufio.NewScanner(location)
 	orm.Debug = false
 	beego.Informational("Inserting users")
+	o := orm.NewOrm()
+	o.Begin()
 	for scannerBlowFish.Scan() {
 		scannerLocation.Scan()
-		o := orm.NewOrm()
-		o.Begin()
 		user, groupName := newUser(scannerBlowFish.Text())
 		// Set Promotion
 		groupName = mapGroup[groupName]
-		if promotion := mapPromotions[groupName]; promotion == nil {
+		if promotion := mapPromotions[groupName]; promotion == nil && groupName != "" {
 			promotion = &models.Promotion{Name: groupName}
 			if _, id, err := o.ReadOrCreate(promotion, "Name"); err == nil {
 				promotion.Id = int(id)
@@ -132,8 +132,8 @@ func blowFishCrawler() error {
 				mapPromotions[groupName] = promotion
 			} else {
 				o.Rollback()
-                beego.Error(err)
-                return err
+				beego.Error(err)
+				return err
 			}
 		} else {
 			user.Promotion = promotion
@@ -143,7 +143,7 @@ func blowFishCrawler() error {
 		if len(strings.Split(scannerLocation.Text(), ":")) > 1 {
 			cityName = mapLocations[strings.Split(scannerLocation.Text(), ":")[1]]
 		}
-		if city := mapCities[cityName]; city == nil {
+		if city := mapCities[cityName]; city == nil && cityName != "" {
 			city = &models.City{Name: cityName}
 			if _, id, err := o.ReadOrCreate(city, "Name"); err == nil {
 				city.Id = int(id)
@@ -151,35 +151,38 @@ func blowFishCrawler() error {
 				mapCities[cityName] = city
 			} else {
 				o.Rollback()
-                beego.Error(err)
+				beego.Error(err)
 				return err
 			}
 		} else {
 			user.City = city
 		}
+		if user.City == nil || user.Promotion == nil {
+			continue
+		}
 		r, err := o.Raw("INSERT INTO user ("+models.GetUserFields()+") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE password=?", user.Values(), user.Password).Exec()
 		if err != nil {
 			o.Rollback()
-            beego.Error(err)
-            return err
+			beego.Error(err)
+			return err
 		}
 		rowsAffected, err := r.RowsAffected()
 		if err != nil {
 			o.Rollback()
-            beego.Error(err)
-            return err
+			beego.Error(err)
+			return err
 		}
 		if rowsAffected != 0 {
 			lastId, err := r.LastInsertId()
 			if err != nil {
 				o.Rollback()
-                beego.Error(err)
-                return err
+				beego.Error(err)
+				return err
 			}
 			user.Id = int(lastId)
 		}
-		o.Commit()
 	}
+	o.Commit()
 	beego.Informational("Users inserted")
 	orm.Debug = true
 	return nil

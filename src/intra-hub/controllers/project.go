@@ -9,6 +9,7 @@ import (
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/validation"
+	"strconv"
 )
 
 type ProjectController struct {
@@ -69,10 +70,13 @@ func (c *ProjectController) ListView() {
 		handleError(err)
 		return
 	}
-	managers, err := db.GetManagers()
+	managers, err := db.GetManagersOrAdmin()
 	if err != nil {
 		handleError(err)
 		return
+	}
+	for _, city := range cities {
+		beego.Warn(city)
 	}
 	c.Data["Status"] = models.EveryProjectStatus
 	c.Data["Managers"] = managers
@@ -185,13 +189,13 @@ func (c *ProjectController) Add() {
 		}
 		project.Manager = manager
 	}
-	project, err := db.AddAndGetProject(project)
+	projectAdded, err := db.AddAndGetProject(project)
 	if err != nil {
 		beego.Error(err)
 		c.SetErrorAndRedirect(err)
 		return
 	}
-	c.Redirect("/projects/"+project.Name, 301)
+	c.Redirect("/projects/"+strconv.FormatInt(int64(projectAdded.Id), 10), 301)
 }
 
 func (c *ProjectController) Edit() {
@@ -262,5 +266,9 @@ func (c *ProjectController) AddComment() {
 
 func (c *ProjectController) CheckName() {
 	c.EnableRender = false
-	c.Ctx.Output.Body([]byte("true"))
+	if ok := db.CheckProjectExists(c.GetString("name")); ok {
+		c.Ctx.Output.Body([]byte("false"))
+	} else {
+		c.Ctx.Output.Body([]byte("true"))
+	}
 }

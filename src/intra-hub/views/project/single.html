@@ -65,7 +65,7 @@
             <ul class="list-group">
                 [[ range $element := .Project.Members ]]
                 <li class="list-group-item">
-                    <img src="[[ $element.Picture ]]">
+                    <img class="size" src="[[ $element.Picture ]]">
                     <a href="/users/[[ $element.Login ]]"> [[ $element.Name ]]</a> - [[ $element.Promotion.Name ]]
                 </li>
                 [[ end ]]

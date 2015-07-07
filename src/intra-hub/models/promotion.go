@@ -2,6 +2,10 @@ package models
 
 import "github.com/astaxie/beego/orm"
 
+const (
+	ExternalPromotion = "external"
+)
+
 func init() {
 	orm.RegisterModel(&Promotion{})
 }

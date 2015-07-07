@@ -1,4 +1,4 @@
-body {
+body.padding {
     padding-top: 120px;
     padding-bottom: 40px;
 }
@@ -17,4 +17,9 @@ body {
 
 .light-margin {
     margin: 10px;
+}
+
+.size {
+    width: 150px;
+    height: auto;
 }

@@ -3,7 +3,6 @@ package models
 import (
 	"strconv"
 
-	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"github.com/astaxie/beego/validation"
 	"github.com/beego/i18n"
@@ -28,8 +27,8 @@ func init() {
 type User struct {
 	Id          int        `json:"id"`
 	Login       string     `json:"login" orm:"unique;size(128)" form:"login"`
-	FirstName   string     `json:"firstName" orm:"size(128)"`
-	LastName    string     `json:"lastName" orm:"size(128)"`
+	FirstName   string     `json:"firstName" orm:"size(128)" form:"firstName"`
+	LastName    string     `json:"lastName" orm:"size(128)" form:"lastName"`
 	Email       string     `json:"email" orm:"size(128)" form:"email"`
 	Picture     string     `json:"picture" orm:"size(128)"`
 	Password    string     `json:"password" orm:"size(128)" form:"password"`
@@ -46,6 +45,7 @@ type User struct {
 	// Non Persistent fields
 
 	GroupID int `form:"groupId" orm:"-"`
+	CityID  int `form:"cityId" orm:"-"`
 }
 
 func (u *User) IsAdmin() bool {
@@ -57,7 +57,6 @@ func (u *User) IsManager() bool {
 }
 
 func (u *User) IsPedago() bool {
-	beego.Warn(u)
 	return u.Group.Name == UserGroupAdmin || u.Group.Name == UserGroupManager || u.Group.Name == UserGroupPedago
 }
 

@@ -16,6 +16,13 @@
         [[ .flash.error ]]
     </div>
     [[ end ]]
+    [[ if .flash.success ]]
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+        [[ .flash.success ]]
+    </div>
+    [[ end ]]
 
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -26,6 +33,16 @@
                 <div class="form-group">
                     <label for="login">Login</label>
                     <input id="login" name="login" type="text" class="form-control" placeholder="Login" required="">
+                </div>
+                <div class="form-group">
+                    <label for="fname">First name</label>
+                    <input id="fname" name="firstName" type="text" class="form-control" placeholder="First name"
+                           required="">
+                </div>
+                <div class="form-group">
+                    <label for="lname">Last name</label>
+                    <input id="lname" name="lastName" type="text" class="form-control" placeholder="Last name"
+                           required="">
                 </div>
                 <div class="form-group">
                     <label for="email">Email</label>
@@ -39,6 +56,16 @@
                         [[ end ]]
                     </select>
                 </div>
+                <div class="form-group">
+                    <label for="city">City</label>
+                    <select id="city" class="form-control" name="cityId">
+                        [[ range $element := .Cities ]]
+                        <option value="[[ $element.Id ]]">[[ i18n $.Lang $element.Name ]]</option>
+                        [[ end ]]
+                    </select>
+                </div>
+
+
                 <button class="btn btn-success">Creer l'utilisateur</button>
             </form>
         </div>

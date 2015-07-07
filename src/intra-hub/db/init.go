@@ -1,6 +1,7 @@
 package db
 
 import (
+	"github.com/astaxie/beego/orm"
 	"intra-hub/models"
 )
 
@@ -37,5 +38,9 @@ func PopulateDatabase() {
 		if err := i.Close(); err != nil {
 			panic(err)
 		}
+	}
+	// Add External Promotion
+	{
+		orm.NewOrm().Insert(&models.Promotion{Name: models.ExternalPromotion})
 	}
 }
