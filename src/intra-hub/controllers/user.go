@@ -12,6 +12,7 @@ import (
 	"github.com/bitly/go-simplejson"
 	"github.com/jmcvetta/randutil"
 	"intra-hub/jsonutils"
+	"log"
 	"strconv"
 	"strings"
 )
@@ -286,12 +287,34 @@ func (c *UserController) ListStudentView() {
 		beego.Error(err)
 		c.SetErrorAndRedirect(err)
 	}
+	promotions, err := db.GetEveryPromotion()
+	if err != nil {
+		handleError(err)
+		return
+	}
+	cities, err := db.GetEveryCities()
+	if err != nil {
+		handleError(err)
+		return
+	}
+	skills, err := db.GetEverySkills()
+	if err != nil {
+		handleError(err)
+		return
+	}
+	themes, err := db.GetEveryThemes()
+	if err != nil {
+		handleError(err)
+		return
+	}
 	queryFilter := make(map[string]interface{})
 	queryFilter["promotions"] = strings.Split(c.GetString("promotions", ""), ",")
 	queryFilter["cities"] = strings.Split(c.GetString("cities", ""), ",")
 	queryFilter["skills"] = strings.Split(c.GetString("skills", ""), ",")
 	queryFilter["themes"] = strings.Split(c.GetString("themes", ""), ",")
 	queryFilter["name"] = c.GetString("name", "")
+	queryFilter["login"] = c.GetString("login", "")
+	queryFilter["email"] = c.GetString("email", "")
 	page, err := c.GetInt("page")
 	if err != nil {
 		handleError(err)
@@ -315,26 +338,7 @@ func (c *UserController) ListStudentView() {
 		return
 	}
 	paginatedItems.SetPagesToShow()
-	promotions, err := db.GetEveryPromotion()
-	if err != nil {
-		handleError(err)
-		return
-	}
-	cities, err := db.GetEveryCities()
-	if err != nil {
-		handleError(err)
-		return
-	}
-	skills, err := db.GetEverySkills()
-	if err != nil {
-		handleError(err)
-		return
-	}
-	themes, err := db.GetEveryThemes()
-	if err != nil {
-		handleError(err)
-		return
-	}
+	log.Printf("%#v\n", paginatedItems)
 	c.Data["Cities"] = cities
 	c.Data["Promotions"] = promotions
 	c.Data["Skills"] = skills

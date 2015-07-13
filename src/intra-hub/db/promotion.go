@@ -4,6 +4,7 @@ import (
 	"intra-hub/models"
 
 	"github.com/astaxie/beego/orm"
+	"intra-hub/services/cache"
 )
 
 const (
@@ -16,6 +17,7 @@ func QueryPromotions() orm.QuerySeter {
 
 func GetEveryPromotion() (promotions []*models.Promotion, err error) {
 	_, err = QueryPromotions().All(&promotions)
+	cache.SetPromotions(promotions)
 	return
 }
 

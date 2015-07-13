@@ -4,6 +4,7 @@ import (
 	"intra-hub/models"
 
 	"github.com/astaxie/beego/orm"
+	"intra-hub/services/cache"
 )
 
 const (
@@ -17,6 +18,7 @@ func QueryThemes() orm.QuerySeter {
 func GetEveryThemes() (themes []*models.Theme, err error) {
 	themes = make([]*models.Theme, 0)
 	_, err = QueryThemes().All(&themes)
+	cache.SetThemes(themes)
 	return
 }
 

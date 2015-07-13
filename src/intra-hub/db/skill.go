@@ -4,6 +4,7 @@ import (
 	"intra-hub/models"
 
 	"github.com/astaxie/beego/orm"
+	"intra-hub/services/cache"
 )
 
 const (
@@ -17,6 +18,7 @@ func QuerySkills() orm.QuerySeter {
 func GetEverySkills() (skills []*models.Skill, err error) {
 	skills = make([]*models.Skill, 0)
 	_, err = QuerySkills().All(&skills)
+	cache.SetSkills(skills)
 	return
 }
 

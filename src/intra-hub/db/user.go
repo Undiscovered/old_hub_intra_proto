@@ -4,9 +4,10 @@ import (
 	"sync"
 
 	"intra-hub/models"
+	"intra-hub/services/cache"
 
 	"fmt"
-	"github.com/astaxie/beego"
+
 	"github.com/astaxie/beego/orm"
 	"github.com/pikanezi/mapslice"
 	"github.com/saschpe/tribool"
@@ -143,79 +144,116 @@ func SetManagerProjects(user *models.User) error {
 }
 
 func GetUsersPaginated(page, limit int, queryFilter map[string]interface{}) (*models.ItemPaginated, error) {
-	queryHelper := make(map[string]string)
-	values := make(map[string]interface{}, 0)
+	queryHelper := make([]interface{}, 0)
+	values := make([]interface{}, 0)
+	getQuestionMarks := func(s []string) (questionMarks string) {
+		for range s {
+			questionMarks += "?, "
+		}
+		return
+	}
 	for key, value := range queryFilter {
-		beego.Warn(key, value)
 		switch key {
 		case "promotions":
 			s := value.([]string)
 			if s[0] == "" {
+				queryHelper = append(queryHelper, "")
 				continue
 			}
-			questionMarks := ""
-			for range s {
-				questionMarks += "?, "
-			}
+			questionMarks := getQuestionMarks(s)
 			if questionMarks != "" {
 				questionMarks = questionMarks[:len(questionMarks)-2]
 			}
-			queryHelper[key] = fmt.Sprintf("AND user.promotion_id IN (%s)", questionMarks)
-			values[key] = value.([]string)
+			queryHelper = append(queryHelper, fmt.Sprintf("OR (user.promotion_id IN (%s))", questionMarks))
+			promotionsIDs := make([]int, len(s))
+			for i, ss := range s {
+				promotionsIDs[i] = cache.Promotions[ss].Id
+			}
+			values = append(values, promotionsIDs)
 		case "cities":
 			s := value.([]string)
 			if s[0] == "" {
+				queryHelper = append(queryHelper, "")
 				continue
 			}
-			questionMarks := ""
-			for range s {
-				questionMarks += "?, "
-			}
+			questionMarks := getQuestionMarks(s)
 			if questionMarks != "" {
 				questionMarks = questionMarks[:len(questionMarks)-2]
 			}
-			queryHelper[key] = fmt.Sprintf("AND user.city_id IN (%s)", questionMarks)
-			values[key] = value.([]string)
+			queryHelper = append(queryHelper, fmt.Sprintf("OR (user.city_id IN (%s))", questionMarks))
+			citiesIDs := make([]int, len(s))
+			for i, ss := range s {
+				citiesIDs[i] = cache.Cities[ss].Id
+			}
+			values = append(values, citiesIDs)
 		case "skills":
 			s := value.([]string)
 			if s[0] == "" {
+				queryHelper = append(queryHelper, "")
 				continue
 			}
-			questionMarks := ""
-			for range s {
-				questionMarks += "?, "
-			}
+			questionMarks := getQuestionMarks(s)
 			if questionMarks != "" {
 				questionMarks = questionMarks[:len(questionMarks)-2]
 			}
-			queryHelper[key] = fmt.Sprintf("AND user_skills.skill_id IN (%s)", questionMarks)
-			values[key] = value.([]string)
+			queryHelper = append(queryHelper, fmt.Sprintf("OR (user_skills.user_id = user.id AND user_skills.skill_id IN (%s))", questionMarks))
+			skillIDs := make([]int, len(s))
+			for i, ss := range s {
+				skillIDs[i] = cache.Skills[ss].Id
+			}
+			values = append(values, skillIDs)
 		case "themes":
 			s := value.([]string)
 			if s[0] == "" {
+				queryHelper = append(queryHelper, "")
 				continue
 			}
-			questionMarks := ""
-			for range s {
-				questionMarks += "?, "
-			}
+			questionMarks := getQuestionMarks(s)
 			if questionMarks != "" {
 				questionMarks = questionMarks[:len(questionMarks)-2]
 			}
-			queryHelper[key] = fmt.Sprintf("AND user_themes.theme_id IN (%s)", questionMarks)
-			values[key] = value.([]string)
+			queryHelper = append(queryHelper, fmt.Sprintf("OR (user_themes.user_id = user.id AND user_themes.theme_id IN (%s))", questionMarks))
+			themeIDs := make([]int, len(s))
+			for i, ss := range s {
+				themeIDs[i] = cache.Themes[ss].Id
+			}
+			values = append(values, themeIDs)
 		case "name":
 			if value.(string) == "" {
+				queryHelper = append(queryHelper, "")
 				continue
 			}
-			queryHelper[key] = `AND (user.first_name LIKE ? OR
+			queryHelper = append(queryHelper, `OR user.first_name LIKE ? OR
 user.last_name LIKE ? OR
-user.login LIKE ? OR
-CONCAT(user.first_name, ' ', user.last_name) LIKE ?)`
-			values[key] = []string{value.(string), value.(string), value.(string), value.(string)}
+CONCAT(user.first_name, ' ', user.last_name) LIKE ?`)
+			values = append(values, []string{value.(string), value.(string), value.(string)})
+		case "login":
+			if value.(string) == "" {
+				queryHelper = append(queryHelper, "")
+				continue
+			}
+			queryHelper = append(queryHelper, `OR (user.login LIKE ?)`)
+			values = append(values, "%"+value.(string)+"%")
+		case "email":
+			if value.(string) == "" {
+				queryHelper = append(queryHelper, "")
+				continue
+			}
+			queryHelper = append(queryHelper, `OR (user.email LIKE ?)`)
+			values = append(values, "%"+value.(string)+"%")
 		}
 	}
-	beego.Warn(queryHelper)
+	for i, v := range queryHelper {
+		s := v.(string)
+		if s != "" {
+			queryHelper[i] = "AND (" + queryHelper[i].(string)[2:]
+			queryHelper[len(queryHelper)-1] = queryHelper[len(queryHelper)-1].(string) + ")"
+			break
+		}
+	}
+	if queryHelper[0] != "" {
+	}
+	queryHelper = append(queryHelper, limit, (page-1)*limit)
 	o := orm.NewOrm()
 	raw := fmt.Sprintf(`SELECT
 user.id, user.login, user.first_name, user.last_name, user.email, user.picture, user.promotion_id, user.city_id,
@@ -227,23 +265,11 @@ INNER JOIN user_skills, user_themes, user_projects
 WHERE (user_skills.user_id = user.id
 OR user_themes.user_id = user.id
 OR user_projects.user_id = user.id)
-%s
-%s
-%s
-%s
-%s
-GROUP BY user.id`, queryHelper["promotions"], queryHelper["cities"], queryHelper["skills"], queryHelper["themes"], queryHelper["name"])
-	finalValues := make([]string, 0)
-	for _, v := range values {
-		switch v.(type) {
-		case []string:
-			finalValues = append(finalValues, v.([]string)...)
-		case string:
-			finalValues = append(finalValues, v.(string))
-		}
-	}
+%s %s %s %s %s %s %s
+GROUP BY user.id
+LIMIT %d OFFSET %d`, queryHelper...)
 	users := make([]*models.User, 0)
-	if _, err := o.Raw(raw, finalValues).QueryRows(&users); err != nil {
+	if _, err := o.Raw(raw, values).QueryRows(&users); err != nil {
 		return nil, err
 	}
 	for _, u := range users {
@@ -251,11 +277,24 @@ GROUP BY user.id`, queryHelper["promotions"], queryHelper["cities"], queryHelper
 			return nil, err
 		}
 	}
+	rawCount := fmt.Sprintf(`SELECT COUNT(DISTINCT user.id) AS count
+FROM user
+INNER JOIN user_skills, user_themes, user_projects
+WHERE (user_skills.user_id = user.id
+OR user_themes.user_id = user.id
+OR user_projects.user_id = user.id)
+%s %s %s %s %s %s %s
+GROUP BY user.id`, queryHelper[:len(queryHelper)-2]...)
+	var res []orm.Params
+	if _, err := o.Raw(rawCount, values).Values(&res); err != nil {
+		return nil, err
+	}
+	count := len(res)
 	itemPaginated := &models.ItemPaginated{
 		Items:          users,
 		ItemCount:      len(users),
-		TotalItemCount: len(users),
-		CurrentPage:    page + 1,
+		TotalItemCount: count,
+		CurrentPage:    page,
 		TotalPageCount: len(users)/limit + 1,
 	}
 	return itemPaginated, nil
