@@ -14,6 +14,11 @@ func init() {
 	beego.Router("/logout", &controllers.UserController{}, "get:Logout")
 	beego.Router("/login", &controllers.UserController{}, "get:LoginView;post:Login")
 
+	beego.Router("/admin/calendars/add", &controllers.CalendarController{}, "post:CalendarAdd")
+	beego.Router("/admin/calendars/:id", &controllers.CalendarController{}, "get:CalendarAdminView")
+	beego.Router("/calendars", &controllers.CalendarController{}, "get:CalendarsView")
+	beego.Router("/calendars/:id", &controllers.CalendarController{}, "get:CalendarsView")
+	
 	beego.Router("/admin", &controllers.AdminController{})
 	beego.Router("/admin/users/add", &controllers.UserController{}, "get:AddView")
 
