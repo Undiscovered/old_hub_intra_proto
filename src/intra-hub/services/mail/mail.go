@@ -13,6 +13,9 @@ import (
 	"github.com/go-gomail/gomail"
 )
 
+const (
+    activationURL = confperso.Protocol + "://" + confperso.Domain + "/users/activate/"
+)
 var (
 	auth = gomail.LoginAuth(confperso.EmailUsername, confperso.EmailPassword, confperso.EmailHost)
 )
@@ -20,7 +23,7 @@ var (
 func SendUserCreated(user *models.User) error {
 	data := make(map[string]interface{})
 	data["User"] = user
-	data["Link"] = "http://localhost:8080/users/activate/" + strconv.FormatInt(int64(user.Id), 10) + "/" + user.Token
+	data["Link"] = activationURL + strconv.FormatInt(int64(user.Id), 10) + "/" + user.Token
 	tmpl, err := template.New("mail").Parse(templateUserCreated)
 	if err != nil {
 		beego.Error(err)

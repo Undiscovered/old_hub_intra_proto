@@ -34,18 +34,21 @@ Open conf.go et put that inside :
 ```
 package confperso
 
-// To update for yourself. Don't commit it
 const (
-    AliasDbName                = "default"
-    DatabaseName               = "intra_hub"
-    Username                   = "root"
-    Password                   = ""
+	AliasDbName  = "default"
+	DatabaseName = "intra_hub"
+	Username     = "root"
+	Password     = ""
 
-    EmailUsername = "vincent.neel@epitech.eu"
-    EmailPassword = "*******"
-    EmailHost     = "smtp.epitech.eu"
-    EmailHostPort = "587"
+	EmailUsername = "vincent.neel@epitech.eu"
+	EmailPassword = "*******"
+	EmailHost     = "smtp.office365.com"
+	EmailHostPort = "587"
+
+    Protocol = "http"
+    Domain = "localhost:8080"
 )
+
 ```
 
 Replace username and password by the value you need.  
