@@ -14,8 +14,9 @@ import (
 )
 
 const (
-    activationURL = confperso.Protocol + "://" + confperso.Domain + "/users/activate/"
+	activationURL = confperso.Protocol + "://" + confperso.Domain + "/users/activate/"
 )
+
 var (
 	auth = gomail.LoginAuth(confperso.EmailUsername, confperso.EmailPassword, confperso.EmailHost)
 )
@@ -52,8 +53,8 @@ func sendMail(to string, subject, body string) {
 	config := `{"username":"` + confperso.EmailUsername + `","password":"` + confperso.EmailPassword + `","host":"` +
 		confperso.EmailHost + `","port":` + confperso.EmailHostPort + `}`
 	email := utils.NewEMail(config)
-    email.Subject = subject
-    email.Auth = auth
+	email.Subject = subject
+	email.Auth = auth
 	email.To = []string{to}
 	email.HTML = body
 	email.From = confperso.EmailUsername

@@ -2,22 +2,16 @@ package controllers
 
 import (
 	"encoding/gob"
-	"encoding/json"
-	"math/rand"
-	"strconv"
 	"strings"
 
 	"intra-hub/models"
 
 	"github.com/astaxie/beego"
 	"github.com/beego/i18n"
-	"github.com/eknkc/dateformat"
-	"time"
 )
 
 const (
 	sessionUserKey = "0xd3ob4"
-	dateFormat     = "dddd 02 MMMM 2006 15:04:05"
 )
 
 func init() {
@@ -66,31 +60,6 @@ func (c *BaseController) Prepare() {
 		c.isLogged = true
 		c.Data["UserLogged"] = c.user
 	}
-
-	// Add basic template functions
-	beego.AddFuncMap("i18n", i18n.Tr)
-	incr := func(arg int) string {
-		return strconv.FormatInt(int64(arg+1), 10)
-	}
-	decr := func(arg int) string {
-		return strconv.FormatInt(int64(arg-1), 10)
-	}
-	randomizeLabel := func() string {
-		labels := []string{"success", "warning", "danger", "info", "primary", "default"}
-		return labels[rand.Intn(len(labels))]
-	}
-	toJSON := func(val interface{}) string {
-		js, _ := json.Marshal(val)
-		return string(js)
-	}
-	datefr := func(val time.Time) string {
-		return dateformat.FormatLocale(val, dateFormat, dateformat.French)
-	}
-	beego.AddFuncMap("incr", incr)
-	beego.AddFuncMap("decr", decr)
-	beego.AddFuncMap("randLabel", randomizeLabel)
-	beego.AddFuncMap("toJSON", toJSON)
-	beego.AddFuncMap("datefr", datefr)
 
 	// If the matching controller is a NestedPreparer, we call the NestedPrepare function
 	// To ensure that this Prepare function is called first (it is done to prevent overriding of

@@ -11,11 +11,15 @@ import (
 	_ "intra-hub/routers"
 	_ "intra-hub/tasks"
 
+	"encoding/json"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	_ "github.com/astaxie/beego/session/mysql"
 	"github.com/beego/i18n"
+	"github.com/eknkc/dateformat"
 	_ "github.com/go-sql-driver/mysql"
+	"math/rand"
+	"strconv"
 )
 
 const (
@@ -27,6 +31,8 @@ const (
 	maxIdleConns               = 150
 	maxOpenConns               = 150
 	optionsDatabaseConnections = "?charset=utf8"
+
+	dateFormat = "dddd 02 MMMM 2006 15:04:05"
 )
 
 // langType represents a language type.
@@ -85,6 +91,32 @@ func init() {
 	orm.DefaultTimeLoc = time.UTC
 	orm.RunCommand()
 	db.PopulateDatabase()
+
+	// Add Default templating functions
+	beego.AddFuncMap("i18n", i18n.Tr)
+	incr := func(arg int) string {
+		return strconv.FormatInt(int64(arg+1), 10)
+	}
+	decr := func(arg int) string {
+		return strconv.FormatInt(int64(arg-1), 10)
+	}
+	randomizeLabel := func() string {
+		labels := []string{"success", "warning", "danger", "info", "primary", "default"}
+		return labels[rand.Intn(len(labels))]
+	}
+	toJSON := func(val interface{}) string {
+		js, _ := json.Marshal(val)
+		return string(js)
+	}
+	datefr := func(val time.Time) string {
+		return dateformat.FormatLocale(val, dateFormat, dateformat.French)
+	}
+	beego.AddFuncMap("incr", incr)
+	beego.AddFuncMap("decr", decr)
+	beego.AddFuncMap("randLabel", randomizeLabel)
+	beego.AddFuncMap("toJSON", toJSON)
+	beego.AddFuncMap("datefr", datefr)
+
 }
 
 func main() {
