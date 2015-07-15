@@ -4,7 +4,6 @@ import (
 	"bufio"
 	_ "crypto/sha512"
 	"io"
-	"net/http"
 	"os"
 	"path"
 	"strings"
@@ -20,9 +19,9 @@ import (
 const (
 	blowFishCrawlerTaskName = "blowfishCrawler"
 	epitechCDNPath          = "https://cdn.local.epitech.eu/userprofil/profilview/"
-	locationFileURL         = "https://lost-contact.mit.edu/afs/epitech.net/site/etc/location"
-	blowFishURL             = "https://lost-contact.mit.edu/afs/epitech.net/site/etc/master.passwd.blowfish"
-	groupFileURL            = "https://lost-contact.mit.edu/afs/epitech.net/site/etc/group"
+	locationFileURL         = "./conf/location.txt"
+	blowFishURL             = "./conf/master.passwd.blowfish.txt"
+	groupFileURL            = "./conf/group.txt"
 )
 
 var (
@@ -50,22 +49,20 @@ var (
 )
 
 func crawlFiles() (bodyBlowFish io.ReadCloser, bodyLocation io.ReadCloser, mapGroup map[string]string, err error) {
-	res, err := http.Get(blowFishURL)
+	bodyBlowFish, err = os.Open(blowFishURL)
 	if err != nil {
 		return
 	}
-	bodyBlowFish = res.Body
-	res, err = http.Get(locationFileURL)
+	bodyLocation, err = os.Open(locationFileURL)
 	if err != nil {
 		return
 	}
-	bodyLocation = res.Body
-	res, err = http.Get(groupFileURL)
+	bodyGroup, err := os.Open(groupFileURL)
 	if err != nil {
 		return
 	}
-	defer res.Body.Close()
-	scanner := bufio.NewScanner(res.Body)
+	defer bodyGroup.Close()
+	scanner := bufio.NewScanner(bodyGroup)
 	mapGroup = make(map[string]string)
 	for scanner.Scan() {
 		lineSplitted := strings.Split(scanner.Text(), ":")
