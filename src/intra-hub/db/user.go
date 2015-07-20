@@ -261,7 +261,9 @@ user_skills.user_id AS skills_user_id,
 user_themes.user_id AS themes_user_id,
 user_projects.user_id
 FROM user
-INNER JOIN user_skills, user_themes, user_projects
+LEFT JOIN user_skills ON user_skills.user_id = user.id
+LEFT JOIN user_themes ON user_themes.user_id = user.id
+LEFT JOIN user_projects ON user_projects.user_id = user.id
 WHERE (user_skills.user_id = user.id
 OR user_themes.user_id = user.id
 OR user_projects.user_id = user.id)
