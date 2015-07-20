@@ -12,7 +12,6 @@ import (
 	"github.com/bitly/go-simplejson"
 	"github.com/jmcvetta/randutil"
 	"intra-hub/jsonutils"
-	"log"
 	"strconv"
 	"strings"
 )
@@ -264,7 +263,7 @@ func (c *UserController) EditUser() {
 		beego.Warn(err)
 		return
 	}
-	if !userDB.IsAdmin() {
+	if !c.user.IsAdmin() {
 		user.Group = userDB.Group
 	}
 	if err := db.EditUserByLogin(user.Login, user); err != nil {
@@ -338,7 +337,6 @@ func (c *UserController) ListStudentView() {
 		return
 	}
 	paginatedItems.SetPagesToShow()
-	log.Printf("%#v\n", paginatedItems)
 	c.Data["Cities"] = cities
 	c.Data["Promotions"] = promotions
 	c.Data["Skills"] = skills
