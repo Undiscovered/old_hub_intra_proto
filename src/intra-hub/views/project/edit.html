@@ -130,7 +130,8 @@
         });
         var themesSelect = $('#themes');
         themesSelect.select2({
-            placeholder: 'Themes'
+            placeholder: 'Themes',
+            tags: true
         });
         themesSelect.on('select2:select', function (event) {
             addTheme(event.params.data.id);
@@ -150,7 +151,8 @@
 
         var technoSelect = $('#technos');
         technoSelect.select2({
-            placeholder: 'Technos'
+            placeholder: 'Technos',
+            tags: true
         });
         technoSelect.on('select2:select', function (event) {
             addTechno(event.params.data.id);

@@ -22,10 +22,10 @@
         <div class="panel-heading">
             <ul class="nav nav-tabs">
                 <li role="presentation">
-                    <a href="/projects/[[ .Project.Name ]]">[[ .Project.Name ]]</a>
+                    <a href="/projects/[[ .Project.Id ]]">[[ .Project.Name ]]</a>
                 </li>
                 <li role="presentation" class="active">
-                    <a href="/projects/[[ .Project.Name ]]/comments" role="button" data-toggle="modal">
+                    <a href="/projects/[[ .Project.Id ]]/comments" role="button" data-toggle="modal">
                         <span class="label label-primary">[[ len .Project.Comments ]]</span>
                         Commentaires
                     </a>
@@ -56,7 +56,7 @@
                 <div class="col-md-2 text-center">
                     <img class="size" src="[[ .UserLogged.Picture ]]">
                 </div>
-                <form method="post" action="/projects/[[ .Project.Name ]]/comments" class="col-md-10">
+                <form method="post" action="/projects/[[ .Project.Id ]]/comments" class="col-md-10">
                     <input type="hidden" name="projectId" value="[[ .Project.Id ]]">
                     <textarea class="form-control" placeholder="Entrez votre message..." rows="3" name="message"></textarea>
 

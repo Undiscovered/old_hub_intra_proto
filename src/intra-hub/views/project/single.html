@@ -15,15 +15,15 @@
             <a href="/projects/list?page=1&limit=15">
                 <span class="fa fa-chevron-left"> Liste des projets</span>
             </a>
-            <a href="/projects/edit/[[ .Project.Name ]]" class="pull-right">
+            <a href="/projects/edit/[[ .Project.Id ]]" class="pull-right">
                 <span class="fa fa-pencil"> Editer</span>
             </a>
             <ul class="nav nav-tabs">
                 <li role="presentation" class="active">
-                    <a href="/projects/[[ .Project.Name ]]">[[ .Project.Name ]]</a>
+                    <a href="/projects/[[ .Project.Id ]]">[[ .Project.Name ]]</a>
                 </li>
                 <li role="presentation">
-                    <a href="/projects/[[ .Project.Name ]]/comments" role="button" data-toggle="modal">
+                    <a href="/projects/[[ .Project.Id ]]/comments" role="button" data-toggle="modal">
                         <span class="label label-primary">[[ len .Project.Comments ]]</span>
                         Commentaires
                     </a>
