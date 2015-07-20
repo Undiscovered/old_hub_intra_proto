@@ -102,7 +102,8 @@
     function start() {
         var themesSelect = $('#themes');
         themesSelect.select2({
-            placeholder: 'Themes'
+            placeholder: 'Themes',
+            tags: true
         });
         themesSelect.on('select2:select', function (event) {
             var themeSelect = $('#themesId');
@@ -129,7 +130,8 @@
 
         var technoSelect = $('#technos');
         technoSelect.select2({
-            placeholder: 'Technos'
+            placeholder: 'Technos',
+            tags: true
         });
         technoSelect.on('select2:select', function (event) {
             var technoSelect = $('#technosId');

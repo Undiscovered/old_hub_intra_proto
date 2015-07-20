@@ -116,7 +116,6 @@ LoopMembers:
 		}
 		id, err := strconv.ParseInt(memberId, 10, 64)
 		if err != nil {
-			beego.Warn(memberId, err)
 			v.SetError("MembersID", err.Error())
 			return
 		}
@@ -137,8 +136,16 @@ LoopTheme:
 		}
 		id, err := strconv.ParseInt(themeId, 10, 64)
 		if err != nil {
-			beego.Warn(themeId, err)
-			v.SetError("ThemesID", err.Error())
+			err = nil
+			// If its not an id, its probably a new theme.
+			theme := &Theme{Name: themeId}
+			id, err := orm.NewOrm().Insert(theme)
+			if err != nil {
+				v.SetError("ThemeID", err.Error())
+				return
+			}
+			theme.Id = int(id)
+			p.Themes = append(p.Themes, theme)
 			return
 		}
 		for _, theme := range p.Themes {
@@ -160,9 +167,18 @@ LoopTechno:
 		beego.Warn(technoID)
 		id, err := strconv.ParseInt(technoID, 10, 64)
 		if err != nil {
-			beego.Warn(technoID, err)
-			v.SetError("TechnosID", err.Error())
+			err = nil
+			// If its not an id, its probably a new theme.
+			techno := &Skill{Name: technoID}
+			id, err := orm.NewOrm().Insert(techno)
+			if err != nil {
+				v.SetError("TechnoID", err.Error())
+				return
+			}
+			techno.Id = int(id)
+			p.Technos = append(p.Technos, techno)
 			return
+
 		}
 		for _, techno := range p.Technos {
 			if int(id) == techno.Id {
