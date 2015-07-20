@@ -31,8 +31,15 @@ touch conf.go
 
 Open conf.go et put that inside :
 
-```
+``` go
 package confperso
+
+import (
+    "os"
+
+    "github.com/astaxie/beego"
+    "github.com/astaxie/beego/orm"
+)
 
 const (
 	AliasDbName  = "default"
@@ -48,6 +55,16 @@ const (
     Protocol = "http"
     Domain = "localhost:8080"
 )
+
+func init() {
+	beego.RunMode = "dev"
+    orm.Debug = true
+
+    // Set logger
+    os.Create("logs/test.log")
+    beego.SetLogger("file", `{"filename":"logs/test.log"}`)
+    beego.SetLogFuncCall(true)
+}
 
 ```
 

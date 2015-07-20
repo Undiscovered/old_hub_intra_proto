@@ -48,7 +48,7 @@ var (
 	}
 )
 
-func crawlFiles() (bodyBlowFish io.ReadCloser, bodyLocation io.ReadCloser, mapGroup map[string]string, err error) {
+func crawlFiles() (bodyBlowFish io.ReadCloser, bodyLocation io.ReadCloser, bodyGroup io.ReadCloser, err error) {
 	bodyBlowFish, err = os.Open(blowFishURL)
 	if err != nil {
 		return
@@ -57,23 +57,14 @@ func crawlFiles() (bodyBlowFish io.ReadCloser, bodyLocation io.ReadCloser, mapGr
 	if err != nil {
 		return
 	}
-	bodyGroup, err := os.Open(groupFileURL)
+	bodyGroup, err = os.Open(groupFileURL)
 	if err != nil {
 		return
-	}
-	defer bodyGroup.Close()
-	scanner := bufio.NewScanner(bodyGroup)
-	mapGroup = make(map[string]string)
-	for scanner.Scan() {
-		lineSplitted := strings.Split(scanner.Text(), ":")
-		if len(lineSplitted) > 2 {
-			mapGroup[lineSplitted[2]] = lineSplitted[0]
-		}
 	}
 	return
 }
 
-func newUser(blowfish string) (*models.User, string) {
+func newUser(blowfish string) *models.User {
 	lineSplitted := strings.Split(blowfish, ":")
 	nameSplitted := strings.Split(lineSplitted[7], " ")
 	var firstName, lastName string
@@ -91,12 +82,13 @@ func newUser(blowfish string) (*models.User, string) {
 		Password:  lineSplitted[1],
 		Picture:   epitechCDNPath + lineSplitted[0] + ".jpg",
 		Email:     lineSplitted[0] + "@epitech.eu",
+		Promotion: mapPromotions[lineSplitted[3]],
 	}
 	if g := specialUsersinfo[user.Login]; g != nil {
 		group = g
 	}
 	user.Group = group
-	return user, lineSplitted[3]
+	return user
 }
 
 func blowFishCrawler() error {
@@ -105,38 +97,46 @@ func blowFishCrawler() error {
 		beego.Error(err)
 		return err
 	}
-	blowfish, location, mapGroup, err := crawlFiles()
+	blowfish, location, group, err := crawlFiles()
 	if err != nil {
 		beego.Error(err)
 		return err
 	}
 	defer blowfish.Close()
 	defer location.Close()
+	defer group.Close()
 	scannerBlowFish := bufio.NewScanner(blowfish)
 	scannerLocation := bufio.NewScanner(location)
-	orm.Debug = false
+	scannerGroups := bufio.NewScanner(group)
 	beego.Informational("Inserting users")
 	o := orm.NewOrm()
 	o.Begin()
-	for scannerBlowFish.Scan() {
-		scannerLocation.Scan()
-		user, groupName := newUser(scannerBlowFish.Text())
-		// Set Promotion
-		groupName = mapGroup[groupName]
-		if promotion := mapPromotions[groupName]; promotion == nil && groupName != "" {
-			promotion = &models.Promotion{Name: groupName}
-			if _, id, err := o.ReadOrCreate(promotion, "Name"); err == nil {
-				promotion.Id = int(id)
-				user.Promotion = promotion
-				mapPromotions[groupName] = promotion
+	for scannerGroups.Scan() {
+		lineSplitted := strings.Split(scannerGroups.Text(), ":")
+		if len(lineSplitted) > 2 {
+			groupName := lineSplitted[0]
+			group := &models.Promotion{Name: groupName}
+			if _, id, err := o.ReadOrCreate(group, "Name"); err == nil {
+				group.Id = int(id)
+				mapPromotions[groupName] = group
 			} else {
 				o.Rollback()
 				beego.Error(err)
 				return err
 			}
-		} else {
-			user.Promotion = promotion
 		}
+	}
+	external, err := db.GetPromotionByName("external")
+	if err != nil {
+		return err
+	}
+	paris := &models.City{Name: "Paris"}
+	if _, id, err := o.ReadOrCreate(paris, "Name"); err == nil {
+		paris.Id = int(id)
+		mapCities["Paris"] = paris
+	}
+	for scannerBlowFish.Scan() {
+		user := newUser(scannerBlowFish.Text())
 		// Set City
 		cityName := ""
 		if len(strings.Split(scannerLocation.Text(), ":")) > 1 {
@@ -156,8 +156,11 @@ func blowFishCrawler() error {
 		} else {
 			user.City = city
 		}
-		if user.City == nil || user.Promotion == nil {
-			continue
+		if user.City == nil {
+			user.City = paris
+		}
+		if user.Promotion == nil {
+			user.Promotion = external
 		}
 		r, err := o.Raw("INSERT INTO user ("+models.GetUserFields()+") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE password=?", user.Values(), user.Password).Exec()
 		if err != nil {
@@ -183,7 +186,6 @@ func blowFishCrawler() error {
 	}
 	o.Commit()
 	beego.Informational("Users inserted")
-	orm.Debug = true
 	return nil
 }
 

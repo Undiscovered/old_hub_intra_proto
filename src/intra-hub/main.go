@@ -1,7 +1,6 @@
 package main
 
 import (
-	"os"
 	"strings"
 	"time"
 
@@ -77,11 +76,6 @@ func init() {
 	beego.SetStaticPath("/css", "static/css")
 	beego.SetStaticPath("/js", "static/js")
 	beego.SetStaticPath("/img", "static/img")
-
-	// Set logger
-	os.Create("logs/test.log")
-	beego.SetLogger("file", `{"filename":"logs/test.log"}`)
-	beego.SetLogFuncCall(true)
 
 	// Set the ORM parameters
 	orm.RegisterDriver(driverSQL, orm.DR_MySQL)
