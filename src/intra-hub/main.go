@@ -60,8 +60,6 @@ func init() {
 		}
 	}
 
-	orm.Debug = true
-
 	// Set session on
 	beego.SessionOn = true
 	beego.SessionProvider = driverSQL
