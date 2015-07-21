@@ -31,6 +31,8 @@ func (c *ExportController) Projects() {
 		p.MembersName = strings.Join(mapslice.MapSliceToStringUnsafe(p.Members, "Login"), ",")
 		p.SkillsName = strings.Join(mapslice.MapSliceToStringUnsafe(p.Technos, "Name"), ",")
 		p.ThemesName = strings.Join(mapslice.MapSliceToStringUnsafe(p.Themes, "Name"), ",")
+		p.CitiesName = p.Cities()
+		p.PromotionsName = p.Promotions()
 		p.MemberCount = len(p.Members)
 	}
 	raw, err := gocsv.MarshalBytes(pagination.Items)

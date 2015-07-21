@@ -29,15 +29,17 @@ type Project struct {
 
 	// Non Persistent fields
 
-	ManagerLogin string `orm:"-" form:"managerLogin" csv:"-"`
-	MembersID    string `orm:"-" form:"membersId" csv:"-"`
-	ThemesID     string `orm:"-" form:"themesId" csv:"-"`
-	TechnosID    string `orm:"-" form:"technosId" csv:"-"`
-	MemberCount  int    `json:"memberCount" orm:"-" csv:"nombre de membres"`
-	StatusName   string `orm:"-" form:"status" csv:"-"`
-	MembersName  string `orm:"-" form:'-" csv:"membres"`
-	SkillsName   string `orm:"-" form:"-" csv:"skills"`
-	ThemesName   string `orm:"-" form:"-" csv:"themes"`
+	ManagerLogin   string `orm:"-" form:"managerLogin" csv:"-"`
+	MembersID      string `orm:"-" form:"membersId" csv:"-"`
+	ThemesID       string `orm:"-" form:"themesId" csv:"-"`
+	TechnosID      string `orm:"-" form:"technosId" csv:"-"`
+	MemberCount    int    `json:"memberCount" orm:"-" csv:"nombre de membres"`
+	StatusName     string `orm:"-" form:"status" csv:"-"`
+	MembersName    string `orm:"-" form:'-" csv:"membres"`
+	SkillsName     string `orm:"-" form:"-" csv:"skills"`
+	ThemesName     string `orm:"-" form:"-" csv:"themes"`
+	CitiesName     string `orm:"-" form:"-" csv:"villes"`
+	PromotionsName string `orm:"-" form:"-" csv:"promotions"`
 }
 
 func (p *Project) Cities() (s string) {

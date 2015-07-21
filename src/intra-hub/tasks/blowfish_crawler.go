@@ -114,11 +114,11 @@ func blowFishCrawler() error {
 	for scannerGroups.Scan() {
 		lineSplitted := strings.Split(scannerGroups.Text(), ":")
 		if len(lineSplitted) > 3 {
-			groupName := lineSplitted[2]
-			group := &models.Promotion{Name: groupName}
+			groupId := lineSplitted[2]
+			group := &models.Promotion{Name: lineSplitted[0]}
 			if _, id, err := o.ReadOrCreate(group, "Name"); err == nil {
 				group.Id = int(id)
-				mapPromotions[groupName] = group
+				mapPromotions[groupId] = group
 			} else {
 				o.Rollback()
 				beego.Error(err)
@@ -135,8 +135,6 @@ func blowFishCrawler() error {
 		paris.Id = int(id)
 		mapCities["Paris"] = paris
 	}
-	beego.Warn(mapPromotions)
-	orm.Debug = false
 	for scannerBlowFish.Scan() {
 		user := newUser(scannerBlowFish.Text())
 		// Set City
