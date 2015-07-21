@@ -51,6 +51,10 @@ type User struct {
 	ProjectsManaged []*Project `json:"projectsManaged" orm:"-"`
 }
 
+func (u *User) MarshalCSV() (string, error) {
+	return u.Login, nil
+}
+
 func (u *User) IsAdmin() bool {
 	return u.Group.Name == UserGroupAdmin
 }

@@ -27,3 +27,7 @@ type ProjectStatus struct {
 	Id   int
 	Name string `orm:"size(128);unique"`
 }
+
+func (p *ProjectStatus) MarshalCSV() (string, error) {
+	return p.Name, nil
+}

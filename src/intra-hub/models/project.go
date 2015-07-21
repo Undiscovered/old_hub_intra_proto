@@ -13,28 +13,31 @@ func init() {
 }
 
 type Project struct {
-	Id                  int            `form:"id"`
-	Name                string         `json:"name" orm:"unique;size(128)" form:"name"`
-	ShortDescription    string         `json:"shortDescription" orm:"size(256)" form:"shortDescription"`
-	CompleteDescription string         `json:"completeDescription" orm:"null;type(text)" form:"completeDescription"`
+	Id                  int            `form:"id" csv:"id"`
+	Name                string         `json:"name" orm:"unique;size(128)" form:"name" csv:"nom du projet"`
+	ShortDescription    string         `json:"shortDescription" orm:"size(256)" form:"shortDescription" csv:"description"`
+	CompleteDescription string         `json:"completeDescription" orm:"null;type(text)" form:"completeDescription" csv:"-"`
 	Status              *ProjectStatus `json:"status" orm:"rel(fk)"`
 	Manager             *User          `json:"manager" orm:"null;rel(fk)"`
-	History             []*HistoryItem `json:"history" orm:"null;rel(m2m)"`
-	Members             []*User        `json:"members" orm:"null;reverse(many);rel_through(intra-hub/models.UserProjects)"`
-	Themes              []*Theme       `json:"themes" orm:"null;rel(m2m)"`
-	Technos             []*Skill       `json:"themes" orm:"null;rel(m2m)"`
-	Comments            []*Comment     `json:"comments" orm:"null;rel(m2m)"`
-	Created             time.Time      `json:"created" orm:"auto_now_add;type(datetime)"`
-	Updated             time.Time      `json:"updated" orm:"auto_now;type(datetime)"`
+	History             []*HistoryItem `json:"history" orm:"null;rel(m2m)" csv:"-"`
+	Members             []*User        `json:"members" orm:"null;reverse(many);rel_through(intra-hub/models.UserProjects)" csv:"-"`
+	Themes              []*Theme       `json:"themes" orm:"null;rel(m2m)" csv:"-"`
+	Technos             []*Skill       `json:"themes" orm:"null;rel(m2m)" csv:"-"`
+	Comments            []*Comment     `json:"comments" orm:"null;rel(m2m)" csv:"-"`
+	Created             time.Time      `json:"created" orm:"auto_now_add;type(datetime)" csv:"creation"`
+	Updated             time.Time      `json:"updated" orm:"auto_now;type(datetime)" csv:"mise a jour"`
 
 	// Non Persistent fields
 
-	ManagerLogin string `orm:"-" form:"managerLogin"`
-	MembersID    string `orm:"-" form:"membersId"`
-	ThemesID     string `orm:"-" form:"themesId"`
-	TechnosID    string `orm:"-" form:"technosId"`
-	MemberCount  int    `json:"memberCount" orm:"-"`
-	StatusName   string `orm:"-" form:"status"`
+	ManagerLogin string `orm:"-" form:"managerLogin" csv:"-"`
+	MembersID    string `orm:"-" form:"membersId" csv:"-"`
+	ThemesID     string `orm:"-" form:"themesId" csv:"-"`
+	TechnosID    string `orm:"-" form:"technosId" csv:"-"`
+	MemberCount  int    `json:"memberCount" orm:"-" csv:"nombre de membres"`
+	StatusName   string `orm:"-" form:"status" csv:"-"`
+	MembersName  string `orm:"-" form:'-" csv:"membres"`
+	SkillsName   string `orm:"-" form:"-" csv:"skills"`
+	ThemesName   string `orm:"-" form:"-" csv:"themes"`
 }
 
 func (p *Project) Cities() (s string) {
