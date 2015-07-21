@@ -1,11 +1,8 @@
 package models
 
 import (
-	"strconv"
-	"strings"
 	"time"
 
-	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"github.com/astaxie/beego/validation"
 	"github.com/docker/docker/pkg/stringutils"
@@ -106,86 +103,4 @@ func (p *Project) Valid(v *validation.Validation) {
 	if p.ShortDescription == "" {
 		v.SetError("ShortDescription", "short description empty")
 	}
-	// Convert the string MembersID to an array of User.
-	// MembersId has the format 1,2,3,4 etc.
-	members := strings.Split(p.MembersID, ",")
-LoopMembers:
-	for _, memberId := range members {
-		if memberId == "" {
-			continue
-		}
-		id, err := strconv.ParseInt(memberId, 10, 64)
-		if err != nil {
-			v.SetError("MembersID", err.Error())
-			return
-		}
-		for _, member := range p.Members {
-			if int(id) == member.Id {
-				continue LoopMembers
-			}
-		}
-		p.Members = append(p.Members, &User{Id: int(id)})
-	}
-	// Convert the string ThemeID to an array of Theme.
-	// ThemeID has the format 1,2,3,4 etc.
-	themes := strings.Split(p.ThemesID, ",")
-LoopTheme:
-	for _, themeId := range themes {
-		if themeId == "" {
-			continue
-		}
-		id, err := strconv.ParseInt(themeId, 10, 64)
-		if err != nil {
-			err = nil
-			// If its not an id, its probably a new theme.
-			theme := &Theme{Name: themeId}
-			id, err := orm.NewOrm().Insert(theme)
-			if err != nil {
-				v.SetError("ThemeID", err.Error())
-				return
-			}
-			theme.Id = int(id)
-			p.Themes = append(p.Themes, theme)
-			return
-		}
-		for _, theme := range p.Themes {
-			if int(id) == theme.Id {
-				continue LoopTheme
-			}
-		}
-		p.Themes = append(p.Themes, &Theme{Id: int(id)})
-	}
-
-	// Convert the string ThemeID to an array of Theme.
-	// ThemeID has the format 1,2,3,4 etc.
-	technos := strings.Split(p.TechnosID, ",")
-LoopTechno:
-	for _, technoID := range technos {
-		if technoID == "" {
-			continue
-		}
-		beego.Warn(technoID)
-		id, err := strconv.ParseInt(technoID, 10, 64)
-		if err != nil {
-			err = nil
-			// If its not an id, its probably a new theme.
-			techno := &Skill{Name: technoID}
-			id, err := orm.NewOrm().Insert(techno)
-			if err != nil {
-				v.SetError("TechnoID", err.Error())
-				return
-			}
-			techno.Id = int(id)
-			p.Technos = append(p.Technos, techno)
-			return
-
-		}
-		for _, techno := range p.Technos {
-			if int(id) == techno.Id {
-				continue LoopTechno
-			}
-		}
-		p.Technos = append(p.Technos, &Skill{Id: int(id)})
-	}
-
 }

@@ -75,9 +75,6 @@ func (c *ProjectController) ListView() {
 		handleError(err)
 		return
 	}
-	for _, city := range cities {
-		beego.Warn(city)
-	}
 	c.Data["Status"] = models.EveryProjectStatus
 	c.Data["Managers"] = managers
 	c.Data["Cities"] = cities
@@ -180,14 +177,10 @@ func (c *ProjectController) Add() {
 		c.SetErrorAndRedirect(fmt.Errorf(valid.Errors[0].String()))
 		return
 	}
-	if project.ManagerLogin != "--" {
-		manager, err := db.GetUserByLogin(project.ManagerLogin)
-		if err != nil {
-			beego.Error(err)
-			c.SetErrorAndRedirect(err)
-			return
-		}
-		project.Manager = manager
+	if err := setProjectData(project); err != nil {
+		beego.Error(err)
+		c.SetErrorAndRedirect(err)
+		return
 	}
 	projectAdded, err := db.AddAndGetProject(project)
 	if err != nil {
@@ -216,22 +209,17 @@ func (c *ProjectController) Edit() {
 		c.SetErrorAndRedirect(fmt.Errorf(valid.Errors[0].String()))
 		return
 	}
-	if project.ManagerLogin != "--" {
-		manager, err := db.GetUserByLogin(project.ManagerLogin)
-		if err != nil {
-			beego.Error(err)
-			c.SetErrorAndRedirect(err)
-			return
-		}
-		project.Manager = manager
+	if err := setProjectData(project); err != nil {
+		beego.Error(err)
+		c.SetErrorAndRedirect(err)
+		return
 	}
 	if _, err := db.EditAndGetProject(project); err != nil {
 		beego.Error(err)
 		c.SetErrorAndRedirect(err)
 		return
 	}
-
-	c.Redirect("/projects/"+project.Name, 301)
+	c.Redirect("/projects/"+strconv.FormatInt(int64(project.Id), 10), 301)
 }
 
 func (c *ProjectController) CommentView() {
@@ -271,4 +259,89 @@ func (c *ProjectController) CheckName() {
 	} else {
 		c.Ctx.Output.Body([]byte("true"))
 	}
+}
+
+func setProjectData(project *models.Project) error {
+	// Convert the string MembersID to an array of User.
+	// MembersId has the format 1,2,3,4 etc.
+	members := strings.Split(project.MembersID, ",")
+LoopMembers:
+	for _, memberId := range members {
+		if memberId == "" {
+			continue
+		}
+		id, err := strconv.ParseInt(memberId, 10, 64)
+		if err != nil {
+			return err
+		}
+		for _, member := range project.Members {
+			if int(id) == member.Id {
+				continue LoopMembers
+			}
+		}
+		project.Members = append(project.Members, &models.User{Id: int(id)})
+	}
+
+	// Convert the string ThemeID to an array of Theme.
+	// ThemeID has the format 1,2,3,4 etc.
+	themes := strings.Split(project.ThemesID, ",")
+LoopTheme:
+	for _, themeId := range themes {
+		if themeId == "" {
+			continue
+		}
+		id, err := strconv.ParseInt(themeId, 10, 64)
+		if err != nil {
+			err = nil
+			// If its not an id, its probably a new theme.
+			theme := &models.Theme{Name: themeId}
+			if theme, err = db.AddAndGetTheme(theme); err != nil {
+				return err
+			}
+			project.Themes = append(project.Themes, theme)
+			continue
+		}
+		for _, theme := range project.Themes {
+			if int(id) == theme.Id {
+				continue LoopTheme
+			}
+		}
+		project.Themes = append(project.Themes, &models.Theme{Id: int(id)})
+	}
+
+	// Convert the string ThemeID to an array of Theme.
+	// ThemeID has the format 1,2,3,4 etc.
+	technos := strings.Split(project.TechnosID, ",")
+LoopTechno:
+	for _, technoID := range technos {
+		if technoID == "" {
+			continue
+		}
+		id, err := strconv.ParseInt(technoID, 10, 64)
+		if err != nil {
+			err = nil
+			// If its not an id, its probably a new theme.
+			techno := &models.Skill{Name: technoID}
+			if techno, err = db.AddAndGetSkill(techno); err != nil {
+				return err
+			}
+			project.Technos = append(project.Technos, techno)
+			continue
+		}
+		// If the techno is already set in the project, we skip it.
+		for _, techno := range project.Technos {
+			if int(id) == techno.Id {
+				continue LoopTechno
+			}
+		}
+		project.Technos = append(project.Technos, &models.Skill{Id: int(id)})
+	}
+	if project.ManagerLogin != "--" {
+		manager, err := db.GetUserByLogin(project.ManagerLogin)
+		if err != nil {
+			return err
+		}
+		project.Manager = manager
+	}
+	return nil
 }
