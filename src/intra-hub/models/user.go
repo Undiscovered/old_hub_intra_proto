@@ -47,6 +47,7 @@ type User struct {
 
 	GroupID         int        `form:"groupId" orm:"-"`
 	CityID          int        `form:"cityId" orm:"-"`
+	PromotionID     int        `form:"promotionId" orm:"-"`
 	ProjectsManaged []*Project `json:"projectsManaged" orm:"-"`
 }
 

@@ -35,13 +35,13 @@
                     <input id="login" name="login" type="text" class="form-control" placeholder="Login" required="">
                 </div>
                 <div class="form-group">
-                    <label for="fname">First name</label>
-                    <input id="fname" name="firstName" type="text" class="form-control" placeholder="First name"
+                    <label for="fname">Prenom</label>
+                    <input id="fname" name="firstName" type="text" class="form-control" placeholder="Prenom"
                            required="">
                 </div>
                 <div class="form-group">
-                    <label for="lname">Last name</label>
-                    <input id="lname" name="lastName" type="text" class="form-control" placeholder="Last name"
+                    <label for="lname">Nom</label>
+                    <input id="lname" name="lastName" type="text" class="form-control" placeholder="Nom"
                            required="">
                 </div>
                 <div class="form-group">
@@ -57,9 +57,17 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="city">City</label>
+                    <label for="city">Ville</label>
                     <select id="city" class="form-control" name="cityId">
                         [[ range $element := .Cities ]]
+                        <option value="[[ $element.Id ]]">[[ i18n $.Lang $element.Name ]]</option>
+                        [[ end ]]
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="promotion">Promotion</label>
+                    <select id="promotion" class="form-control" name="promotionId">
+                        [[ range $element := .Promotions ]]
                         <option value="[[ $element.Id ]]">[[ i18n $.Lang $element.Name ]]</option>
                         [[ end ]]
                     </select>

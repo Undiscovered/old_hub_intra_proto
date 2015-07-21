@@ -33,8 +33,14 @@ func (c *UserController) AddView() {
 		c.Redirect("/", 301)
 		return
 	}
+	promotions, err := db.GetEveryPromotion()
+	if err != nil {
+		c.Redirect("/", 301)
+		return
+	}
 	c.Data["Cities"] = cities
 	c.Data["Groups"] = groups
+	c.Data["Promotions"] = promotions
 }
 
 func (c *UserController) SingleView() {
@@ -224,12 +230,7 @@ func (c *UserController) AddUser() {
 		c.SetErrorAndRedirect(fmt.Errorf("wrong email format"))
 		return
 	}
-	promo, err := db.GetPromotionByName(models.ExternalPromotion)
-	if err != nil {
-		c.SetErrorAndRedirect(err)
-		return
-	}
-	user.Promotion = promo
+	user.Promotion = &models.Promotion{Id: user.PromotionID}
 	user.Group = &models.Group{Id: user.GroupID}
 	user.City = &models.City{Id: user.CityID}
 	randString, err := randutil.AlphaString(9)
