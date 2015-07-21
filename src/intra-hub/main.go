@@ -31,7 +31,7 @@ const (
 	maxOpenConns               = 150
 	optionsDatabaseConnections = "?charset=utf8"
 
-	dateFormat = "dddd 02 MMMM 2006 15:04:05"
+	dateFormat = "dddd DD MMMM YYYY HH:mm:ss"
 )
 
 // langType represents a language type.
