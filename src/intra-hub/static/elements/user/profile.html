@@ -98,7 +98,7 @@
             </paper-toolbar>
             <div layout>
                 <div left>
-                    <img src="{{ user.picture }}">
+                    <img id="img" on-error="switchImage" src="{{ user.picture }}">
                 </div>
                 <div right>
                     <div space>
@@ -164,7 +164,7 @@
             </paper-toolbar>
             <div layout>
                 <div left>
-                    <img src="{{ user.picture }}">
+                    <img on-error="switchImage" id="img" src="{{ user.picture }}">
                 </div>
                 <div right>
                     <div space>
@@ -390,6 +390,9 @@
                     }
                 });
                 vm.user.daysWorked = vm.user.daysWorked.slice(0, -1);
+            },
+            switchImage: function() {
+              this.$$('#img').src = 'https://cloud.canadastays.com/assets/images/user-placeholder.png';
             },
             ready: function () {
                 this.userEmail = 'mailto:' + this.user.email;

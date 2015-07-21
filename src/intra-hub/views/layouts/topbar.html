@@ -1,9 +1,14 @@
+[[ template "layouts/include-js.html" ]]
+
 <nav class="navbar header">
     <div class="col-md-12">
         <div class="navbar-header">
             <a href="/home" class="navbar-brand">Innovation Hub</a>
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse1">
-                <i class="glyphicon glyphicon-search"></i>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar blue"></span>
+                <span class="icon-bar blue"></span>
+                <span class="icon-bar blue"></span>
             </button>
         </div>
         <div class="collapse navbar-collapse" id="navbar-collapse1">
@@ -45,7 +50,7 @@
                     </ul>
                 </li>
                 <li><a href="/me" title="Profil" data-toggle="tooltip" data-placement="bottom">
-                    <img style="-webkit-border-radius: 150px;-moz-border-radius: 150px;border-radius: 150px;"
+                    <img onerror="errorImage(this)" style="-webkit-border-radius: 150px;-moz-border-radius: 150px;border-radius: 150px;"
                          width="14px" src="[[ .UserLogged.Picture ]]">
                 </a></li>
                 [[ if .UserLogged.IsAdmin ]]

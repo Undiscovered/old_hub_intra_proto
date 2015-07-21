@@ -93,7 +93,6 @@
 </div>
 
 </body>
-[[ template "layouts/include-js.html" ]]
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.13.1/jquery.validate.js"></script>
 
 <script type="application/javascript">
@@ -215,7 +214,7 @@
 
     function generateListItem(user) {
         var deleteButton = '<span ' + 'onclick="deleteLogin(\'' + user.login + '\', \'' + user.id + '\')"' + 'class="pull-right glyphicon glyphicon-remove"></span>';
-        var image = '<img class="img-responsive size" src="' + user.picture + '">';
+        var image = '<img onerror="errorImage(this)" class="img-responsive size" src="' + user.picture + '">';
         return '<li id="' + user.login + '" class="list-group-item"><div>' + image + user.login + deleteButton + '</div></li>';
     }
 

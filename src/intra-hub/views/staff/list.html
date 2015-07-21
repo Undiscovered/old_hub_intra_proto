@@ -34,7 +34,7 @@
                     </thead>
                     [[ range $element := .Managers ]]
                     <tr>
-                        <td><img class="img-responsive size" src="[[ $element.Picture ]]"></td>
+                        <td><img onerror="errorImage(this)" class="img-responsive size" src="[[ $element.Picture ]]"></td>
                         <td><a href="/users/[[ $element.Login ]]">[[ $element.Login ]]</a></td>
                         <td>[[ $element.Name ]]</td>
                         <td>[[ $element.Email ]]</td>
@@ -53,6 +53,5 @@
     </div>
 </div>
 </body>
-[[ template "layouts/include-js.html" ]]
 
 </html>

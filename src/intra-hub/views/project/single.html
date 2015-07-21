@@ -67,7 +67,7 @@
             <ul class="list-group">
                 [[ range $element := .Project.Members ]]
                 <li class="list-group-item">
-                    <img class="size" src="[[ $element.Picture ]]">
+                    <img onerror="errorImage(this)" class="size" src="[[ $element.Picture ]]">
                     <a href="/users/[[ $element.Login ]]"> [[ $element.Name ]]</a> - [[ $element.Promotion.Name ]]
                 </li>
                 [[ end ]]
@@ -78,5 +78,4 @@
 </div>
 </body>
 
-[[ template "layouts/include-js.html" ]]
 </html>

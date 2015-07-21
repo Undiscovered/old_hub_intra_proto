@@ -7,7 +7,6 @@
 </head>
 <body>
 [[ template "layouts/topbar.html" . ]]
-[[ template "layouts/include-js.html" ]]
 
 <div class="container-fluid">
     [[ if .flash.error ]]
@@ -38,7 +37,7 @@
             <div class="row" style="padding: 5px; border: solid 1px #dddddd; margin-bottom: 1px;">
                 <!-- Left part -->
                 <div class="col-md-2 text-center" style="background: #eeeeee;">
-                    <img class="size" src="[[ $element.Author.Picture ]]">
+                    <img onerror="errorImage(this)" class="size" src="[[ $element.Author.Picture ]]">
                     <div>[[ $element.Author.Login ]]</div>
                     <div>[[ datefr $element.Created ]]</div>
                 </div>
@@ -54,7 +53,7 @@
             [[ end ]]
             <div class="row" style="padding: 25px;">
                 <div class="col-md-2 text-center">
-                    <img class="size" src="[[ .UserLogged.Picture ]]">
+                    <img onerror="errorImage(this)" class="size" src="[[ .UserLogged.Picture ]]">
                 </div>
                 <form method="post" action="/projects/[[ .Project.Id ]]/comments" class="col-md-10">
                     <input type="hidden" name="projectId" value="[[ .Project.Id ]]">
