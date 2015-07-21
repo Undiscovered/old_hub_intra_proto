@@ -113,8 +113,8 @@ func blowFishCrawler() error {
 	o.Begin()
 	for scannerGroups.Scan() {
 		lineSplitted := strings.Split(scannerGroups.Text(), ":")
-		if len(lineSplitted) > 2 {
-			groupName := lineSplitted[0]
+		if len(lineSplitted) > 3 {
+			groupName := lineSplitted[2]
 			group := &models.Promotion{Name: groupName}
 			if _, id, err := o.ReadOrCreate(group, "Name"); err == nil {
 				group.Id = int(id)
@@ -135,6 +135,8 @@ func blowFishCrawler() error {
 		paris.Id = int(id)
 		mapCities["Paris"] = paris
 	}
+	beego.Warn(mapPromotions)
+	orm.Debug = false
 	for scannerBlowFish.Scan() {
 		user := newUser(scannerBlowFish.Text())
 		// Set City
@@ -162,7 +164,10 @@ func blowFishCrawler() error {
 		if user.Promotion == nil {
 			user.Promotion = external
 		}
-		r, err := o.Raw("INSERT INTO user ("+models.GetUserFields()+") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE password=?", user.Values(), user.Password).Exec()
+		r, err := o.Raw("INSERT INTO user ("+
+			models.GetUserFields()+
+			") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE password=?, promotion_id=?",
+			user.Values(), user.Password, user.Promotion.Id).Exec()
 		if err != nil {
 			o.Rollback()
 			beego.Error(err)

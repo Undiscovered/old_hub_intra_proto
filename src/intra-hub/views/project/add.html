@@ -213,7 +213,7 @@
     }
 
     function generateListItem(user) {
-        var deleteButton = '<span ' + 'onclick="deleteLogin(\'' + user.login + '\', \'' + user.id + '\')"' + 'class="pull-right glyphicon glyphicon-remove"></span>';
+        var deleteButton = '<span ' + 'onclick="deleteLogin(\'' + user.login + '\', \'' + user.id + '\')"' + 'class="pull-right glyphicon glyphicon-remove red clickable"></span>';
         var image = '<img onerror="errorImage(this)" class="img-responsive size" src="' + user.picture + '">';
         return '<li id="' + user.login + '" class="list-group-item"><div>' + image + user.login + deleteButton + '</div></li>';
     }

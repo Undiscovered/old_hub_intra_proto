@@ -24,6 +24,14 @@ body.padding {
     height: auto;
 }
 
+.clickable {
+    cursor: pointer;
+}
+
 .blue {
     color: #4582ec;
+}
+
+.red {
+    color: #F44336;
 }

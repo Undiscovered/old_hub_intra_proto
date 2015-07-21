@@ -98,7 +98,7 @@
                                 <img onerror="errorImage(this)" class="img-responsive size" src="[[ $element.Picture ]]">
                                 [[ $element.Login ]]
                                 <span onclick="deleteLogin('[[ $element.Login ]]', '[[ $element.Id ]]')"
-                                      class="pull-right glyphicon glyphicon-remove"></span>
+                                      class="pull-right glyphicon glyphicon-remove red clickable"></span>
                             </div>
                         </li>
                         [[ end ]]
@@ -202,7 +202,7 @@
     }
 
     function generateListItem(user) {
-        var deleteButton = '<span ' + 'onclick="deleteLogin(\'' + user.login + '\', \'' + user.id + '\')"' + 'class="pull-right glyphicon glyphicon-remove"></span>';
+        var deleteButton = '<span ' + 'onclick="deleteLogin(\'' + user.login + '\', \'' + user.id + '\')"' + 'class="pull-right glyphicon glyphicon-remove red clickable"></span>';
         var image = '<img class="img-responsive" src="' + user.picture + '">';
         return '<li id="' + user.login + '" class="list-group-item"><div>' + image + user.login + deleteButton + '</div></li>';
     }
@@ -247,7 +247,7 @@
             }
         }
         membersId.attr('value', ids);
-        $('#' + login).remove();
+        $('#' + id).remove();
     }
 </script>
 
