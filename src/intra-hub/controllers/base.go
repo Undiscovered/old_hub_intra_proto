@@ -80,7 +80,7 @@ func (c *BaseController) SetErrorAndRedirect(err error) {
 }
 
 func (c *BaseController) RequireLogin() {
-	if !c.isLogged {
+	if !c.isLogged || c.user == nil {
 		c.Redirect("/login", 301)
 	}
 }

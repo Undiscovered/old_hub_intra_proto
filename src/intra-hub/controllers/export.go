@@ -17,6 +17,7 @@ type ExportController struct {
 
 func (c *ExportController) Projects() {
 	c.EnableRender = false
+	c.RequireAdmin()
 	pagination, err := db.GetProjectsPaginated(1, 10000, make(map[string]interface{}))
 	if err != nil {
 		beego.Error(err)
