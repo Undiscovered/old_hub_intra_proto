@@ -8,7 +8,7 @@ type StaffController struct {
 
 func (c *StaffController) ListView() {
 	c.TplNames = "staff/list.html"
-
+	c.RequireLogin()
 	managers, err := db.GetManagersOrAdmin()
 	if err != nil {
 		c.SetErrorAndRedirect(err)
