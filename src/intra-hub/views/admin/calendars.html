@@ -1,37 +1,37 @@
-<table class="table">
-  <tr>
-    <th>Nom</th>
-    <th>Public</th>
-    <th>Modifier</th>
-  </tr>
-  [[ range .Calendars ]]
-  <tr>
-    <td>[[ .Name ]]</td>
-    [[ if .Public ]]
-    <td>Oui</td>
+<table class="table table-responsive">
+    <tr>
+        <th>Nom</th>
+        <th>Public</th>
+        <th>Modifier</th>
+    </tr>
+    [[ range .Calendars ]]
+    <tr>
+        <td>[[ .Name ]]</td>
+        [[ if .Public ]]
+        <td>Oui</td>
+        [[ end ]]
+
+        [[ if not .Public ]]
+        <td>Non</td>
+        [[ end ]]
+        <td><a href="/admin/calendars/[[.Id]]">Modifier</a></td>
+    </tr>
     [[ end ]]
-    
-    [[ if not .Public ]]
-    <td>Non</td>
-    [[ end ]]
-    <td><a href="/admin/calendars/[[.Id]]">Modifier</a></td>
-</tr>
-[[ end ]]
 </table>
 
 <br/>
 <h5>Créer un calendrier</h5>
 <form class="form-inline" method="POST" action="/admin/calendars/add">
-  <div class="form-group">
-    <label for="calendar_name">Nom</label>
-    <input type="text" class="form-control" id="calendar_name" name="name" placeholder="Nom">
-  </div>
-  <div class="form-group">
-    <label for="calendar_public">Public</label>
-    <select name="public" id="calendar_public">
-      <option value="true">Oui</option>
-      <option value="false">Non</option>
-    </select>
-  </div>
-  <button type="submit" class="btn btn-success">Créer le calendrier</button>
+    <div class="form-group">
+        <label for="calendar_name">Nom</label>
+        <input type="text" class="form-control" id="calendar_name" name="name" placeholder="Nom">
+    </div>
+    <div class="form-group">
+        <label for="calendar_public">Public</label>
+        <select name="public" id="calendar_public">
+            <option value="true">Oui</option>
+            <option value="false">Non</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-success">Créer le calendrier</button>
 </form>
