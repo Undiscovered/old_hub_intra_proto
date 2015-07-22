@@ -292,6 +292,7 @@ func (c *UserController) GetMe() {
 
 func (c *UserController) ListStudentView() {
 	c.TplNames = "student/list.html"
+	c.RequireLogin()
 	handleError := func(err error) {
 		beego.Error(err)
 		c.SetErrorAndRedirect(err)
