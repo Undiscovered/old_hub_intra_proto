@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head lang="en">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>[[ .Project.Name ]]</title>
     [[ template "layouts/include-css.html" ]]
 </head>
@@ -13,7 +11,7 @@
 <div class="container-fluid">
     <div class="panel panel-default">
         <div class="panel-heading">
-            <a href="/projects/list?page=1&limit=15">
+            <a href="/projects?page=1&limit=15">
                 <span class="fa fa-chevron-left"> Liste des projets</span>
             </a>
             [[ if .UserLogged.IsManager ]]
@@ -36,7 +34,7 @@
             <h4>[[ .Project.Name ]]</h4>
             [[ if .Project.Themes ]]
             <div>
-                <h5 style="font-size: 14px">Themes du projet</h5>
+                <h5 style="font-size: 14px">Thèmes</h5>
                 [[ range $element := .Project.Themes ]]
                 <span class="label label-[[ randLabel ]]">[[ $element.Name ]]</span>
                 [[ end ]]
@@ -44,7 +42,7 @@
             [[ end ]]
             [[ if .Project.Technos ]]
             <div>
-                <h5 style="font-size: 14px">Technos du projet</h5>
+                <h5 style="font-size: 14px">Technos</h5>
                 [[ range $element := .Project.Technos ]]
                 <span class="label label-[[ randLabel ]]">[[ $element.Name ]]</span>
                 [[ end ]]
@@ -52,13 +50,13 @@
             [[ end ]]
         </div>
         <div class="panel-body">
-            <h5>Short Description</h5>
+            <h5>Description</h5>
 
             <p style="white-space: pre-line;">
                 [[ .Project.ShortDescription ]]
             </p>
 
-            <h5>Complete Description</h5>
+            <h5>Description détaillée</h5>
 
             <p style="white-space: pre-line">
                 [[ .Project.CompleteDescription ]]

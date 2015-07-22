@@ -245,6 +245,7 @@ func (c *UserController) AddUser() {
 	}
 	go mail.SendUserCreated(user)
 	c.flash.Data["success"] = "User created"
+	c.flash.Store(&c.Controller)
 	c.Redirect("/admin/users/add", 301)
 }
 
@@ -348,4 +349,36 @@ func (c *UserController) ListStudentView() {
 	c.Data["HasPreviousPage"] = paginatedItems.CurrentPage != 1
 	c.Data["ShowGoToFirst"] = paginatedItems.PagesToShow[0] != 1
 	c.Data["ShowGoToLast"] = paginatedItems.PagesToShow[len(paginatedItems.PagesToShow)-1] != paginatedItems.TotalPageCount
+}
+
+func (c *UserController) ResetPasswordView() {
+	c.TplNames = "forgot-password.html"
+}
+
+func (c *UserController) ResetPassword() {
+	user := &models.User{}
+	if err := c.ParseForm(user); err != nil {
+		c.SetErrorAndRedirect(err)
+		return
+	}
+	user, err := db.GetUserByEmail(user.Email)
+	if err != nil {
+		c.SetErrorAndRedirect(fmt.Errorf("Email not found"))
+		return
+	}
+	randString, err := randutil.AlphaString(9)
+	if err != nil {
+		c.SetErrorAndRedirect(err)
+		return
+	}
+	user.Token = randString
+	user.Password = ""
+	if err := db.EditUserByLogin(user.Login, user); err != nil {
+		c.SetErrorAndRedirect(err)
+		return
+	}
+	go mail.SendForgotPassword(user)
+	c.flash.Data["success"] = "Email send"
+	c.flash.Store(&c.Controller)
+	c.Redirect("/forgot", 301)
 }

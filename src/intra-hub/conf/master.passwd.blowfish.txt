@@ -7695,7 +7695,7 @@ etna_berger_d:$2a$07$eTGx3t8hWVLFkmONTgen9.1RPTEapSp1BJVJa5MhC9GYrB74fJjmW:94326
 etna_berhou_b:$2a$07$OPIhIc4sAQBS468vExndvuGpXeammVYlUUmBXg4uvIi5mFim6XlCS:95036:52015::0:0:ghanderi berhouma:/u/etna_2015/etna_berhou_b/cu:/usr/site/bin/shell
 etna_bernar_i:$2a$07$7uHTdHCSZE2/9cOUvg/ZquYCyQ4yUU/0B/ACAJCflKFG/L9YPE1pW:93159:52013::0:0:cedric bernard:/u/etna_2013/etna_bernar_i/cu:/usr/site/bin/shell
 etna_bernar_m:$2a$07$AOdLbPb3TkuykKadQ.S9E.UdUrWKnI94g6lFKJokMFTfNT5MqMchu:95037:52015::0:0:maximilien bernard:/u/etna_2015/etna_bernar_m/cu:/usr/site/bin/shell
-etna_bernar_s:$2a$07$3nK03LsbdRiXYuzpjPWC2.UFvDB8qctKR7NJywGuKQ6zQhEgWZtNi:96045:52016::0:0:sébastien bernard:/u/etna_2016/etna_bernar_s/cu:/usr/site/bin/shell
+etna_bernar_s:$2a$07$3nK03LsbdRiXYuzpjPWC2.UFvDB8qctKR7NJywGuKQ6zQhEgWZtNi:96045:52016::0:0:sï¿½bastien bernard:/u/etna_2016/etna_bernar_s/cu:/usr/site/bin/shell
 etna_bernou_g:$2a$07$PEteP37QS7vaH20t42HFCOLaf67cmpezvph34LryZSVARm34S2WzK:95004:52015::0:0:Gaya BERNOU:/u/etna_2015/etna_bernou_g/cu:/usr/site/bin/shell
 etna_berouc_p:$2a$07$xZ/tUajTogZB5XZLQqllVOirq71sA3h2Z7IaLwU/flnv6k5ZLR6VW:94171:52014::0:0:philippe beroucry:/u/etna_2014/etna_berouc_p/cu:/usr/site/bin/shell
 etna_berrah_h:$2a$07$vGkhTSdYsiJCxEQ1iYUEkO0k9kfgS7uP9JvciGNxvg1BfA2IYrKo2:94359:52014::0:0:hemza berrahou:/u/etna_2014/etna_berrah_h/cu:/usr/site/bin/shell

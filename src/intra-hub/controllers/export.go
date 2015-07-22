@@ -38,7 +38,6 @@ func (c *ExportController) Projects() {
 	}
 	raw, err := gocsv.MarshalBytes(pagination.Items)
 	if err != nil {
-		beego.Error(2, err)
 		return
 	}
 	c.Ctx.WriteString(string(raw))

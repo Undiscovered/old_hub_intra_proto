@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head lang="en">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Etudiants</title>
     <link rel="import" href="/static/elements/user/star-rating.html">
     [[ template "layouts/include-css.html" ]]
@@ -40,6 +38,7 @@
                 </ul>
             </span>
                 <button class="btn btn-primary" onclick="performSearch()">Rechercher</button>
+                <a href="/students?page=1&limit=25" class="btn btn-info">Reset</a>
 
                 <div class="table-responsive">
                     <table class="table table-striped table-hover">
@@ -56,9 +55,7 @@
                         </tr>
                         </thead>
                         <tr>
-                            <td>
-                                <a href="/students?page=1&limit=25" class="btn btn-info">Reset</a>
-                            </td>
+                            <td></td>
                             <td>
                                 <input id="login" class="form-control" placeholder="Login">
                             </td>
@@ -103,7 +100,8 @@
                         </tr>
                         [[ range $element := .PaginatedItems.Items ]]
                         <tr>
-                            <td><img onerror="errorImage(this)" class="img-responsive size" src="[[ $element.Picture ]]"></td>
+                            <td><img onerror="errorImage(this)" class="img-responsive size"
+                                     src="[[ $element.Picture ]]"></td>
                             <td><a href="/users/[[ $element.Login ]]">[[ $element.Login ]]</a></td>
                             <td>[[ $element.Name ]]</td>
                             <td>[[ $element.Email ]]</td>
@@ -215,7 +213,7 @@
         var page = getParameterByName('page');
         var promotions = $('#promotions').val();
         var cities = $('#cities').val();
-        var email = $('#email').val() ? $('#email').val(): null;
+        var email = $('#email').val() ? $('#email').val() : null;
         var login = $('#login').val() ? $('#login').val() : null;
         var name = $('#name').val() ? $('#name').val() : null;
         var skills = $('#skills').val() ? $('#skills').val() : null;
@@ -226,7 +224,6 @@
             return;
         }
 
-        console.log(limit);
         var baseUrl = String.format('{0}{1}?page={2}&limit={3}', window.location.origin, window.location.pathname, page, limit);
 
         if (cities !== null) {
@@ -242,15 +239,14 @@
             baseUrl += String.format('&name={0}', name);
         }
         if (skills !== null) {
-            baseUrl += String.format('&skills={0}', skills.join());
+            baseUrl += String.format('&skills={0}', encodeURIComponent(skills.join()));
         }
         if (themes !== null) {
-            baseUrl += String.format('&themes={0}', themes);
+            baseUrl += String.format('&themes={0}', encodeURIComponent(themes.join()));
         }
         if (login !== null) {
             baseUrl += String.format('&login={0}', login);
         }
-        console.log(baseUrl);
         window.location.href = baseUrl;
     }
 

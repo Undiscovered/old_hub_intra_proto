@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head lang="en">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Validation de Projets</title>
     <link rel="import" href="/static/bower_components/iron-icons/iron-icons.html">
     <link rel="import" href="/static/bower_components/iron-form/iron-form.html">
@@ -20,17 +18,17 @@
             <ul class="nav nav-tabs">
                 <li id="indeterminate" role="presentation" class="active">
                     <a href="/pedago/validation/indeterminate" role="button" data-toggle="modal">
-                        Etudiants a valides
+                        Étudiants a validés
                     </a>
                 </li>
                 <li id="validated" role="presentation">
                     <a href="/pedago/validation/validated" role="button" data-toggle="modal">
-                        Etudiants valides
+                        Étudiants validés
                     </a>
                 </li>
                 <li id="refused" role="presentation">
                     <a href="/pedago/validation/refused" role="button" data-toggle="modal">
-                        Etudiants refuses
+                        Étudiants refusés
                     </a>
                 </li>
             </ul>
@@ -40,7 +38,7 @@
                 <table class="table table-striped table-hover">
                     <thead>
                     <tr>
-                        <td>Etudiant</td>
+                        <td>Étudiant</td>
                         <td>Projet</td>
                         <td>Validation</td>
                     </tr>
@@ -54,15 +52,15 @@
                             <select id="validation-select" class="form-control">
                                 <option value="1" [[ if eq $element.PedagogicallyValidated 1 ]] selected="selected"
                                         [[ end ]]>
-                                    Indetermine
+                                    Indeterminé
                                 </option>
                                 <option value="0" [[ if eq $element.PedagogicallyValidated 0 ]] selected="selected"
                                         [[ end ]]>
-                                    Refuse
+                                    Refusé
                                 </option>
                                 <option value="2" [[ if eq $element.PedagogicallyValidated 2 ]] selected="selected"
                                         [[ end ]]>
-                                    Accepte
+                                    Accepté
                                 </option>
                             </select>
                         </td>
@@ -71,7 +69,7 @@
                                 <paper-button style="background: #2196F3; color: white;"
                                         onclick="validateProject([[ $element.User.Id ]], [[ $element.Project.Id ]])">
                                     <iron-icon icon="check"></iron-icon>
-                                    Valide
+                                    Valider
                                 </paper-button>
                             </form>
                         </td>
