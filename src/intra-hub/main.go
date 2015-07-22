@@ -101,7 +101,8 @@ func init() {
 		return string(js)
 	}
 	datefr := func(val time.Time) string {
-		return dateformat.FormatLocale(val, dateFormat, dateformat.French)
+		locale, _ := time.LoadLocation("Europe/Paris")
+		return dateformat.FormatLocale(val.In(locale), dateFormat, dateformat.French)
 	}
 	beego.AddFuncMap("incr", incr)
 	beego.AddFuncMap("decr", decr)
