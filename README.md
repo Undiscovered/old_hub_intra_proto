@@ -142,8 +142,9 @@ R.A.S
 
 Tri par : Promotion(s) impliqué(s), étudiant, état d'avancement, thémes, techno, manageur assigné
 
+# Backup
 
-# Database, backlog & documentation
-
-https://drive.google.com/drive/u/0/folders/0B_SWVXj-Hf43fmlXX0VhV2QxTVA3U2NCX0RSYmJRblgtXzdkTkJnWWNQY21IT1lQWExiY0E
-
+Mise en place du script
+`cp backup/backup.sh > /bin`
+Mise en place du crontab
+`crontab -l | cat backup/crontab.txt  | crontab -`
