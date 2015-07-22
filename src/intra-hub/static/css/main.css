@@ -28,6 +28,10 @@ body.padding {
     cursor: pointer;
 }
 
+.white {
+    color: #ffffff;
+}
+
 .blue {
     color: #4582ec;
 }
