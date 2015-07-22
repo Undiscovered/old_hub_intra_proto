@@ -31,6 +31,9 @@
                 </li>
             </ul>
 
+            [[ if .Project.Image ]]
+            <img src="[[ .Project.Image ]]">
+            [[ end ]]
             <h4>[[ .Project.Name ]]</h4>
             [[ if .Project.Themes ]]
             <div>
@@ -50,6 +53,11 @@
             [[ end ]]
         </div>
         <div class="panel-body">
+            <h5>Depot</h5>
+            <a href="[[ .Project.Repository ]]">[[ .Project.Repository ]]</a>
+
+            <h5>Site internet</h5>
+            <a href="[[ .Project.Website ]]">[[ .Project.Website ]]</a>
             <h5>Description</h5>
 
             <p style="white-space: pre-line;">
