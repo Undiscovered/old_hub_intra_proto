@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Liste des Projets</title>
+    [[ template "layouts/include-css.html" ]]
+</head>
+<body>
+[[ template "layouts/topbar.html" . ]]
+<div class="container-fluid">
+    <div class="row-fluid panel">
+        <table class="table">
+            <tr>
+                <th>Calendrier</th>
+                <th>Événements</th>
+            </tr>
+            [[ range .Calendars ]]
+            <tr>
+                <td><a href="/calendars/[[.Id]]">[[ .Name ]]</a></td>
+                <td>[[ .Events | len ]]</td>
+            </tr>
+            [[ end ]]
+        </table>
+    </div>
+</div>
+</body>
+[[ template "layouts/include-js.html" ]]
+
+</html>
