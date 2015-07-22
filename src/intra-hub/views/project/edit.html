@@ -39,6 +39,21 @@
                     <textarea class="form-control" id="completeDescription" rows="8" placeholder="Description complete"
                               name="completeDescription" required="">[[ .Project.CompleteDescription ]]</textarea>
                 </div>
+                <div class="form-group">
+                    <label for="website">Social</label>
+                    <input class="form-control" id="website" placeholder="Social" type="text"
+                           value="[[ .Project.Website ]]" name="website" required="">
+                </div>
+                <div class="form-group">
+                    <label for="shortDescription">Depot</label>
+                    <input class="form-control" id="repository" placeholder="Depot" type="text"
+                           value="[[ .Project.Repository ]]" name="repository" required="">
+                </div>
+                <div class="form-group">
+                    <label for="shortDescription">Image</label>
+                    <input class="form-control" id="image" placeholder="Image" type="text"
+                           value="[[ .Project.Image ]]" name="image" required="">
+                </div>
 
                 <div class="form-group">
                     <label for="managerLogin">Assigner un manager</label>
