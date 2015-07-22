@@ -324,18 +324,10 @@ func (c *UserController) ListStudentView() {
 	queryFilter["name"] = c.GetString("name", "")
 	queryFilter["login"] = c.GetString("login", "")
 	queryFilter["email"] = c.GetString("email", "")
-	page, err := c.GetInt("page")
-	if err != nil {
-		handleError(err)
-		return
-	}
-	limit, err := c.GetInt("limit")
-	if err != nil {
-		handleError(err)
-		return
-	}
+	page, _ := c.GetInt("page")
+	limit, _ := c.GetInt("limit")
 	if page <= 0 {
-		c.Redirect(fmt.Sprintf("/students?page=1&limit=%d", limit), 301)
+		c.Redirect(fmt.Sprintf("/students?page=1&limit=25"), 301)
 		return
 	}
 	if limit == 0 {
