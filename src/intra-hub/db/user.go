@@ -345,6 +345,11 @@ func LoadUserInfo(user *models.User) error {
 	return nil
 }
 
+func LoadUserProjects(user *models.User) error {
+	_, err := QueryProjects().Filter("Members__User__Id", user.Id).All(&user.Projects)
+	return err
+}
+
 func loadEveryInfoOfUsers(users []*models.User) error {
 	wg := sync.WaitGroup{}
 	errorChan := make(chan error, 1)
