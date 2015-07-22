@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head lang="en">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Liste des projets</title>
     [[ template "layouts/include-css.html" ]]
 </head>
@@ -38,11 +36,14 @@
                     </li>
                 </ul>
             </span>
-            [[ if .UserLogged.IsManager ]]
+
+                <button class="btn btn-primary" onclick="performSearch()">Rechercher</button>
+                <a class="btn btn-info" href="/projects/list?page=1&limit=15">Reset</a>
+                [[ if .UserLogged.IsManager ]]
             <span class="pull-right">
             <a class="btn btn-primary" href="/projects/add">Lancer un projet</a>
             </span>
-            [[ end ]]
+                [[ end ]]
             </div>
 
             <div class="row-fluid">
@@ -59,6 +60,45 @@
                             <td>Statuts</td>
                         </tr>
                         </thead>
+                        <tr>
+                            <td><input id="name" class="form-control" type="text" placeholder="Nom"></td>
+                            <td>
+                                <select id="promotions" class="form-control" multiple="multiple">
+                                    <option></option>
+                                    [[ range $element := .Promotions ]]
+                                    <option value="[[ $element.Name ]]">[[ $element.Name ]]</option>
+                                    [[ end ]]
+                                </select>
+                            </td>
+                            <td>
+                                <select id="cities" class="form-control" multiple="multiple">
+                                    <option></option>
+                                    [[ range $element := .Cities ]]
+                                    <option value="[[ $element.Name ]]">[[ $element.Name ]]</option>
+                                    [[ end ]]
+                                </select>
+                            </td>
+                            <td><input id="student" class="form-control" type="text" placeholder="Etudiant"></td>
+                            <td>
+                                <select id="managers" class="form-control" multiple="multiple">
+                                    <option></option>
+                                    [[ range $element := .Managers ]]
+                                    <option value="[[ $element.Login ]]">
+                                        [[ $element.FirstName ]] [[ $element.LastName ]]
+                                    </option>
+                                    [[ end ]]
+                                </select>
+                            </td>
+                            <td>
+                                <select id="status" class="form-control" multiple="multiple">
+                                    <option></option>
+                                    [[ range $element := .Status ]]
+                                    <option value="[[ $element ]]">[[ i18n $.Lang $element ]]
+                                    </option>
+                                    [[ end ]]
+                                </select>
+                            </td>
+                        </tr>
                         [[ range $element := .PaginatedItems.Items ]]
 
                         <tr>
@@ -105,64 +145,7 @@
 
                 </div>
 
-                <div class="col-md-2">
-                    <h4>Recherche <span class="pull-right">
-                        <a class="btn btn-xs btn-info" href="/projects/list?page=1&limit=15">Reset</a>
-                    </span>
-                    </h4>
 
-                    <div class="form-group">
-                        <label for="name">Name</label>
-                        <input id="name" class="form-control" type="text" placeholder="Nom">
-                    </div>
-                    <div class="form-group">
-                        <label for="student">Etudiant</label>
-                        <input id="student" class="form-control" type="text" placeholder="Etudiant">
-                    </div>
-                    <div class="form-group">
-                        <label for="promotions">Promotion</label>
-                        <select id="promotions" class="form-control" multiple="multiple">
-                            <option></option>
-                            [[ range $element := .Promotions ]]
-                            <option value="[[ $element.Name ]]">[[ $element.Name ]]</option>
-                            [[ end ]]
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="cities">Ville</label>
-                        <select id="cities" class="form-control" multiple="multiple">
-                            <option></option>
-                            [[ range $element := .Cities ]]
-                            <option value="[[ $element.Name ]]">[[ $element.Name ]]</option>
-                            [[ end ]]
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="managers">Manageurs</label>
-                        <select id="managers" class="form-control" multiple="multiple">
-                            <option></option>
-                            [[ range $element := .Managers ]]
-                            <option value="[[ $element.Login ]]">[[ $element.FirstName ]] [[ $element.LastName ]]
-                            </option>
-                            [[ end ]]
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="status">Status</label>
-                        <select id="status" class="form-control" multiple="multiple">
-                            <option></option>
-                            [[ range $element := .Status ]]
-                            <option value="[[ $element ]]">[[ i18n $.Lang $element ]]
-                            </option>
-                            [[ end ]]
-                        </select>
-                    </div>
-
-                    <button class="btn btn-primary" onclick="performSearch()">Rechercher</button>
-                </div>
             </div>
         </div>
     </div>
@@ -205,22 +188,22 @@
         });
         var statuses = {};
         // generation of status and managers via the backend :(
-        [[ range $element := .Status ]]
-        statuses['[[ $element ]]'] = '[[ i18n $.Lang $element ]]'
-        [[ end ]]
+        // [[range $element := .Status]]
+        statuses['[[ $element ]]'] = '[[ i18n $.Lang $element ]]';
+        // [[end]]
         var managers = {};
-        [[ range $element := .Managers ]]
-        managers['[[ $element.Login ]]'] = '[[ $element.FirstName ]] [[ $element.LastName ]]'
-        [[ end ]]
+        // [[range $element := .Managers]]
+        managers['[[ $element.Login ]]'] = '[[ $element.FirstName ]] [[ $element.LastName ]]';
+        // [[end]]
         getParameterByName('status').split(',').forEach(function (status) {
             if (status) {
                 statusSelector.append(new Option(statuses[status], status, true, true));
             }
         });
         getParameterByName('managers').split(',').forEach(function (manager) {
-           if (manager) {
-               managersSelector.append(new Option(managers[manager], manager, true, true));
-           }
+            if (manager) {
+                managersSelector.append(new Option(managers[manager], manager, true, true));
+            }
         });
         promoSelector.trigger('change');
         citiesSelector.trigger('change');

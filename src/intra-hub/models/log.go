@@ -17,3 +17,12 @@ type Log struct {
 	User     *User     `orm:"rel(fk)"`
 	Date     time.Time `orm:"auto_now_add;type(datetime)"`
 }
+
+const (
+	ActionLogIn       = "LOG_IN"
+	ActionLogOut      = "LOG_OUT"
+	ActionAddProject  = "ADD_PROJECT"
+	ActionEditProject = "EDIT_PROJECT"
+	ActionAddTheme    = "ADD_THEME"
+	ActionAddSkill    = "ADD_SKILL"
+)
