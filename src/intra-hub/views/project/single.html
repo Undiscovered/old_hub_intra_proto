@@ -34,7 +34,7 @@
             <h4>[[ .Project.Name ]]</h4>
             [[ if .Project.Themes ]]
             <div>
-                <h5 style="font-size: 14px">Themes du projet</h5>
+                <h5 style="font-size: 14px">Thèmes</h5>
                 [[ range $element := .Project.Themes ]]
                 <span class="label label-[[ randLabel ]]">[[ $element.Name ]]</span>
                 [[ end ]]
@@ -42,7 +42,7 @@
             [[ end ]]
             [[ if .Project.Technos ]]
             <div>
-                <h5 style="font-size: 14px">Technos du projet</h5>
+                <h5 style="font-size: 14px">Technos</h5>
                 [[ range $element := .Project.Technos ]]
                 <span class="label label-[[ randLabel ]]">[[ $element.Name ]]</span>
                 [[ end ]]
@@ -50,13 +50,13 @@
             [[ end ]]
         </div>
         <div class="panel-body">
-            <h5>Short Description</h5>
+            <h5>Description</h5>
 
             <p style="white-space: pre-line;">
                 [[ .Project.ShortDescription ]]
             </p>
 
-            <h5>Complete Description</h5>
+            <h5>Description détaillée</h5>
 
             <p style="white-space: pre-line">
                 [[ .Project.CompleteDescription ]]
