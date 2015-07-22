@@ -149,9 +149,20 @@
                             </template>
                         </div>
                     </template>
-
                 </div>
             </div>
+            <template is="dom-repeat" items="{{ user.projects }}">
+
+            </template>
+            <paper-toolbar>
+                <div class="title">
+                    <span>{{ user.firstName }}</span> <span>{{ user.lastName }}</span>
+                </div>
+                <template is="dom-if" if="{{ canEdit }}">
+                    <a href="{{ editLink }}">
+                        <paper-icon-button white icon="create"></paper-icon-button>
+                    </a>
+                </template>
         </template>
         <!-- End Profile View -->
 
