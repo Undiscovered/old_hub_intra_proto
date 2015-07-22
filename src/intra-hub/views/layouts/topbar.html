@@ -1,0 +1,65 @@
+[[ template "layouts/include-js.html" ]]
+
+<nav class="navbar navbar-default" style="margin-top: 0">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a href="/home" class="navbar-brand">Innovation Hub</a>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar blue"></span>
+                <span class="icon-bar blue"></span>
+                <span class="icon-bar blue"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse" id="nav">
+            <ul class="nav navbar-nav navbar-left">
+                <li id="hub" onclick="switchActiveTab()" class="active">
+                    <a href="/home">Le Hub</a>
+                </li>
+                <li id="events" onclick="switchActiveTab()">
+                    <a href="#" role="button" data-toggle="modal">Evenements</a>
+                </li>
+                <li id="projects" onclick="switchActiveTab()">
+                    <a href="/projects" role="button" data-toggle="modal">Projets</a>
+                </li>
+                <li id="staff" onclick="switchActiveTab()">
+                    <a href="/staff" role="button" data-toggle="modal">Staff</a>
+                </li>
+                <li id="students" onclick="switchActiveTab()">
+                    <a href="/students?page=1&limit=25" role="button" data-toggle="modal">Etudiants</a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">SpeedBar
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        [[ if .UserLogged.IsManager ]]
+                        <li><a href="/projects/add">
+                            <span class="glyphicon glyphicon-plus"></span> Lancer un Projet
+                        </a></li>
+                        [[ end ]]
+                        <li><a href="/projects/list?limit=15&page=1">
+                            <span class="glyphicon glyphicon-th-list"></span> Tous les projets
+                        </a></li>
+                        [[ if .UserLogged.IsPedago ]]
+                        <li><a href="/pedago/validation/indeterminate">
+                            <span class="glyphicon glyphicon-ok-circle"></span> Validation Pedagogique
+                        </a></li>
+                        [[ end ]]
+                    </ul>
+                </li>
+                <li><a href="/me" title="Profil" data-toggle="tooltip" data-placement="bottom">
+                    <img onerror="errorImage(this)" style="-webkit-border-radius: 150px;-moz-border-radius: 150px;border-radius: 150px;"
+                         width="14px" src="[[ .UserLogged.Picture ]]">
+                </a></li>
+                [[ if .UserLogged.IsAdmin ]]
+                <li><a href="/admin" title="Admin" data-toggle="tooltip" data-placement="bottom">
+                    <span class="glyphicon glyphicon-star"></span>
+                </a></li>
+                [[ end ]]
+                <li><a href="/logout" class="off" title="Deconnexion"><i class="glyphicon glyphicon-off"></i></a></li>
+            </ul>
+        </div>
+    </div>
+</nav>

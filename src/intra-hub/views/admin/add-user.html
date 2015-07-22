@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Nouvel utilisateur</title>
+    [[ template "layouts/include-css.html" ]]
+</head>
+<body>
+[[ template "layouts/topbar.html" . ]]
+
+<div class="container-fluid">
+    [[ if .flash.error ]]
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+        [[ .flash.error ]]
+    </div>
+    [[ end ]]
+    [[ if .flash.success ]]
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+        [[ .flash.success ]]
+    </div>
+    [[ end ]]
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>Ajouter un nouvel utilisateur</h4>
+        </div>
+        <div class="panel-body">
+            <form method="POST" action="/users">
+                <div class="form-group">
+                    <label for="login">Login</label>
+                    <input id="login" name="login" type="text" class="form-control" placeholder="Login" required="">
+                </div>
+                <div class="form-group">
+                    <label for="fname">Prenom</label>
+                    <input id="fname" name="firstName" type="text" class="form-control" placeholder="Prenom"
+                           required="">
+                </div>
+                <div class="form-group">
+                    <label for="lname">Nom</label>
+                    <input id="lname" name="lastName" type="text" class="form-control" placeholder="Nom"
+                           required="">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input id="email" name="email" type="email" class="form-control" placeholder="Email" required="">
+                </div>
+                <div class="form-group">
+                    <label for="role">Role</label>
+                    <select id="role" class="form-control" name="groupId">
+                        [[ range $element := .Groups ]]
+                        <option value="[[ $element.Id ]]">[[ i18n $.Lang $element.Name ]]</option>
+                        [[ end ]]
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="city">Ville</label>
+                    <select id="city" class="form-control" name="cityId">
+                        [[ range $element := .Cities ]]
+                        <option value="[[ $element.Id ]]">[[ i18n $.Lang $element.Name ]]</option>
+                        [[ end ]]
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="promotion">Promotion</label>
+                    <select id="promotion" class="form-control" name="promotionId">
+                        [[ range $element := .Promotions ]]
+                        <option value="[[ $element.Id ]]">[[ i18n $.Lang $element.Name ]]</option>
+                        [[ end ]]
+                    </select>
+                </div>
+
+
+                <button class="btn btn-success">Creer l'utilisateur</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Etudiants</title>
+    <link rel="import" href="/static/elements/user/star-rating.html">
+    [[ template "layouts/include-css.html" ]]
+</head>
+<body>
+[[ template "layouts/topbar.html" . ]]
+
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>Etudiants - [[ .PaginatedItems.TotalItemCount ]] en tout</h4>
+        </div>
+
+        <div class="panel-body">
+            <div class="row-fluid" style="margin-bottom: 15px; padding-left:15px">
+            <span class="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
+                        data-toggle="dropdown" aria-expanded="true">
+                    [[ .Limit ]] Etudiants par page
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                    <li role="presentation">
+                        <a role="menuitem" tabindex="-1" href="/students?page=1&limit=15">15</a>
+                    </li>
+                    <li role="presentation">
+                        <a role="menuitem" tabindex="-1" href="/students?page=1&limit=30">30</a>
+                    </li>
+                    <li role="presentation">
+                        <a role="menuitem" tabindex="-1" href="/students?page=1&limit=50">50</a>
+                    </li>
+                    <li role="presentation">
+                        <a role="menuitem" tabindex="-1" href="/students?page=1&limit=100">100</a>
+                    </li>
+                </ul>
+            </span>
+                <button class="btn btn-primary" onclick="performSearch()">Rechercher</button>
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                        <tr>
+                            <td></td>
+                            <td>Login</td>
+                            <td>Nom</td>
+                            <td>Email</td>
+                            <td>Promotion</td>
+                            <td>Ville</td>
+                            <td>Skills</td>
+                            <td>Themes</td>
+                        </tr>
+                        </thead>
+                        <tr>
+                            <td>
+                                <a href="/students?page=1&limit=25" class="btn btn-info">Reset</a>
+                            </td>
+                            <td>
+                                <input id="login" class="form-control" placeholder="Login">
+                            </td>
+                            <td>
+                                <input id="name" class="form-control" placeholder="Nom">
+                            </td>
+                            <td>
+                                <input id="email" class="form-control" placeholder="Email">
+                            </td>
+                            <td>
+                                <select id="promotions" class="form-control" multiple="multiple">
+                                    <option></option>
+                                    [[ range $element := .Promotions ]]
+                                    <option value="[[ $element.Name ]]">[[ $element.Name ]]</option>
+                                    [[ end ]]
+                                </select>
+                            </td>
+                            <td>
+                                <select id="cities" class="form-control" multiple="multiple">
+                                    <option></option>
+                                    [[ range $element := .Cities ]]
+                                    <option value="[[ $element.Name ]]">[[ $element.Name ]]</option>
+                                    [[ end ]]
+                                </select>
+                            </td>
+                            <td>
+                                <select id="skills" class="form-control" multiple="multiple">
+                                    <option></option>
+                                    [[ range $element := .Skills ]]
+                                    <option value="[[ $element.Name ]]">[[ $element.Name ]]</option>
+                                    [[ end ]]
+                                </select>
+                            </td>
+                            <td>
+                                <select id="themes" class="form-control" multiple="multiple">
+                                    <option></option>
+                                    [[ range $element := .Themes ]]
+                                    <option value="[[ $element.Name ]]">[[ $element.Name ]]</option>
+                                    [[ end ]]
+                                </select>
+                            </td>
+                        </tr>
+                        [[ range $element := .PaginatedItems.Items ]]
+                        <tr>
+                            <td><img onerror="errorImage(this)" class="img-responsive size" src="[[ $element.Picture ]]"></td>
+                            <td><a href="/users/[[ $element.Login ]]">[[ $element.Login ]]</a></td>
+                            <td>[[ $element.Name ]]</td>
+                            <td>[[ $element.Email ]]</td>
+                            <td>[[ $element.Promotion.Name ]]</td>
+                            <td>[[ $element.City.Name ]]</td>
+                            <td>
+                                [[ range $skill := $element.Skills ]]
+                                <div>
+                                    <span style="color: #2196F3">[[ $skill.Name ]]</span>
+                                    <star-rating showEmpty="false" rating="[[ $skill.Level ]]"></star-rating>
+                                </div>
+                                [[ end]]
+                            </td>
+                            <td>
+                                [[ range $theme := $element.Themes ]]
+                                <div>
+                                    <span style="color: #2196F3">[[ $theme.Name ]]</span>
+                                    <star-rating showEmpty="false" rating="[[ $theme.Level ]]"></star-rating>
+                                </div>
+                                [[ end]]
+                            </td>
+
+                        </tr>
+                        [[ end ]]
+                    </table>
+                    <ul class="pagination center-block">
+                        [[ if .HasPreviousPage ]]
+                        <li><a href="/students?page=[[ decr .PaginatedItems.CurrentPage ]]&limit=[[ .Limit ]]">
+                            <span class="glyphicon glyphicon-chevron-left"></span></a></li>
+                        [[ end ]]
+                        [[ if .ShowGoToFirst ]]
+                        <li><a href="/students?page=1&limit=[[ .Limit ]]">
+                            1
+                        </a></li>
+                        [[ end ]]
+                        [[ range $element := .PaginatedItems.PagesToShow ]]
+                        <li class="[[ if eq $element $.PaginatedItems.CurrentPage ]]active[[ end ]]">
+                            <a class="text-primary" href="/students?page=[[ $element ]]&limit=[[ $.Limit ]]">
+                                [[ $element ]]</a></li>
+                        [[ end ]]
+                        [[ if .ShowGoToLast ]]
+                        <li><a href="/students?page=[[ .PaginatedItems.TotalPageCount ]]&limit=[[ .Limit ]]">
+                            [[ .PaginatedItems.TotalPageCount ]]
+                        </a></li>
+                        [[ end ]]
+                        [[ if .HasNextPage ]]
+                        <li><a href="/students?page=[[ incr .PaginatedItems.CurrentPage ]]&limit=[[ .Limit ]]">
+                            <span class="glyphicon glyphicon-chevron-right"></span></a></li>
+                        [[ end ]]
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function start() {
+        $('#name').val(getParameterByName('name'));
+        $('#login').val(getParameterByName('login'));
+        $('#email').val(getParameterByName('email'));
+
+        var promoSelector = $('#promotions').select2({
+            placeholder: 'Promotions',
+            tags: true
+        });
+        var citiesSelector = $('#cities').select2({
+            placeholder: 'Villes',
+            tags: true
+        });
+        var skillSelector = $('#skills').select2({
+            placeholder: 'Skills',
+            tags: true
+        });
+        var themeSelector = $('#themes').select2({
+            placeholder: 'Themes',
+            tags: true
+        });
+
+        getParameterByName('promotions').split(',').forEach(function (promo) {
+            if (promo) {
+                promoSelector.append(new Option(promo, promo, true, true));
+            }
+        });
+        getParameterByName('cities').split(',').forEach(function (city) {
+            if (city) {
+                citiesSelector.append(new Option(city, city, true, true));
+            }
+        });
+        getParameterByName('skills').split(',').forEach(function (skill) {
+            if (skill) {
+                skillSelector.append(new Option(skill, skill, true, true));
+            }
+        });
+        getParameterByName('themes').split(',').forEach(function (theme) {
+            if (theme) {
+                themeSelector.append(new Option(theme, theme, true, true));
+            }
+        });
+        promoSelector.trigger('change');
+        citiesSelector.trigger('change');
+        themeSelector.trigger('change');
+        skillSelector.trigger('change');
+    }
+
+    function performSearch() {
+        var limit = getParameterByName('limit');
+        var page = getParameterByName('page');
+        var promotions = $('#promotions').val();
+        var cities = $('#cities').val();
+        var email = $('#email').val() ? $('#email').val(): null;
+        var login = $('#login').val() ? $('#login').val() : null;
+        var name = $('#name').val() ? $('#name').val() : null;
+        var skills = $('#skills').val() ? $('#skills').val() : null;
+        var themes = $('#themes').val() ? $('#themes').val() : null;
+
+        if (cities === null && promotions === null && name === null && themes === null &&
+                skills === null && name === null && login === null && email === null) {
+            return;
+        }
+
+        console.log(limit);
+        var baseUrl = String.format('{0}{1}?page={2}&limit={3}', window.location.origin, window.location.pathname, page, limit);
+
+        if (cities !== null) {
+            baseUrl += String.format('&cities={0}', cities.join());
+        }
+        if (email !== null) {
+            baseUrl += String.format('&email={0}', email);
+        }
+        if (promotions !== null) {
+            baseUrl += String.format('&promotions={0}', promotions.join());
+        }
+        if (name !== null) {
+            baseUrl += String.format('&name={0}', name);
+        }
+        if (skills !== null) {
+            baseUrl += String.format('&skills={0}', skills.join());
+        }
+        if (themes !== null) {
+            baseUrl += String.format('&themes={0}', themes);
+        }
+        if (login !== null) {
+            baseUrl += String.format('&login={0}', login);
+        }
+        console.log(baseUrl);
+        window.location.href = baseUrl;
+    }
+
+    $('document').ready(start);
+</script>
+</body>
+
+</html>

@@ -1,0 +1,37 @@
+body.padding {
+    padding-top: 120px;
+    padding-bottom: 40px;
+}
+
+.btn {
+    outline: 0;
+    border-style: none;
+    box-shadow: inset 2px -3px rgba(0, 0, 0, 0.15);
+}
+
+.btn:focus {
+    outline: 0;
+    -webkit-outline: 0;
+    -moz-outline: 0;
+}
+
+.light-margin {
+    margin: 10px;
+}
+
+.size {
+    width: 150px;
+    height: auto;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.blue {
+    color: #4582ec;
+}
+
+.red {
+    color: #F44336;
+}

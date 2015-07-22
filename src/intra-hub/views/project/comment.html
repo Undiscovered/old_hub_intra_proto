@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>[[ .Project.Name ]] - Commentaires</title>
+    [[ template "layouts/include-css.html" ]]
+</head>
+<body>
+[[ template "layouts/topbar.html" . ]]
+
+<div class="container-fluid">
+    [[ if .flash.error ]]
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+        [[ .flash.error ]]
+    </div>
+    [[ end ]]
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <ul class="nav nav-tabs">
+                <li role="presentation">
+                    <a href="/projects/[[ .Project.Id ]]">[[ .Project.Name ]]</a>
+                </li>
+                <li role="presentation" class="active">
+                    <a href="/projects/[[ .Project.Id ]]/comments" role="button" data-toggle="modal">
+                        <span class="label label-primary">[[ len .Project.Comments ]]</span>
+                        Commentaires
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+        <div class="panel-body" style="margin: 5px;">
+            [[ range $element := .Project.Comments ]]
+            <div class="row" style="padding: 5px; border: solid 1px #dddddd; margin-bottom: 1px;">
+                <!-- Left part -->
+                <div class="col-md-2 text-center" style="background: #eeeeee;">
+                    <img onerror="errorImage(this)" class="size" src="[[ $element.Author.Picture ]]">
+                    <div>[[ $element.Author.Login ]]</div>
+                    <div>[[ datefr $element.Created ]]</div>
+                </div>
+                <!-- End Left part -->
+
+                <!-- Right part -->
+                <div class="col-md-10" style="white-space: pre-line">
+                [[ $element.Message ]]
+                </div>
+                <!-- End Right part -->
+
+            </div>
+            [[ end ]]
+            <div class="row" style="padding: 25px;">
+                <div class="col-md-2 text-center">
+                    <img onerror="errorImage(this)" class="size" src="[[ .UserLogged.Picture ]]">
+                </div>
+                <form method="post" action="/projects/[[ .Project.Id ]]/comments" class="col-md-10">
+                    <input type="hidden" name="projectId" value="[[ .Project.Id ]]">
+                    <textarea class="form-control" placeholder="Entrez votre message..." rows="3" name="message"></textarea>
+
+                    <div class="pull-right" style="margin: 5px;">
+                        <button class="btn btn-primary " type="submit">Envoyer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

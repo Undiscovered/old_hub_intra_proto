@@ -1,0 +1,31 @@
+{
+  "name": "intra-hub",
+  "version": "0.0.0",
+  "homepage": "https://github.com/KaeYuri/hub_intra_proto",
+  "authors": [
+    "Vincent <20cent.neel@gmail.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.0.0",
+    "iron-elements": "PolymerElements/iron-elements#~1.0.0",
+    "paper-material": "PolymerElements/paper-material#^1.0.0",
+    "iron-flex-layout": "PolymerElements/iron-flex-layout#~1.0.1",
+    "paper-icon-button": "PolymerElements/paper-icon-button#^1.0.0",
+    "paper-input": "PolymerElements/paper-input#^1.0.0",
+    "gold-email-input": "PolymerElements/gold-email-input#^1.0.0",
+    "paper-menu": "PolymerElements/paper-menu#^1.0.0",
+    "paper-fab": "PolymerElements/paper-fab#^1.0.0",
+    "gold-phone-input": "PolymerElements/gold-phone-input#^1.0.0",
+    "paper-tabs": "PolymerElements/paper-tabs#^1.0.0",
+    "iron-form": "PolymerElements/iron-form#^1.0.0",
+    "paper-toast": "PolymerElements/paper-toast#^1.0.0"
+  }
+}

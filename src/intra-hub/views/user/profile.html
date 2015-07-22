@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>[[ .User.Name ]]</title>
+    <link rel="import" href="/static/elements/layout/page-content.html">
+    <link rel="import" href="/static/elements/user/profile.html">
+    [[ template "layouts/include-css.html" ]]
+</head>
+<body>
+[[ template "layouts/topbar.html" . ]]
+
+<page-content>
+    <user-profile
+            is-admin="[[ .UserLogged.IsAdmin ]]"
+            can-edit="[[ .Edit ]]"
+            user="[[ .UserJSON ]]">
+
+    </user-profile>
+</page-content>
+
+</body>
+</html>

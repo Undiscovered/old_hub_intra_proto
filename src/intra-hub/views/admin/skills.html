@@ -1,0 +1,51 @@
+<div class="input-group">
+    <input id="skill" name="name" onkeypress="if (event.keyCode === 13) {addSkill()}" placeholder="Skill" type="text"
+           class="form-control">
+
+    <div class="input-group-btn">
+        <button onclick="addSkill()" class="btn btn-success">Ajouter un Skill</button>
+    </div>
+</div>
+
+
+<ul id="list-skills" class="list-group">
+    [[ if not .Skills ]]
+    <li class="list-group-item active" id="empty">0 skills</li>
+    [[ end ]]
+    [[ range $index, $element := .Skills ]]
+    <li class="list-group-item" id="[[ $element.Id ]]">
+        <span class="label label-[[ randLabel ]] s-1x">[[ $element.Name ]]</span>
+        <span class="pull-right">
+            <span class="btn-group btn-group-xs">
+                <button class="btn btn-danger" onclick="deleteSkill([[ $element.Id ]])"><span
+                        class="fa fa-remove color-white"></span></button>
+            </span>
+        </span>
+    </li>
+    [[ end ]]
+</ul>
+
+<script>
+    function addSkill() {
+        var th = $('#skill');
+        var skillName = th.val().trim();
+        if (skillName === '') {
+            return;
+        }
+        th.val('');
+        new Http().Post('/skills', {name: skillName}).success(function (skill) {
+            $('#list-skills').append('<li class="list-group-item" id="' + skill.id + '"><span class="label label-' + randomizeLabel() +
+                    ' s-1x" >' + skill.name + '</span>' +
+                    '<span class="pull-right"><span class="btn-group btn-group-xs">' +
+                    '<button class="btn btn-danger" onclick=deleteSkill(' + skill.id + ')><span class="fa fa-remove color-white"></span></button>' +
+                    '<span/><span/></li> ');
+            $('#empty').hide();
+        });
+    }
+
+    function deleteSkill(id) {
+        new Http().Delete('/skills/' + id).success(function () {
+            $('#' + id).remove();
+        });
+    }
+</script>

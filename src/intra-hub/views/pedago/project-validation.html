@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Validation de Projets</title>
+    <link rel="import" href="/static/bower_components/iron-icons/iron-icons.html">
+    <link rel="import" href="/static/bower_components/iron-form/iron-form.html">
+    <link rel="import" href="/static/bower_components/paper-button/paper-button.html">
+
+    [[ template "layouts/include-css.html" ]]
+</head>
+
+<body>
+[[ template "layouts/topbar.html" . ]]
+
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <ul class="nav nav-tabs">
+                <li id="indeterminate" role="presentation" class="active">
+                    <a href="/pedago/validation/indeterminate" role="button" data-toggle="modal">
+                        Etudiants a valides
+                    </a>
+                </li>
+                <li id="validated" role="presentation">
+                    <a href="/pedago/validation/validated" role="button" data-toggle="modal">
+                        Etudiants valides
+                    </a>
+                </li>
+                <li id="refused" role="presentation">
+                    <a href="/pedago/validation/refused" role="button" data-toggle="modal">
+                        Etudiants refuses
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <td>Etudiant</td>
+                        <td>Projet</td>
+                        <td>Validation</td>
+                    </tr>
+                    </thead>
+                    [[ range $element := .UserProjects ]]
+
+                    <tr>
+                        <td><a href="/users/[[ $element.User.Login ]]">[[ $element.User.Login ]]</a></td>
+                        <td><a href="/projects/[[ $element.Project.Id ]]">[[ $element.Project.Name ]]</a></td>
+                        <td>
+                            <select id="validation-select" class="form-control">
+                                <option value="1" [[ if eq $element.PedagogicallyValidated 1 ]] selected="selected"
+                                        [[ end ]]>
+                                    Indetermine
+                                </option>
+                                <option value="0" [[ if eq $element.PedagogicallyValidated 0 ]] selected="selected"
+                                        [[ end ]]>
+                                    Refuse
+                                </option>
+                                <option value="2" [[ if eq $element.PedagogicallyValidated 2 ]] selected="selected"
+                                        [[ end ]]>
+                                    Accepte
+                                </option>
+                            </select>
+                        </td>
+                        <td>
+                            <form is="iron-form" id="form" method="post">
+                                <paper-button style="background: #2196F3; color: white;"
+                                        onclick="validateProject([[ $element.User.Id ]], [[ $element.Project.Id ]])">
+                                    <iron-icon icon="check"></iron-icon>
+                                    Valide
+                                </paper-button>
+                            </form>
+                        </td>
+                    </tr>
+                    [[ end ]]
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    function validateProject(userId, projectId) {
+        var validationValue = $('#validation-select').val();
+        var form = document.getElementById('form');
+        form.action = String.format('/pedago/validate/{0}/{1}/{2}', userId, projectId, validationValue);
+        form.submit();
+        window.location.reload();
+    }
+
+    function switchTabs() {
+        var path = window.location.pathname;
+        var indeterminate = $('#indeterminate');
+        var refused = $('#refused');
+        var validated = $('#validated');
+        indeterminate.removeClass('active');
+        refused.removeClass('active');
+        validated.removeClass('active');
+        if (~path.indexOf('indeterminate') !== 0) {
+            indeterminate.addClass('active');
+        } else if (~path.indexOf('refused') !== 0) {
+            refused.addClass('active');
+        } else {
+            validated.addClass('active');
+        }
+    }
+    $('document').ready(switchTabs());
+</script>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>[[ .Project.Name ]]</title>
+    [[ template "layouts/include-css.html" ]]
+</head>
+
+<body>
+[[ template "layouts/topbar.html" . ]]
+
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <a href="/projects/list?page=1&limit=15">
+                <span class="fa fa-chevron-left"> Liste des projets</span>
+            </a>
+            [[ if .UserLogged.IsManager ]]
+            <a href="/projects/edit/[[ .Project.Id ]]" class="pull-right">
+                <span class="fa fa-pencil"> Editer</span>
+            </a>
+            [[ end ]]
+            <ul class="nav nav-tabs">
+                <li role="presentation" class="active">
+                    <a href="/projects/[[ .Project.Id ]]">[[ .Project.Name ]]</a>
+                </li>
+                <li role="presentation">
+                    <a href="/projects/[[ .Project.Id ]]/comments" role="button" data-toggle="modal">
+                        <span class="label label-primary">[[ len .Project.Comments ]]</span>
+                        Commentaires
+                    </a>
+                </li>
+            </ul>
+
+            <h4>[[ .Project.Name ]]</h4>
+            [[ if .Project.Themes ]]
+            <div>
+                <h5 style="font-size: 14px">Themes du projet</h5>
+                [[ range $element := .Project.Themes ]]
+                <span class="label label-[[ randLabel ]]">[[ $element.Name ]]</span>
+                [[ end ]]
+            </div>
+            [[ end ]]
+            [[ if .Project.Technos ]]
+            <div>
+                <h5 style="font-size: 14px">Technos du projet</h5>
+                [[ range $element := .Project.Technos ]]
+                <span class="label label-[[ randLabel ]]">[[ $element.Name ]]</span>
+                [[ end ]]
+            </div>
+            [[ end ]]
+        </div>
+        <div class="panel-body">
+            <h5>Short Description</h5>
+
+            <p style="white-space: pre-line;">
+                [[ .Project.ShortDescription ]]
+            </p>
+
+            <h5>Complete Description</h5>
+
+            <p style="white-space: pre-line">
+                [[ .Project.CompleteDescription ]]
+            </p>
+            [[ if .Project.Members ]]
+            <h5>Membres</h5>
+            <ul class="list-group">
+                [[ range $element := .Project.Members ]]
+                <li class="list-group-item">
+                    <img onerror="errorImage(this)" class="size" src="[[ $element.Picture ]]">
+                    <a href="/users/[[ $element.Login ]]"> [[ $element.Name ]]</a> - [[ $element.Promotion.Name ]]
+                </li>
+                [[ end ]]
+            </ul>
+            [[ end ]]
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

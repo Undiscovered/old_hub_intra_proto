@@ -1,0 +1,90 @@
+<link rel="import" href="/static/bower_components/iron-icons/iron-icons.html">
+
+<dom-module id="star-rating">
+    <style>
+        .rating {
+            display: inline-block;
+            margin: 0;
+            padding: 0;
+        }
+
+        li {
+            padding: 1px;
+            color: #ddd;
+            font-size: 20px;
+            text-shadow: .05em .05em #aaa;
+            list-style-type: none;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .gold {
+            color: #ffd700;
+        }
+
+        .clickable {
+            cursor: pointer;
+        }
+
+        .not-clickable {
+            cursor: default;
+        }
+    </style>
+    <template>
+
+        <ul class="rating">
+            <template id="stars" is="dom-repeat" items="{{ stars }}">
+                <li on-click="setStar"><i class$="{{ computeClass(index, rating) }}"></i></li>
+            </template>
+        </ul>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'star-rating',
+
+            properties: {
+                max: {
+                    value: 5
+                },
+                rating: {
+                    value: 0,
+                    notify: true
+                },
+                showEmpty: {
+                    value: true
+                },
+                edit: {
+                    type: Boolean,
+                    value: false
+                }
+            },
+            computeClass: function (index) {
+                var clazz = '';
+                if (index < this.rating) {
+                    clazz += 'gold ';
+                }
+                if (this.showEmpty || index < this.rating) {
+                    clazz += 'fa fa-star ';
+                }
+                if (this.edit) {
+                    clazz += 'clickable ';
+                } else {
+                    clazz += 'not-clickable';
+                }
+                return clazz;
+            },
+            setStar: function (event) {
+                if (this.edit) {
+                    this.rating = event.model.index + 1;
+                }
+            },
+            ready: function () {
+                this.stars = [];
+                for (var i = 0; i < this.max; ++i) {
+                    this.stars.push({});
+                }
+            }
+        });
+    </script>
+</dom-module>

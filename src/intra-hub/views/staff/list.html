@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Staff</title>
+    [[ template "layouts/include-css.html" ]]
+</head>
+<body>
+[[ template "layouts/topbar.html" . ]]
+
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4>Staff</h4>
+        </div>
+
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <td></td>
+                        <td>Login</td>
+                        <td>Nom</td>
+                        <td>Email</td>
+                        <td>Promotion</td>
+                        <td>Planning</td>
+                        <td>Ville</td>
+                        [[ if .UserLogged.IsManager ]]
+                        <td>Numero de telephone</td>
+                        <td>Projets gérés</td>
+                        [[ end ]]
+                    </tr>
+                    </thead>
+                    [[ range $element := .Managers ]]
+                    <tr>
+                        <td><img onerror="errorImage(this)" class="img-responsive size" src="[[ $element.Picture ]]"></td>
+                        <td><a href="/users/[[ $element.Login ]]">[[ $element.Login ]]</a></td>
+                        <td>[[ $element.Name ]]</td>
+                        <td>[[ $element.Email ]]</td>
+                        <td>[[ $element.Promotion.Name ]]</td>
+                        <td>[[ $element.DaysWorked ]]</td>
+                        <td>[[ $element.City.Name ]]</td>
+                        [[ if $.UserLogged.IsManager ]]
+                        <td>[[ $element.PhoneNumber ]]</td>
+                        <td> [[ len $element.ProjectsManaged ]]</td>
+                        [[ end ]]
+                    </tr>
+                    [[ end ]]
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>
