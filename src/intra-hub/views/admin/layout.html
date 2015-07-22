@@ -17,7 +17,9 @@
                 <li class="active"><a data-toggle="tab" href="#users">Utilisateurs</a></li>
                 <li><a data-toggle="tab" href="#skills">Skills / Technos</a></li>
                 <li><a data-toggle="tab" href="#themes">Themes</a></li>
-		<li><a data-toggle="tab" href="#calendars">Calendars</a></li>
+                <li><a data-toggle="tab" href="#calendars">Calendars</a></li>
+                <li><a data-toggle="tab" href="#stats">Statistiques</a></li>
+                <li><a data-toggle="tab" href="#exports">Exports</a></li>
             </ul>
 
             <div class="tab-content">
@@ -36,9 +38,19 @@
                         [[ template "admin/themes.html" . ]]
                     </div>
                 </div>
-		<div id="calendars" class="tab-pane fade">
+                <div id="calendars" class="tab-pane fade">
                     <div class="well">
                         [[ template "admin/calendars.html" . ]]
+                    </div>
+                </div>
+                <div id="stats" class="tab-pane fade">
+                    <div class="well">
+                        [[ template "admin/stats.html" . ]]
+                    </div>
+                </div>
+                <div id="exports" class="tab-pane fade">
+                    <div class="well">
+                        [[ template "admin/exports.html" . ]]
                     </div>
                 </div>
             </div>

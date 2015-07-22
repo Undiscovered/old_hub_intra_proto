@@ -2,25 +2,9 @@
  * Created by Vincent on 27/05/15.
  */
 
-
 function switchActiveTab() {
-    var path = window.location.pathname;
-    var projects = $('#projects');
-    var staff = $('#staff');
-    var students = $('#students');
-    var pedago = $('#pedago');
-    projects.removeClass('active');
-    staff.removeClass('active');
-    students.removeClass('active');
-    if (~path.indexOf('projects') !== 0) {
-        projects.addClass('active');
-    } else if (~path.indexOf('staff')) {
-        staff.addClass('active');
-    } else if (~path.indexOf('students')) {
-        students.addClass('active');
-    } else if (~path.indexOf('pedago')) {
-        pedago.addClass('active');
-    }
+    var path = location.pathname.substr(1).split('/')[0];
+    $('#'+path).addClass('active');
 }
 
 function getParameterByName(name) {

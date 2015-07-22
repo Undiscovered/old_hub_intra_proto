@@ -12,23 +12,24 @@
                 <span class="icon-bar blue"></span>
             </button>
         </div>
-        <div class="collapse navbar-collapse" id="nav">
-            <ul class="nav navbar-nav navbar-left">
-                <li id="events" onclick="switchActiveTab()">
+        <div class="collapse navbar-collapse">
+            <ul id="nav" class="nav navbar-nav navbar-left">
+                <li id="">
                     <a href="#" role="button" data-toggle="modal">Événements</a>
                 </li>
-                <li id="projects" onclick="switchActiveTab()">
+                <li id="projects">
                     <a href="/projects?page=1&limit=15" role="button" data-toggle="modal">Projets</a>
                 </li>
-                <li id="students" onclick="switchActiveTab()">
+                <li id="students">
                     <a href="/students?page=1&limit=25" role="button" data-toggle="modal">Étudiants</a>
                 </li>
-                <li id="staff" onclick="switchActiveTab()">
+                <li id="staff">
                     <a href="/staff" role="button" data-toggle="modal">Staff</a>
                 </li>
                 [[ if .UserLogged.IsPedago ]]
-                <li id="pedago" onclick="switchActiveTab()">
-                    <a href="/pedago/validation/indeterminate" title="Validation pédagogique" data-toggle="tooltip" data-placement="bottom">
+                <li id="pedago">
+                    <a href="/pedago/validation/indeterminate" title="Validation pédagogique" data-toggle="tooltip"
+                       data-placement="bottom">
                         Validation
                     </a>
                 </li>

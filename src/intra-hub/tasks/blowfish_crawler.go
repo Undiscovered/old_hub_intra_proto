@@ -143,7 +143,6 @@ func blowFishCrawler() error {
 		if len(strings.Split(scannerLocation.Text(), ":")) > 1 {
 			cityName = mapLocations[strings.Split(scannerLocation.Text(), ":")[1]]
 		}
-		beego.Warn(cityName)
 		if city := mapCities[cityName]; city == nil && cityName != "" {
 			city = &models.City{Name: cityName}
 			if _, id, err := o.ReadOrCreate(city, "Name"); err == nil {
