@@ -119,8 +119,11 @@
                     </table>
                     <ul class="pagination center-block">
                         [[ if .HasPreviousPage ]]
-                        <li><a href="/projects?page=[[ decr .PaginatedItems.CurrentPage ]]&limit=[[ .Limit ]]">
-                            <span class="glyphicon glyphicon-chevron-left"></span></a></li>
+                        <li>
+                            <a class="clickable" onclick="previousPage()">
+                                <span class="glyphicon glyphicon-chevron-left"></span>
+                            </a>
+                        </li>
                         [[ end ]]
                         [[ if .ShowGoToFirst ]]
                         <li><a href="/projects?page=1&limit=[[ .Limit ]]">
@@ -138,8 +141,11 @@
                         </a></li>
                         [[ end ]]
                         [[ if .HasNextPage ]]
-                        <li><a href="/projects?page=[[ incr .PaginatedItems.CurrentPage ]]&limit=[[ .Limit ]]">
-                            <span class="glyphicon glyphicon-chevron-right"></span></a></li>
+                        <li>
+                            <a class="clickable" onclick="nextPage()">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </a>
+                        </li>
                         [[ end ]]
                     </ul>
 
@@ -211,9 +217,9 @@
         managersSelector.trigger('change');
     }
 
-    function performSearch() {
-        var limit = getParameterByName('limit');
-        var page = getParameterByName('page');
+    function performSearch(limit, page, force) {
+        limit = limit || getParameterByName('limit');
+        page = page || getParameterByName('page');
         var promotions = $('#promotions').val();
         var cities = $('#cities').val();
         var name = $('#name').val() ? $('#name').val() : null;
@@ -222,7 +228,7 @@
         var student = $('#student').val() ? $('#student').val() : null;
 
         if (cities === null && promotions === null && name === null && managers === null &&
-                status === null && student === null) {
+                status === null && student === null && !force) {
             return;
         }
         var baseUrl = String.format('{0}{1}?page={2}&limit={3}', window.location.origin, window.location.pathname, page, limit);
@@ -248,5 +254,14 @@
         window.location.href = baseUrl;
     }
 
+    function nextPage() {
+        performSearch(getParameterByName('limit'), parseInt(getParameterByName('page')) + 1, true);
+        return false;
+    }
+
+    function previousPage() {
+        performSearch(getParameterByName('limit'), parseInt(getParameterByName('page')) - 1, true);
+        return false;
+    }
 </script>
 </html>

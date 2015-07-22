@@ -16,6 +16,6 @@ func (c *HomeController) RootRedirection() {
 
 func (c *HomeController) HomeView() {
 	c.RequireLogin()
-	c.TplNames = "list.html"
+	c.TplNames = "index.html"
 	c.Data["User"] = c.user
 }
