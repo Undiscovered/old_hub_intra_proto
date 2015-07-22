@@ -129,8 +129,11 @@
                     </table>
                     <ul class="pagination center-block">
                         [[ if .HasPreviousPage ]]
-                        <li><a href="/students?page=[[ decr .PaginatedItems.CurrentPage ]]&limit=[[ .Limit ]]">
-                            <span class="glyphicon glyphicon-chevron-left"></span></a></li>
+                        <li>
+                            <a class="clickable" onclick="previousPage()">
+                                <span class="glyphicon glyphicon-chevron-left"></span>
+                            </a>
+                        </li>
                         [[ end ]]
                         [[ if .ShowGoToFirst ]]
                         <li><a href="/students?page=1&limit=[[ .Limit ]]">
@@ -148,8 +151,11 @@
                         </a></li>
                         [[ end ]]
                         [[ if .HasNextPage ]]
-                        <li><a href="/students?page=[[ incr .PaginatedItems.CurrentPage ]]&limit=[[ .Limit ]]">
-                            <span class="glyphicon glyphicon-chevron-right"></span></a></li>
+                        <li>
+                            <a class="clickable" onclick="nextPage()">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </a>
+                        </li>
                         [[ end ]]
                     </ul>
 
@@ -208,9 +214,9 @@
         skillSelector.trigger('change');
     }
 
-    function performSearch() {
-        var limit = getParameterByName('limit');
-        var page = getParameterByName('page');
+    function performSearch(limit, page, force) {
+        limit = limit || getParameterByName('limit');
+        page = page || getParameterByName('page');
         var promotions = $('#promotions').val();
         var cities = $('#cities').val();
         var email = $('#email').val() ? $('#email').val() : null;
@@ -220,7 +226,7 @@
         var themes = $('#themes').val() ? $('#themes').val() : null;
 
         if (cities === null && promotions === null && name === null && themes === null &&
-                skills === null && name === null && login === null && email === null) {
+                skills === null && name === null && login === null && email === null && !force) {
             return;
         }
 
@@ -248,6 +254,16 @@
             baseUrl += String.format('&login={0}', login);
         }
         window.location.href = baseUrl;
+    }
+
+    function nextPage() {
+        performSearch(getParameterByName('limit'), parseInt(getParameterByName('page')) + 1, true);
+        return false;
+    }
+
+    function previousPage() {
+        performSearch(getParameterByName('limit'), parseInt(getParameterByName('page')) - 1, true);
+        return false;
     }
 
     $('document').ready(start);
