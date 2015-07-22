@@ -37,18 +37,10 @@ func (c *ProjectController) ListView() {
 	queryFilter["status"] = strings.Split(c.GetString("status", ""), ",")
 	queryFilter["student"] = c.GetString("student", "")
 	queryFilter["name"] = c.GetString("name", "")
-	page, err := c.GetInt("page")
-	if err != nil {
-		handleError(err)
-		return
-	}
-	limit, err := c.GetInt("limit")
-	if err != nil {
-		handleError(err)
-		return
-	}
+	page, err := c.GetInt("page", 1)
+	limit, err := c.GetInt("limit", 25)
 	if page <= 0 {
-		c.Redirect(fmt.Sprintf("/projects?page=1&limit=%d", limit), 301)
+		c.Redirect(fmt.Sprintf("/projects?page=1&limit=25"), 301)
 		return
 	}
 	if limit == 0 {

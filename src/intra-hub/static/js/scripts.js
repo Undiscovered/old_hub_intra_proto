@@ -46,7 +46,7 @@ if (!String.format) {
 }
 
 function errorImage(img) {
-    img.src = 'https://cloud.canadastays.com/assets/images/user-placeholder.png';
+    img.src = '/static/img/user-placeholder.png';
 }
 
 $('document').ready(switchActiveTab);

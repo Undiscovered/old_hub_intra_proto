@@ -136,6 +136,7 @@ func blowFishCrawler() error {
 		mapCities["Paris"] = paris
 	}
 	for scannerBlowFish.Scan() {
+		scannerLocation.Scan()
 		user := newUser(scannerBlowFish.Text())
 		// Set City
 		cityName := ""

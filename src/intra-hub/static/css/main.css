@@ -39,3 +39,12 @@ body.padding {
 .red {
     color: #F44336;
 }
+
+.padding-left {
+
+}
+
+.project-info {
+    padding-left: 1%;
+    margin-bottom: 1%;
+}

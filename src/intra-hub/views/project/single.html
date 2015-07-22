@@ -2,6 +2,7 @@
 <html>
 <head lang="en">
     <title>[[ .Project.Name ]]</title>
+    <link rel="import" href="/static/bower_components/paper-toolbar/paper-toolbar.html">
     [[ template "layouts/include-css.html" ]]
 </head>
 
@@ -30,47 +31,67 @@
                     </a>
                 </li>
             </ul>
-
-            [[ if .Project.Image ]]
-            <img src="[[ .Project.Image ]]">
-            [[ end ]]
-            <h4>[[ .Project.Name ]]</h4>
-            [[ if .Project.Themes ]]
-            <div>
-                <h5 style="font-size: 14px">Thèmes</h5>
-                [[ range $element := .Project.Themes ]]
-                <span class="label label-[[ randLabel ]]">[[ $element.Name ]]</span>
-                [[ end ]]
-            </div>
-            [[ end ]]
-            [[ if .Project.Technos ]]
-            <div>
-                <h5 style="font-size: 14px">Technos</h5>
-                [[ range $element := .Project.Technos ]]
-                <span class="label label-[[ randLabel ]]">[[ $element.Name ]]</span>
-                [[ end ]]
-            </div>
-            [[ end ]]
         </div>
         <div class="panel-body">
-            <h5>Depot</h5>
-            <a href="[[ .Project.Repository ]]">[[ .Project.Repository ]]</a>
+            <paper-toolbar>
+                [[ if .Project.Image ]]
+                <img src="[[ .Project.Image ]]">
+                [[ end ]]
+                <div style="font-size: 1.4em">
+                    [[ .Project.Name ]]
+                </div>
+            </paper-toolbar>
 
-            <h5>Site internet</h5>
-            <a href="[[ .Project.Website ]]">[[ .Project.Website ]]</a>
-            <h5>Description</h5>
+            <!-- -->
+            <div class="project-info">
 
-            <p style="white-space: pre-line;">
-                [[ .Project.ShortDescription ]]
-            </p>
+                <div class="project-desc">
+                    <h5>Description</h5>
+                    <p style="white-space: pre-line">[[ .Project.ShortDescription ]]</p>
+                    <p style="white-space: pre-line">[[ .Project.CompleteDescription ]]</p>
+                </div>
 
-            <h5>Description détaillée</h5>
+                [[ if .Project.Themes ]]
+                <div class="project-topic">
+                    <h5>Thèmes</h5>
+                    [[ range $element := .Project.Themes ]]
+                    <span class="label label-[[ randLabel ]]">[[ $element.Name ]]</span>
+                    [[ end ]]
+                </div>
+                [[ end ]]
 
-            <p style="white-space: pre-line">
-                [[ .Project.CompleteDescription ]]
-            </p>
+                [[ if .Project.Technos ]]
+                <div class="project-techno">
+                    <h5>Technos</h5>
+                    [[ range $element := .Project.Technos ]]
+                    <span class="label label-[[ randLabel ]]">[[ $element.Name ]]</span>
+                    [[ end ]]
+                </div>
+                [[ end ]]
+
+                [[ if .Project.Repository ]]
+                <div class="project-repo">
+                    <h5>Dépôt</h5>
+                    <a href="[[ .Project.Repository ]]">[[ .Project.Repository ]]</a>
+                </div>
+                [[ end ]]
+
+                [[ if .Project.Website ]]
+                <div class="project-site">
+                    <h5>Site</h5>
+                    <a href="[[ .Project.Website ]]">[[ .Project.Website ]]</a>
+                </div>
+                [[ end ]]
+
+            </div>
+            <!-- -->
+
             [[ if .Project.Members ]]
-            <h5>Membres</h5>
+            <paper-toolbar>
+                <div style="font-size: 1.4em">
+                    Membres
+                </div>
+            </paper-toolbar>
             <ul class="list-group">
                 [[ range $element := .Project.Members ]]
                 <li class="list-group-item">

@@ -52,6 +52,10 @@ func (c *UserController) SingleView() {
 		c.Redirect("/home", 301)
 		return
 	}
+	if err := db.LoadUserProjects(user); err != nil {
+		c.SetErrorAndRedirect(err)
+		return
+	}
 	c.Data["User"] = user
 	c.Data["UserJSON"] = user.ToJSON(c.currentLanguage)
 }
@@ -59,6 +63,10 @@ func (c *UserController) SingleView() {
 func (c *UserController) MeView() {
 	c.RequireLogin()
 	c.TplNames = "user/profile.html"
+	if err := db.LoadUserProjects(c.user); err != nil {
+		c.SetErrorAndRedirect(err)
+		return
+	}
 	c.Data["User"] = c.user
 	c.Data["UserJSON"] = c.user.ToJSON(c.currentLanguage)
 	c.Data["Edit"] = true
@@ -284,6 +292,7 @@ func (c *UserController) GetMe() {
 
 func (c *UserController) ListStudentView() {
 	c.TplNames = "student/list.html"
+	c.RequireLogin()
 	handleError := func(err error) {
 		beego.Error(err)
 		c.SetErrorAndRedirect(err)
@@ -316,18 +325,10 @@ func (c *UserController) ListStudentView() {
 	queryFilter["name"] = c.GetString("name", "")
 	queryFilter["login"] = c.GetString("login", "")
 	queryFilter["email"] = c.GetString("email", "")
-	page, err := c.GetInt("page")
-	if err != nil {
-		handleError(err)
-		return
-	}
-	limit, err := c.GetInt("limit")
-	if err != nil {
-		handleError(err)
-		return
-	}
+	page, _ := c.GetInt("page")
+	limit, _ := c.GetInt("limit")
 	if page <= 0 {
-		c.Redirect(fmt.Sprintf("/students?page=1&limit=%d", limit), 301)
+		c.Redirect(fmt.Sprintf("/students?page=1&limit=25"), 301)
 		return
 	}
 	if limit == 0 {

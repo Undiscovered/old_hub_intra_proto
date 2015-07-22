@@ -10,6 +10,7 @@
 <link rel="import" href="/static/bower_components/gold-email-input/gold-email-input.html">
 <link rel="import" href="/static/bower_components/gold-phone-input/gold-phone-input.html">
 <link rel="import" href="/static/elements/user/star-rating.html">
+
 <dom-module id="user-profile">
 
     <style>
@@ -102,34 +103,34 @@
                 </div>
                 <div right>
                     <div space>
-                        <span class="fa fa-user"></span> <span>{{ user.login }}</span>
+                        <span>{{ user.login }}</span>
                     </div>
                     <div space>
-                        <span class="fa fa-paper-plane-o"></span> <a href="{{ userEmail }}">{{ user.email }}</a>
+                        <a href="{{ userEmail }}">{{ user.email }}</a>
                     </div>
                     <template is="dom-if" if="{{ user.phoneNumber }}">
                         <div space>
-                            <span class="fa fa-phone"></span> <span>{{ user.phoneNumber }}</span>
+                            <span>{{ user.phoneNumber }}</span>
                         </div>
                     </template>
                     <template is="dom-if" if="{{ user.promotion }}">
                         <div space>
-                            <span class="fa fa-graduation-cap"></span> <span>{{ user.promotion.name }}</span>
+                            <span>{{ user.promotion.name }}</span>
                         </div>
                     </template>
                     <template is="dom-if" if="{{ user.city }}">
                         <div space>
-                            <span class="fa fa-map-marker"></span> <span>{{ user.city.localizedName }}</span>
+                            <span>{{ user.city.localizedName }}</span>
                         </div>
                     </template>
                     <template is="dom-if" if="{{ user.group }}">
                         <div space>
-                            <span class="fa fa-transgender"></span> <span>{{ user.group.localizedName }}</span>
+                            <span>{{ user.group.localizedName }}</span>
                         </div>
                     </template>
                     <template is="dom-if" if="{{ notEqual(user.skills.length, 0) }}">
                         <div space>
-                            <span class="fa fa-leanpub"> Skills</span>
+                            <span class="fa">Skills</span>
                             <template is="dom-repeat" items="{{ user.skills }}">
                                 <div padding-left>
                                     <span>{{ item.name }}</span>
@@ -140,7 +141,7 @@
                     </template>
                     <template is="dom-if" if="{{ notEqual(user.themes.length, 0) }}">
                         <div space>
-                            <span class="fa fa-globe"> Themes</span>
+                            <span class="fa">Themes</span>
                             <template is="dom-repeat" items="{{ user.themes }}">
                                 <div padding-left>
                                     <span>{{ item.name }}</span>
@@ -149,9 +150,20 @@
                             </template>
                         </div>
                     </template>
-
                 </div>
             </div>
+            <template is="dom-if" if="{{ notEqual(user.projects.length, 0) }}">
+                <paper-toolbar>
+                    <div class="title">
+                        <span>Projets</span>
+                    </div>
+                </paper-toolbar>
+                <template is="dom-repeat" items="{{ user.projects }}">
+                    <div space>
+                        <a href="{{ getProjectUrl(item.id) }}">{{ item.name }}</a>
+                    </div>
+                </template>
+            </template>
         </template>
         <!-- End Profile View -->
 
@@ -168,7 +180,7 @@
                 </div>
                 <div right>
                     <div space>
-                        <span class="fa fa-user"></span> <span>{{ user.login }}</span>
+                        <span>{{ user.login }}</span>
                     </div>
                     <div space>
                         <paper-input label="Image" value="{{ user.picture }}"></paper-input>
@@ -182,7 +194,6 @@
                     </div>
                     <template is="dom-if" if="{{ user.city }}">
                         <div space>
-                            <span class="fa fa-map-marker"></span>
                             <select id="city">
                                 <template is="dom-repeat" items="{{ cities }}">
                                     <template is="dom-if" if="{{ !equal(item.name, user.city.name) }}">
@@ -197,7 +208,6 @@
                     </template>
                     <template is="dom-if" if="{{ isAdmin }}">
                         <div space>
-                            <span class="fa fa-transgender"></span>
                             <select id="group">
                                 <template is="dom-repeat" items="{{ groups }}">
                                     <template is="dom-if" if="{{ !equal(item.name, user.group.name) }}">
@@ -211,7 +221,7 @@
                         </div>
                     </template>
                     <div space>
-                        <span class="fa fa-leanpub"> Skills</span>
+                        <span class="fa"> Skills</span>
                         <select id="skills">
                             <template is="dom-repeat" items="{{ skills }}">
                                 <option value="{{ item.id }}">{{ item.name }}</option>
@@ -228,7 +238,7 @@
                         </template>
                     </div>
                     <div space>
-                        <span class="fa fa-globe"> Themes</span>
+                        <span class="fa"> Themes</span>
                         <select id="themes">
                             <template is="dom-repeat" items="{{ themes }}">
                                 <option value="{{ item.id }}">{{ item.name }}</option>
@@ -246,7 +256,7 @@
                     </div>
 
                     <div space>
-                        <span class="fa fa-calendar"> Planning</span>
+                        <span class="fa"> Planning</span>
                         <select id="planning">
                             <template is="dom-repeat" items="{{ planning }}">
                                 <option value="{{ item }}">{{ item }}</option>
@@ -318,6 +328,9 @@
             },
             notEqual: function (a, b) {
                 return a !== b;
+            },
+            getProjectUrl: function (id) {
+              return '/projects/' + id;
             },
             addTheme: function () {
                 var themeSelector = this.$$('#themes');
@@ -391,8 +404,8 @@
                 });
                 vm.user.daysWorked = vm.user.daysWorked.slice(0, -1);
             },
-            switchImage: function() {
-              this.$$('#img').src = 'https://cloud.canadastays.com/assets/images/user-placeholder.png';
+            switchImage: function () {
+                this.$$('#img').src = 'https://cloud.canadastays.com/assets/images/user-placeholder.png';
             },
             ready: function () {
                 this.userEmail = 'mailto:' + this.user.email;

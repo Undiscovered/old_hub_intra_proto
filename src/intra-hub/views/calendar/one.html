@@ -11,13 +11,15 @@
     <div class="row-fluid panel">
       <table class="table">
 	<tr>
-	  <th>Calendrier</th>
-	  <th>Événements</th>
+	  <th>Titre</th>
+	  <th>Début</th>
+	  <th>Fin</th>
 	</tr>
-	[[ range .Calendars ]]
+	[[ range .Calendar.Events ]]
 	<tr>
-	  <td><a href="/calendars/[[.Id]]">[[ .Name ]]</a></td>
-	  <td>[[ .Events | len ]]</td>
+	  <td>[[ .Title ]]</td>
+	  <td>[[ .Begin ]]</td>
+	  <td>[[ .End ]]</td>
 	</tr>
 	[[ end ]]
       </table>
