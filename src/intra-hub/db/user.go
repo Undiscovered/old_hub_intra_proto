@@ -8,6 +8,7 @@ import (
 
 	"fmt"
 
+	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"github.com/pikanezi/mapslice"
 	"github.com/saschpe/tribool"
@@ -202,6 +203,7 @@ func GetUsersPaginated(page, limit int, queryFilter map[string]interface{}) (*mo
 			queryHelper = append(queryHelper, fmt.Sprintf("OR (user_skills.user_id = user.id AND user_skills.skill_id IN (%s))", questionMarks))
 			skillIDs := make([]int, len(s))
 			for i, ss := range s {
+				beego.Warn(ss)
 				skillIDs[i] = cache.Skills[ss].Id
 			}
 			values = append(values, skillIDs)
@@ -229,7 +231,7 @@ func GetUsersPaginated(page, limit int, queryFilter map[string]interface{}) (*mo
 			queryHelper = append(queryHelper, `OR user.first_name LIKE ? OR
 user.last_name LIKE ? OR
 CONCAT(user.first_name, ' ', user.last_name) LIKE ?`)
-			values = append(values, []string{value.(string), value.(string), value.(string)})
+			values = append(values, []string{"%" + value.(string) + "%", "%" + value.(string) + "%", "%" + value.(string) + "%"})
 		case "login":
 			if value.(string) == "" {
 				queryHelper = append(queryHelper, "")

@@ -226,7 +226,6 @@
             return;
         }
 
-        console.log(limit);
         var baseUrl = String.format('{0}{1}?page={2}&limit={3}', window.location.origin, window.location.pathname, page, limit);
 
         if (cities !== null) {
@@ -242,15 +241,14 @@
             baseUrl += String.format('&name={0}', name);
         }
         if (skills !== null) {
-            baseUrl += String.format('&skills={0}', skills.join());
+            baseUrl += String.format('&skills={0}', encodeURIComponent(skills.join()));
         }
         if (themes !== null) {
-            baseUrl += String.format('&themes={0}', themes);
+            baseUrl += String.format('&themes={0}', encodeURIComponent(themes.join()));
         }
         if (login !== null) {
             baseUrl += String.format('&login={0}', login);
         }
-        console.log(baseUrl);
         window.location.href = baseUrl;
     }
 
