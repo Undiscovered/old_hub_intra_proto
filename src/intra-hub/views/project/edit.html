@@ -25,17 +25,17 @@
                 <input type="hidden" name="id" value="[[ .Project.Id ]]">
 
                 <div class="form-group">
-                    <label for="name">Name</label>
+                    <label for="name">Nom</label>
                     <input class="form-control" placeholder="Name" id="name" name="name" type="text"
                            value="[[ .Project.Name ]]" required="">
                 </div>
                 <div class="form-group">
-                    <label for="shortDescription">Courte description</label>
+                    <label for="shortDescription">Description</label>
                     <input class="form-control" id="shortDescription" placeholder="Courte description" type="text"
                            name="shortDescription" value="[[ .Project.ShortDescription ]]" required="">
                 </div>
                 <div class="form-group">
-                    <label for="completeDescription">Description complete</label>
+                    <label for="completeDescription">Description détaillée</label>
                     <textarea class="form-control" id="completeDescription" rows="8" placeholder="Description complete"
                               name="completeDescription" required="">[[ .Project.CompleteDescription ]]</textarea>
                 </div>
@@ -52,7 +52,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="status">Status du projet</label>
+                    <label for="status">Status</label>
                     <select class="form-control" id="status" name="status">
                         [[ range $element := .Status ]]
                         <option [[ if eq $element $.Project.Status.Name ]] selected="selected" [[ end ]]
@@ -63,7 +63,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="themes">Themes du projet</label>
+                    <label for="themes">Thèmes</label>
                     <input type="hidden" id="themesId" name="themesId">
                     <select id="themes" class="form-control" multiple="true">
                         <option></option>
@@ -75,7 +75,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="technos">Technos du projet</label>
+                    <label for="technos">Technos</label>
                     <input type="hidden" id="technosId" name="technosId">
                     <select id="technos" class="form-control" multiple="true">
                         <option></option>
