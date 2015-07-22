@@ -93,6 +93,15 @@ func GetUserByLogin(login string) (*models.User, error) {
 	return userDb, err
 }
 
+func GetUserByEmail(email string) (*models.User, error) {
+	userDb := &models.User{}
+	if err := QueryUser().Filter("Email", email).RelatedSel().One(userDb); err != nil {
+		return nil, err
+	}
+	err := LoadUserInfo(userDb)
+	return userDb, err
+}
+
 func ActivateUser(id int, token, password string) (*models.User, error) {
 	userDb := &models.User{}
 	o := orm.NewOrm()

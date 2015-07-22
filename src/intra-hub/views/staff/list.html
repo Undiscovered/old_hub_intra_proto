@@ -26,8 +26,8 @@
                         <td>Planning</td>
                         <td>Ville</td>
                         [[ if .UserLogged.IsManager ]]
-                        <td>Numero de telephone</td>
-                        <td>Projets gérés</td>
+                        <td>Téléphone</td>
+                        <td>Projets</td>
                         [[ end ]]
                     </tr>
                     </thead>
@@ -36,7 +36,7 @@
                         <td><img onerror="errorImage(this)" class="img-responsive size" src="[[ $element.Picture ]]"></td>
                         <td><a href="/users/[[ $element.Login ]]">[[ $element.Login ]]</a></td>
                         <td>[[ $element.Name ]]</td>
-                        <td>[[ $element.Email ]]</td>
+                        <td><a href="mailto:[[ $element.Email ]]">[[ $element.Email ]]</a></td>
                         <td>[[ $element.Promotion.Name ]]</td>
                         <td>[[ $element.DaysWorked ]]</td>
                         <td>[[ $element.City.Name ]]</td>

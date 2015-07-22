@@ -4,7 +4,8 @@
     <div class="container-fluid">
         <div class="navbar-header">
             <a href="/home" class="navbar-brand">Innovation Hub</a>
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav" aria-expanded="false">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav"
+                    aria-expanded="false">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar blue"></span>
                 <span class="icon-bar blue"></span>
@@ -17,7 +18,7 @@
                     <a href="#" role="button" data-toggle="modal">Événements</a>
                 </li>
                 <li id="projects" onclick="switchActiveTab()">
-                    <a href="/projects" role="button" data-toggle="modal">Projets</a>
+                    <a href="/projects?page=1&limit=15" role="button" data-toggle="modal">Projets</a>
                 </li>
                 <li id="students" onclick="switchActiveTab()">
                     <a href="/students?page=1&limit=25" role="button" data-toggle="modal">Étudiants</a>
@@ -25,29 +26,19 @@
                 <li id="staff" onclick="switchActiveTab()">
                     <a href="/staff" role="button" data-toggle="modal">Staff</a>
                 </li>
+                [[ if .UserLogged.IsPedago ]]
+                <li id="pedago" onclick="switchActiveTab()">
+                    <a href="/pedago/validation/indeterminate" title="Validation pédagogique" data-toggle="tooltip" data-placement="bottom">
+                        Validation
+                    </a>
+                </li>
+                [[ end ]]
+
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">SpeedBar
-                        <span class="caret"></span></a>
-                    <ul class="dropdown-menu" role="menu">
-                        [[ if .UserLogged.IsManager ]]
-                        <li><a href="/projects/add">
-                            <span class="glyphicon glyphicon-plus"></span> Lancer un projet
-                        </a></li>
-                        [[ end ]]
-                        <li><a href="/projects/list?limit=15&page=1">
-                            <span class="glyphicon glyphicon-th-list"></span> Tous les projets
-                        </a></li>
-                        [[ if .UserLogged.IsPedago ]]
-                        <li><a href="/pedago/validation/indeterminate">
-                            <span class="glyphicon glyphicon-ok-circle"></span> Validation pédagogique
-                        </a></li>
-                        [[ end ]]
-                    </ul>
-                </li>
                 <li><a href="/me" title="Profil" data-toggle="tooltip" data-placement="bottom">
-                    <img onerror="errorImage(this)" style="-webkit-border-radius: 150px;-moz-border-radius: 150px;border-radius: 150px;"
+                    <img onerror="errorImage(this)"
+                         style="-webkit-border-radius: 150px;-moz-border-radius: 150px;border-radius: 150px;"
                          width="14px" src="[[ .UserLogged.Picture ]]">
                 </a></li>
                 [[ if .UserLogged.IsAdmin ]]

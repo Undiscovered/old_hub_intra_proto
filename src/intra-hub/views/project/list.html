@@ -23,22 +23,22 @@
                 </button>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                     <li role="presentation">
-                        <a role="menuitem" tabindex="-1" href="/projects/list?page=1&limit=15">15</a>
+                        <a role="menuitem" tabindex="-1" href="/projects?page=1&limit=15">15</a>
                     </li>
                     <li role="presentation">
-                        <a role="menuitem" tabindex="-1" href="/projects/list?page=1&limit=30">30</a>
+                        <a role="menuitem" tabindex="-1" href="/projects?page=1&limit=30">30</a>
                     </li>
                     <li role="presentation">
-                        <a role="menuitem" tabindex="-1" href="/projects/list?page=1&limit=50">50</a>
+                        <a role="menuitem" tabindex="-1" href="/projects?page=1&limit=50">50</a>
                     </li>
                     <li role="presentation">
-                        <a role="menuitem" tabindex="-1" href="/projects/list?page=1&limit=100">100</a>
+                        <a role="menuitem" tabindex="-1" href="/projects?page=1&limit=100">100</a>
                     </li>
                 </ul>
             </span>
 
                 <button class="btn btn-primary" onclick="performSearch()">Rechercher</button>
-                <a class="btn btn-info" href="/projects/list?page=1&limit=15">Reset</a>
+                <a class="btn btn-info" href="/projects?page=1&limit=15">Reset</a>
                 [[ if .UserLogged.IsManager ]]
             <span class="pull-right">
             <a class="btn btn-primary" href="/projects/add">Lancer un projet</a>
@@ -119,26 +119,26 @@
                     </table>
                     <ul class="pagination center-block">
                         [[ if .HasPreviousPage ]]
-                        <li><a href="/projects/list?page=[[ decr .PaginatedItems.CurrentPage ]]&limit=[[ .Limit ]]">
+                        <li><a href="/projects?page=[[ decr .PaginatedItems.CurrentPage ]]&limit=[[ .Limit ]]">
                             <span class="glyphicon glyphicon-chevron-left"></span></a></li>
                         [[ end ]]
                         [[ if .ShowGoToFirst ]]
-                        <li><a href="/projects/list?page=1&limit=[[ .Limit ]]">
+                        <li><a href="/projects?page=1&limit=[[ .Limit ]]">
                             1
                         </a></li>
                         [[ end ]]
                         [[ range $element := .PaginatedItems.PagesToShow ]]
                         <li class="[[ if eq $element $.PaginatedItems.CurrentPage ]]active[[ end ]]">
-                            <a class="text-primary" href="/projects/list?page=[[ $element ]]&limit=[[ $.Limit ]]">
+                            <a class="text-primary" href="/projects?page=[[ $element ]]&limit=[[ $.Limit ]]">
                                 [[ $element ]]</a></li>
                         [[ end ]]
                         [[ if .ShowGoToLast ]]
-                        <li><a href="/projects/list?page=[[ .PaginatedItems.TotalPageCount ]]&limit=[[ .Limit ]]">
+                        <li><a href="/projects?page=[[ .PaginatedItems.TotalPageCount ]]&limit=[[ .Limit ]]">
                             [[ .PaginatedItems.TotalPageCount ]]
                         </a></li>
                         [[ end ]]
                         [[ if .HasNextPage ]]
-                        <li><a href="/projects/list?page=[[ incr .PaginatedItems.CurrentPage ]]&limit=[[ .Limit ]]">
+                        <li><a href="/projects?page=[[ incr .PaginatedItems.CurrentPage ]]&limit=[[ .Limit ]]">
                             <span class="glyphicon glyphicon-chevron-right"></span></a></li>
                         [[ end ]]
                     </ul>

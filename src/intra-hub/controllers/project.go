@@ -93,7 +93,7 @@ func (c *ProjectController) EditView() {
 	project, err := db.GetProjectByIDOrName(c.GetString(":nameOrId"))
 	if err != nil {
 		beego.Error(err)
-		c.Redirect("/projects/list?page=1&limit=15", 301)
+		c.Redirect("/projects?page=1&limit=15", 301)
 		return
 	}
 	managers, err := db.GetManagersOrAdmin()
@@ -126,7 +126,7 @@ func (c *ProjectController) SingleView() {
 	project, err := db.GetProjectByIDOrName(c.GetString(":nameOrId"))
 	if err != nil {
 		beego.Error(err)
-		c.Redirect("/projects/list?page=1&limit=15", 301)
+		c.Redirect("/projects?page=1&limit=15", 301)
 		return
 	}
 	c.Data["Project"] = project
@@ -228,7 +228,7 @@ func (c *ProjectController) CommentView() {
 	project, err := db.GetProjectByIDOrName(c.GetString(":nameOrId"))
 	if err != nil {
 		beego.Error(err)
-		c.Redirect("/projects/list?page=1&limit=15", 301)
+		c.Redirect("/projects?page=1&limit=15", 301)
 		return
 	}
 	c.Data["Project"] = project
@@ -239,7 +239,7 @@ func (c *ProjectController) AddComment() {
 	project, err := db.GetProjectByIDOrName(c.GetString(":nameOrId"))
 	if err != nil {
 		beego.Error(err)
-		c.Redirect("/projects/list?page=1&limit=15", 301)
+		c.Redirect("/projects?page=1&limit=15", 301)
 		return
 	}
 	defer c.Redirect("/projects/"+project.Name+"/comments", 301)

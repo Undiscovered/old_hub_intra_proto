@@ -6,21 +6,20 @@
 function switchActiveTab() {
     var path = window.location.pathname;
     var projects = $('#projects');
-    var hub = $('#hub');
     var staff = $('#staff');
     var students = $('#students');
+    var pedago = $('#pedago');
     projects.removeClass('active');
-    hub.removeClass('active');
     staff.removeClass('active');
     students.removeClass('active');
     if (~path.indexOf('projects') !== 0) {
         projects.addClass('active');
-    } else if (~path.indexOf('hub')) {
-        hub.addClass('active');
     } else if (~path.indexOf('staff')) {
         staff.addClass('active');
     } else if (~path.indexOf('students')) {
         students.addClass('active');
+    } else if (~path.indexOf('pedago')) {
+        pedago.addClass('active');
     }
 }
 

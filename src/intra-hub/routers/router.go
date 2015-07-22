@@ -13,6 +13,7 @@ func init() {
 	beego.Router("/home", &controllers.HomeController{}, "get:HomeView")
 	beego.Router("/logout", &controllers.UserController{}, "get:Logout")
 	beego.Router("/login", &controllers.UserController{}, "get:LoginView;post:Login")
+	beego.Router("/forgot", &controllers.UserController{}, "get:ResetPasswordView;post:ResetPassword")
 
 	beego.Router("/admin", &controllers.AdminController{})
 	beego.Router("/admin/users/add", &controllers.UserController{}, "get:AddView")
@@ -33,8 +34,7 @@ func init() {
 	beego.Router("/users/:id", &controllers.UserController{}, "get:SingleView")
 	beego.Router("/users", &controllers.UserController{}, "post:AddUser")
 
-	beego.Router("/projects", &controllers.ProjectController{}, "get:IntroView")
-	beego.Router("/projects/list", &controllers.ProjectController{}, "get:ListView")
+	beego.Router("/projects", &controllers.ProjectController{}, "get:ListView")
 	beego.Router("/projects/checkname", &controllers.ProjectController{}, "get:CheckName")
 	beego.Router("/projects/add", &controllers.ProjectController{}, "get:AddView;post:Add")
 	beego.Router("/projects/edit", &controllers.ProjectController{}, "post:Edit")
