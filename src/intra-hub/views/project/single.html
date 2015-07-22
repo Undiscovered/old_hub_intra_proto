@@ -53,11 +53,16 @@
             [[ end ]]
         </div>
         <div class="panel-body">
+            [[ if .Project.Repository ]]
             <h5>Depot</h5>
             <a href="[[ .Project.Repository ]]">[[ .Project.Repository ]]</a>
+            [[ end ]]
 
+            [[ if .Project.Website ]]
             <h5>Site internet</h5>
             <a href="[[ .Project.Website ]]">[[ .Project.Website ]]</a>
+            [[ end ]]
+            
             <h5>Description</h5>
 
             <p style="white-space: pre-line;">
