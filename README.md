@@ -115,6 +115,7 @@ bower install
 ## How to load users
 
 Browse to http://localhost:8088/task and run the task named BlowfishCrawler
+
 Or make a post request to http://localhost:8088/task?taskname=blowfishCrawler
 
 # Contribution
@@ -140,11 +141,12 @@ R.A.S
 
 ## Page de visualisation des projets
 
-Tri par : Promotion(s) impliqué(s), étudiant, état d'avancement, thémes, techno, manageur assigné
+Tri par : Promotion(s) impliqué(s), étudiant, état d'avancement, thèmes, techno, manageur assigné
 
 # Backup
 
 Mise en place du script
 `cp backup/backup.sh > /bin`
+
 Mise en place du crontab
 `crontab -l | cat backup/crontab.txt  | crontab -`
