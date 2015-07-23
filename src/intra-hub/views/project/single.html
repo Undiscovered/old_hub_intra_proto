@@ -17,7 +17,7 @@
             </a>
             [[ if .UserLogged.IsManager ]]
             <a href="/projects/edit/[[ .Project.Id ]]" class="pull-right">
-                <span class="fa fa-pencil"> Editer</span>
+                <span class="fa fa-pencil">Editer</span>
             </a>
             [[ end ]]
             <ul class="nav nav-tabs">
@@ -45,11 +45,14 @@
             <!-- -->
             <div class="project-info">
 
+                <div class="project-status">
+                    <h5>Status</h5>
+                    <p id="status">[[ .Project.Status.Name ]]</p>
+                </div>
+
                 <div class="project-desc">
                     <h5>Description</h5>
-
-                    <p style="white-space: pre-line">[[ .Project.ShortDescription ]]</p>
-
+                    <p id="short-description">[[ .Project.ShortDescription ]]</p>
                     <p id="description" style="white-space: pre-line">[[ .Project.CompleteDescription ]]</p>
                 </div>
 
