@@ -47,13 +47,13 @@
 
                 <div class="project-status">
                     <h5>Status</h5>
-                    <p id="status">[[ .Project.Status.Name ]]</p>
+                    <p id="status">[[ i18n $.Lang .Project.Status.Name ]]</p>
                 </div>
 
                 <div class="project-desc">
                     <h5>Description</h5>
                     <p id="short-description">[[ .Project.ShortDescription ]]</p>
-                    <p id="description" style="white-space: pre-line">[[ .Project.CompleteDescription ]]</p>
+                    <p id="description">[[ .Project.CompleteDescription ]]</p>
                 </div>
 
                 [[ if .Project.Themes ]]
