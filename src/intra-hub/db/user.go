@@ -150,6 +150,9 @@ func GetEveryUserProjectsByValidation(pedagogicallyValidation tribool.Tribool) (
 		if _, err := o.LoadRelated(u, "User"); err != nil {
 			return nil, err
 		}
+		if _, err := o.LoadRelated(u.User, "Promotion"); err != nil {
+			return nil, err
+		}
 	}
 	return
 }

@@ -56,23 +56,4 @@ func (c *PedagoController) ValidateProject() {
 		c.SetErrorAndRedirect(err)
 		return
 	}
-	//	userID, err := c.GetInt(":userId")
-	//	if err != nil {
-	//		c.flash.Data["error"] = err.Error()
-	//		return
-	//	}
-	//	projectID, err := c.GetInt(":projectId")
-	//	if err != nil {
-	//		c.flash.Data["error"] = err.Error()
-	//		return
-	//	}
-	//	validation, err := c.GetInt(":validation")
-	//	if err != nil {
-	//		c.flash.Data["error"] = err.Error()
-	//		return
-	//	}
-	//	if err := db.ValidatePedagogicallyUser(userID, projectID, tribool.Tribool(validation)); err != nil {
-	//		c.flash.Data["error"] = err.Error()
-	//		return
-	//	}
 }
