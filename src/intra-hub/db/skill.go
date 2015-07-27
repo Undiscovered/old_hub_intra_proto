@@ -31,6 +31,11 @@ func AddAndGetSkill(skill *models.Skill) (*models.Skill, error) {
 	return skill, nil
 }
 
+func EditAndGetSkill(skill *models.Skill) (*models.Skill, error) {
+	_, err := orm.NewOrm().Update(skill)
+	return skill, err
+}
+
 func DeleteSkillByID(id int) error {
 	_, err := orm.NewOrm().Delete(&models.Skill{Id: id})
 	return err

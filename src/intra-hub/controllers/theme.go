@@ -44,6 +44,36 @@ func (c *ThemeController) Post() {
 	c.ServeJson()
 }
 
+func (c *ThemeController) Put() {
+	if !c.user.IsManager() {
+		jsonErr := simplejson.New()
+		jsonErr.Set("error", "forbidden")
+		c.Data["json"] = jsonErr
+		c.ServeJson()
+		return
+	}
+	theme := &models.Theme{}
+	if err := json.Unmarshal(c.Ctx.Input.CopyBody(), theme); err != nil {
+		beego.Error(err)
+		jsonErr := simplejson.New()
+		jsonErr.Set("error", err)
+		c.Data["json"] = jsonErr
+		c.ServeJson()
+		return
+	}
+	theme, err := db.EditAndGetTheme(theme)
+	if err != nil {
+		beego.Error(err)
+		jsonErr := simplejson.New()
+		jsonErr.Set("error", err.Error())
+		c.Data["json"] = jsonErr
+		c.ServeJson()
+		return
+	}
+	c.Data["json"] = theme
+	c.ServeJson()
+}
+
 func (c *ThemeController) Delete() {
 	if !c.user.IsManager() {
 		jsonErr := simplejson.New()

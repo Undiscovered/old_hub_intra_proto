@@ -40,6 +40,9 @@ body.padding {
     color: #F44336;
 }
 
+.color-black {
+    color: black !important;
+}
 .project-title {
     font-size: 2.5em !important;
     margin-left: 1% !important;

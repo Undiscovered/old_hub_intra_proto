@@ -44,6 +44,35 @@ func (c *SkillController) Post() {
 	c.ServeJson()
 }
 
+func (c *SkillController) Put() {
+	if !c.user.IsManager() {
+		jsonErr := simplejson.New()
+		jsonErr.Set("error", "forbidden")
+		c.Data["json"] = jsonErr
+		c.ServeJson()
+		return
+	}
+	skill := &models.Skill{}
+	if err := json.Unmarshal(c.Ctx.Input.CopyBody(), skill); err != nil {
+		beego.Error(err)
+		jsonErr := simplejson.New()
+		jsonErr.Set("error", err)
+		c.Data["json"] = jsonErr
+		c.ServeJson()
+		return
+	}
+	skill, err := db.EditAndGetSkill(skill)
+	if err != nil {
+		beego.Error(err)
+		jsonErr := simplejson.New()
+		jsonErr.Set("error", err.Error())
+		c.Data["json"] = jsonErr
+		c.ServeJson()
+		return
+	}
+	c.Data["json"] = skill
+	c.ServeJson()
+}
 func (c *SkillController) Delete() {
 	if !c.user.IsManager() {
 		jsonErr := simplejson.New()

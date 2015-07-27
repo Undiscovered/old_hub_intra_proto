@@ -14,9 +14,13 @@
     [[ end ]]
     [[ range $index, $element := .Skills ]]
     <li class="list-group-item" id="[[ $element.Id ]]">
-        <span class="label label-[[ randLabel ]] s-1x">[[ $element.Name ]]</span>
+        <span id="skill-[[ $element.Id ]]" class="label label-[[ randLabel ]] s-1x">[[ $element.Name ]]</span>
         <span class="pull-right">
             <span class="btn-group btn-group-xs">
+                <button class="btn btn-warning" data-toggle="modal" data-target="#skillModal"
+                        onclick="openSkillModal('[[ $element.Id ]]')">
+                    <span class="fa fa-pencil color-black"></span>
+                </button>
                 <button class="btn btn-danger" onclick="deleteSkill([[ $element.Id ]])"><span
                         class="fa fa-remove color-white"></span></button>
             </span>
@@ -25,7 +29,48 @@
     [[ end ]]
 </ul>
 
+<div class="modal fade" id="skillModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Editer le skill</h4>
+            </div>
+            <div class="modal-body form-group">
+                <input id="skill-edit-id" type="hidden">
+                <label for="skill-edit-name">Nom</label>
+                <input id="skill-edit-name" class="form-control" type="text" placeholder="Nom">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-primary" onclick="editSkill()">Editer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
+
+    function openSkillModal(id) {
+        $('#skill-edit-name').val($('#skill-' + id).html());
+        $('#skill-edit-id').val(id)
+    }
+
+    function editSkill() {
+        var obj = {
+            id: parseInt($('#skill-edit-id').val()),
+            name: $('#skill-edit-name').val()
+        };
+        if (obj.name === '') {
+            return;
+        }
+        new Http().Put('/skills', obj).success(function (skill) {
+            $('#skill-' + skill.id).html(skill.name);
+            $('#skillModal').modal('hide');
+        });
+    }
+
     function addSkill() {
         var th = $('#skill');
         var skillName = th.val().trim();
@@ -34,13 +79,17 @@
         }
         th.val('');
         new Http().Post('/skills', {name: skillName}).success(function (skill) {
-            $('#list-skills').append('<li class="list-group-item" id="' + skill.id + '"><span class="label label-' + randomizeLabel() +
-                    ' s-1x" >' + skill.name + '</span>' +
-                    '<span class="pull-right"><span class="btn-group btn-group-xs">' +
-                    '<button class="btn btn-danger" onclick=deleteSkill(' + skill.id + ')><span class="fa fa-remove color-white"></span></button>' +
-                    '<span/><span/></li> ');
+            appendSkill(skill);
             $('#empty').hide();
         });
+    }
+
+    function appendSkill(skill) {
+        $('#list-skills').append('<li class="list-group-item" id="' + skill.id + '"><span class="label label-' + randomizeLabel() +
+                ' s-1x" >' + skill.name + '</span>' +
+                '<span class="pull-right"><span class="btn-group btn-group-xs">' +
+                '<button class="btn btn-danger" onclick=deleteSkill(' + skill.id + ')><span class="fa fa-remove color-white"></span></button>' +
+                '<span/><span/></li> ');
     }
 
     function deleteSkill(id) {

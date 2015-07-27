@@ -20,8 +20,8 @@ func init() {
 	beego.Router("/admin/calendars/delete/:id", &controllers.CalendarController{}, "post:Delete")
 	beego.Router("/admin/users/add", &controllers.UserController{}, "get:AddView")
 
-	beego.Router("/theme", &controllers.ThemeController{})
-	beego.Router("/theme/:id", &controllers.ThemeController{})
+	beego.Router("/themes", &controllers.ThemeController{})
+	beego.Router("/themes/:id", &controllers.ThemeController{})
 
 	beego.Router("/skills", &controllers.SkillController{})
 	beego.Router("/skills/:id", &controllers.SkillController{})
