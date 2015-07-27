@@ -40,5 +40,6 @@ func (c *ExportController) Projects() {
 	if err != nil {
 		return
 	}
+	c.Ctx.Output.Header("Content-Type", "text/csv")
 	c.Ctx.WriteString(string(raw))
 }
