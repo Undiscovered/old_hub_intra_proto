@@ -43,7 +43,7 @@ func init() {
 	beego.Router("/projects/:nameOrId", &controllers.ProjectController{}, "get:SingleView")
 	beego.Router("/projects/:nameOrId/comments", &controllers.ProjectController{}, "get:CommentView;post:AddComment")
 
-	beego.Router("/pedago/validate/:userId/:projectId/:validation", &controllers.PedagoController{}, "post:ValidateProject")
+	beego.Router("/pedago/validate", &controllers.PedagoController{}, "post:ValidateProject")
 	beego.Router("/pedago/validation/:validation", &controllers.PedagoController{}, "get:ValidateProjectView")
 
 	beego.Router("/export/projects", &controllers.ExportController{}, "get:Projects")

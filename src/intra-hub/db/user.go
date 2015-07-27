@@ -20,6 +20,20 @@ const (
 	UserProjectTable = "user_projects"
 )
 
+func getQuestionMarksFromSlice(s []string) (questionMarks string) {
+	for range s {
+		questionMarks += "?, "
+	}
+	return
+}
+
+func getQuestionMarks(count int) (questionMarks string) {
+	for i := 0; i < count; i++ {
+		questionMarks += "?, "
+	}
+	return
+}
+
 func QueryUser() orm.QuerySeter {
 	return orm.NewOrm().QueryTable(UserTable)
 }
@@ -140,9 +154,19 @@ func GetEveryUserProjectsByValidation(pedagogicallyValidation tribool.Tribool) (
 	return
 }
 
-func ValidatePedagogicallyUser(userID int, projectID int, pedagogicallyValidation tribool.Tribool) error {
-	_, err := QueryUserProject().Filter("user_id", userID).Filter("project_id", projectID).
-		Update(orm.Params{"pedagogically_validated": int(pedagogicallyValidation)})
+func PedagogicallyValidation(userIDs, projectIDs, validation []interface{}) error {
+	rawSQL := "UPDATE `user_projects` SET `pedagogically_validated` = CASE\n"
+	valueArray := make([]interface{}, 0, len(userIDs)+len(projectIDs)+len(validation))
+	for i := range userIDs {
+		rawSQL += fmt.Sprintf("WHEN `user_id` = ? AND `project_id` = ? THEN ?\n")
+		valueArray = append(valueArray, userIDs[i], projectIDs[i], validation[i])
+	}
+	questionMarks := getQuestionMarks(len(userIDs))
+	questionMarks = questionMarks[:len(questionMarks)-2]
+	rawSQL += fmt.Sprintf("END\nWHERE `user_id` IN (%v) AND `project_id` IN (%v)", questionMarks, questionMarks)
+	valueArray = append(valueArray, userIDs...)
+	valueArray = append(valueArray, projectIDs...)
+	_, err := orm.NewOrm().Raw(rawSQL, valueArray...).Exec()
 	return err
 }
 
@@ -156,12 +180,6 @@ func SetManagerProjects(user *models.User) error {
 func GetUsersPaginated(page, limit int, queryFilter map[string]interface{}) (*models.ItemPaginated, error) {
 	queryHelper := make([]interface{}, 0)
 	values := make([]interface{}, 0)
-	getQuestionMarks := func(s []string) (questionMarks string) {
-		for range s {
-			questionMarks += "?, "
-		}
-		return
-	}
 	for key, value := range queryFilter {
 		switch key {
 		case "promotions":
@@ -170,7 +188,7 @@ func GetUsersPaginated(page, limit int, queryFilter map[string]interface{}) (*mo
 				queryHelper = append(queryHelper, "")
 				continue
 			}
-			questionMarks := getQuestionMarks(s)
+			questionMarks := getQuestionMarksFromSlice(s)
 			if questionMarks != "" {
 				questionMarks = questionMarks[:len(questionMarks)-2]
 			}
@@ -186,7 +204,7 @@ func GetUsersPaginated(page, limit int, queryFilter map[string]interface{}) (*mo
 				queryHelper = append(queryHelper, "")
 				continue
 			}
-			questionMarks := getQuestionMarks(s)
+			questionMarks := getQuestionMarksFromSlice(s)
 			if questionMarks != "" {
 				questionMarks = questionMarks[:len(questionMarks)-2]
 			}
@@ -202,7 +220,7 @@ func GetUsersPaginated(page, limit int, queryFilter map[string]interface{}) (*mo
 				queryHelper = append(queryHelper, "")
 				continue
 			}
-			questionMarks := getQuestionMarks(s)
+			questionMarks := getQuestionMarksFromSlice(s)
 			if questionMarks != "" {
 				questionMarks = questionMarks[:len(questionMarks)-2]
 			}
@@ -219,7 +237,7 @@ func GetUsersPaginated(page, limit int, queryFilter map[string]interface{}) (*mo
 				queryHelper = append(queryHelper, "")
 				continue
 			}
-			questionMarks := getQuestionMarks(s)
+			questionMarks := getQuestionMarksFromSlice(s)
 			if questionMarks != "" {
 				questionMarks = questionMarks[:len(questionMarks)-2]
 			}
