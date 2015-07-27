@@ -3,6 +3,9 @@
 <head lang="en">
     <title>Admin</title>
     [[ template "layouts/include-css.html" ]]
+    <link rel="import" href="/static/bower_components/paper-checkbox/paper-checkbox.html">
+    <link rel="import" href="/static/bower_components/iron-form/iron-form.html">
+
 </head>
 <body>
 [[ template "layouts/topbar.html" . ]]
@@ -58,5 +61,18 @@
     </div>
 </div>
 
+<script>
+    $(function () {
+        var hash = window.location.hash;
+        hash && $('ul.nav a[href="' + hash + '"]').tab('show');
+
+        $('.nav-tabs a').click(function (e) {
+            $(this).tab('show');
+            var scrollmem = $('body').scrollTop();
+            window.location.hash = this.hash;
+            $('html,body').scrollTop(scrollmem);
+        });
+    });
+</script>
 </body>
 </html>

@@ -16,6 +16,8 @@ func init() {
 	beego.Router("/forgot", &controllers.UserController{}, "get:ResetPasswordView;post:ResetPassword")
 
 	beego.Router("/admin", &controllers.AdminController{})
+	beego.Router("/admin/calendars", &controllers.CalendarController{}, "post:Add")
+	beego.Router("/admin/calendars/delete/:id", &controllers.CalendarController{}, "post:Delete")
 	beego.Router("/admin/users/add", &controllers.UserController{}, "get:AddView")
 
 	beego.Router("/theme", &controllers.ThemeController{})

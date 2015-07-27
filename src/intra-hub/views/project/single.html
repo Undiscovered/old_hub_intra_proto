@@ -65,9 +65,11 @@
                             </thead>
                             <tr>
                                 <td>[[ i18n $.Lang .Project.Status.Name ]]</td>
+                                [[ if .Project.Manager ]]
                                 <td>
                                     <a href="/users/[[ .Project.Manager.Login ]]">[[ .Project.Manager.Login ]]</a>
                                 </td>
+                                [[ end ]]
                                 [[ if .Project.Themes ]]
                                 <td>
                                     [[ range $element := .Project.Themes ]]

@@ -50,12 +50,6 @@
                            value="[[ .Project.Repository ]]" name="repository">
                 </div>
                 <div class="form-group">
-                    <label for="shortDescription">Image</label>
-                    <input class="form-control" id="image" placeholder="Image" type="text"
-                           value="[[ .Project.Image ]]" name="image">
-                </div>
-
-                <div class="form-group">
                     <label for="managerLogin">Assigner un manager</label>
                     <select class="form-control" id="managerLogin" name="managerLogin">
                         <option>--</option>
@@ -109,7 +103,8 @@
                         [[ range $element := $.Project.Members ]]
                         <li id="[[ $element.Id ]]" class="list-group-item">
                             <div>
-                                <img onerror="errorImage(this)" class="img-responsive size" src="[[ $element.Picture ]]">
+                                <img onerror="errorImage(this)" class="img-responsive size"
+                                     src="[[ $element.Picture ]]">
                                 [[ $element.Login ]]
                                 <span onclick="deleteLogin('[[ $element.Login ]]', '[[ $element.Id ]]')"
                                       class="pull-right glyphicon glyphicon-remove red clickable"></span>

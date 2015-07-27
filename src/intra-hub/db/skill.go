@@ -18,7 +18,7 @@ func QuerySkills() orm.QuerySeter {
 func GetEverySkills() (skills []*models.Skill, err error) {
 	skills = make([]*models.Skill, 0)
 	_, err = QuerySkills().OrderBy("Name").All(&skills)
-	cache.SetSkills(skills)
+	go cache.SetSkills(skills)
 	return
 }
 

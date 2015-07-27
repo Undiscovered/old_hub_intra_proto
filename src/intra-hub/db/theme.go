@@ -18,7 +18,7 @@ func QueryThemes() orm.QuerySeter {
 func GetEveryThemes() (themes []*models.Theme, err error) {
 	themes = make([]*models.Theme, 0)
 	_, err = QueryThemes().OrderBy("Name").All(&themes)
-	cache.SetThemes(themes)
+	go cache.SetThemes(themes)
 	return
 }
 

@@ -1,37 +1,39 @@
-<table class="table table-responsive">
-    <tr>
-        <th>Nom</th>
-        <th>Public</th>
-        <th>Modifier</th>
-    </tr>
-    [[ range .Calendars ]]
-    <tr>
-        <td>[[ .Name ]]</td>
-        [[ if .Public ]]
-        <td>Oui</td>
-        [[ end ]]
-
-        [[ if not .Public ]]
-        <td>Non</td>
-        [[ end ]]
-        <td><a href="/admin/calendars/[[.Id]]">Modifier</a></td>
-    </tr>
-    [[ end ]]
-</table>
-
-<br/>
 <h5>Créer un calendrier</h5>
-<form class="form-inline" method="POST" action="/admin/calendars">
+<form method="POST" action="/admin/calendars">
     <div class="form-group">
         <label for="calendar_name">Nom</label>
         <input type="text" class="form-control" id="calendar_name" name="name" placeholder="Nom">
     </div>
-    <div class="form-group">
-        <label for="calendar_public">Public</label>
-        <select name="public" id="calendar_public">
-            <option value="true">Oui</option>
-            <option value="false">Non</option>
-        </select>
+    <div class="checkbox">
+        <label>
+            <input type="checkbox" name="public"> Public
+        </label>
     </div>
     <button type="submit" class="btn btn-success">Créer le calendrier</button>
 </form>
+
+<ul id="list-skills" class="list-group">
+    [[ if not .Calendars ]]
+    <li class="list-group-item active" id="empty">0 calendriers</li>
+    [[ end ]]
+    [[ range $index, $element := .Calendars ]]
+    <li class="list-group-item" id="[[ $element.Id ]]">
+        [[ if not $element.Public ]]
+        <span class="label label-danger s-1x">Privé</span>
+        [[ end ]]
+        [[ if $element.Public ]]
+        <span class="label label-success s-1x">Public</span>
+        [[ end ]]
+        <span>[[ $element.Name ]]</span>
+        <span class="pull-right">
+            <form action="/admin/calendars/delete/[[ $element.Id ]]" method="post">
+                <span class="btn-group btn-group-xs">
+                    <button class="btn btn-danger" type="submit">
+                        <span class="fa fa-remove color-white"></span>
+                    </button>
+                </span>
+            </form>
+        </span>
+    </li>
+    [[ end ]]
+</ul>

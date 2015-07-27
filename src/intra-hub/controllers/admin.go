@@ -27,6 +27,13 @@ func (c *AdminController) Get() {
 		c.SetErrorAndRedirect(err)
 		return
 	}
+	calendars, err := db.GetEveryCalendars()
+	if err != nil {
+		beego.Error(err)
+		c.SetErrorAndRedirect(err)
+		return
+	}
 	c.Data["Themes"] = themes
 	c.Data["Skills"] = skills
+	c.Data["Calendars"] = calendars
 }
