@@ -377,6 +377,11 @@ func LoadUserProjects(user *models.User) error {
 	return err
 }
 
+func LoadUserProjectsManaged(user *models.User) error {
+	_, err := QueryProjects().Filter("Manager", user).All(&user.ProjectsManaged)
+	return err
+}
+
 func loadEveryInfoOfUsers(users []*models.User) error {
 	wg := sync.WaitGroup{}
 	errorChan := make(chan error, 1)

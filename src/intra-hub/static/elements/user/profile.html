@@ -164,6 +164,19 @@
                     </div>
                 </template>
             </template>
+            <template is="dom-if" if="{{ notEqual(user.projectsManaged.length, 0) }}">
+                <paper-toolbar>
+                    <div class="title">
+                        <span>Projets suivis</span>
+                    </div>
+                </paper-toolbar>
+                <template is="dom-repeat" items="{{ user.projectsManaged }}">
+                    <div space>
+                        <a href="{{ getProjectUrl(item.id) }}">{{ item.name }}</a>
+                    </div>
+                </template>
+
+            </template>
         </template>
         <!-- End Profile View -->
 
@@ -422,6 +435,7 @@
                     this.user.planning = this.user.daysWorked.split(',');
                 }
                 this.planning = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+                console.log(this.user);
             }
         });
     </script>

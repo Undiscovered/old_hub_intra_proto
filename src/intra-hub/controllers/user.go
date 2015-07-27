@@ -43,6 +43,19 @@ func (c *UserController) AddView() {
 	c.Data["Promotions"] = promotions
 }
 
+func (c *UserController) getUserInfo(user *models.User) {
+	if err := db.LoadUserProjects(user); err != nil {
+		c.SetErrorAndRedirect(err)
+		return
+	}
+	if user.IsManager() {
+		if err := db.LoadUserProjectsManaged(user); err != nil {
+			c.SetErrorAndRedirect(err)
+			return
+		}
+	}
+}
+
 func (c *UserController) SingleView() {
 	c.RequireLogin()
 	c.TplNames = "user/profile.html"
@@ -52,10 +65,7 @@ func (c *UserController) SingleView() {
 		c.Redirect("/home", 301)
 		return
 	}
-	if err := db.LoadUserProjects(user); err != nil {
-		c.SetErrorAndRedirect(err)
-		return
-	}
+	c.getUserInfo(user)
 	c.Data["User"] = user
 	c.Data["UserJSON"] = user.ToJSON(c.currentLanguage)
 }
@@ -63,10 +73,7 @@ func (c *UserController) SingleView() {
 func (c *UserController) MeView() {
 	c.RequireLogin()
 	c.TplNames = "user/profile.html"
-	if err := db.LoadUserProjects(c.user); err != nil {
-		c.SetErrorAndRedirect(err)
-		return
-	}
+	c.getUserInfo(c.user)
 	c.Data["User"] = c.user
 	c.Data["UserJSON"] = c.user.ToJSON(c.currentLanguage)
 	c.Data["Edit"] = true
