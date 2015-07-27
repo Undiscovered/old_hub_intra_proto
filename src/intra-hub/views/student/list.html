@@ -111,7 +111,7 @@
                                 [[ range $skill := $element.Skills ]]
                                 <div>
                                     <span style="color: #2196F3">[[ $skill.Name ]]</span>
-                                    <star-rating showEmpty="false" rating="[[ $skill.Level ]]"></star-rating>
+                                    <star-rating max="3" showEmpty="false" rating="[[ $skill.Level ]]"></star-rating>
                                 </div>
                                 [[ end]]
                             </td>
@@ -119,7 +119,7 @@
                                 [[ range $theme := $element.Themes ]]
                                 <div>
                                     <span style="color: #2196F3">[[ $theme.Name ]]</span>
-                                    <star-rating showEmpty="false" rating="[[ $theme.Level ]]"></star-rating>
+                                    <star-rating max="3" showEmpty="false" rating="[[ $theme.Level ]]"></star-rating>
                                 </div>
                                 [[ end]]
                             </td>

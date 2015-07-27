@@ -134,7 +134,7 @@
                             <template is="dom-repeat" items="{{ user.skills }}">
                                 <div padding-left>
                                     <span>{{ item.name }}</span>
-                                    <star-rating rating="{{ item.level }}" show-empty="false"></star-rating>
+                                    <star-rating max="3" rating="{{ item.level }}" show-empty="false"></star-rating>
                                 </div>
                             </template>
                         </div>
@@ -145,7 +145,7 @@
                             <template is="dom-repeat" items="{{ user.themes }}">
                                 <div padding-left>
                                     <span>{{ item.name }}</span>
-                                    <star-rating rating="{{ item.level }}" show-empty="false"></star-rating>
+                                    <star-rating max="3" rating="{{ item.level }}" show-empty="false"></star-rating>
                                 </div>
                             </template>
                         </div>
@@ -231,7 +231,7 @@
                         <template is="dom-repeat" items="{{ user.skills }}">
                             <div padding-left>
                                 <span>{{ item.name }}</span>
-                                <star-rating rating="{{ item.level }}" edit></star-rating>
+                                <star-rating max="3" rating="{{ item.level }}" edit></star-rating>
                                 <paper-icon-button red icon="clear" type="button"
                                                    on-click="removeSkill"></paper-icon-button>
                             </div>
@@ -248,7 +248,7 @@
                         <template is="dom-repeat" items="{{ user.themes }}">
                             <div padding-left>
                                 <span>{{ item.name }}</span>
-                                <star-rating rating="{{ item.level }}" edit></star-rating>
+                                <star-rating max="3" rating="{{ item.level }}" edit></star-rating>
                                 <paper-icon-button red icon="clear" type="button"
                                                    on-click="removeTheme"></paper-icon-button>
                             </div>
