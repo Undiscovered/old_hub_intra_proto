@@ -74,6 +74,7 @@ func init() {
 	beego.SetStaticPath("/css", "static/css")
 	beego.SetStaticPath("/js", "static/js")
 	beego.SetStaticPath("/img", "static/img")
+	beego.SetStaticPath("/favicon", "static/favicon")
 
 	// Set the ORM parameters
 	orm.RegisterDriver(driverSQL, orm.DR_MySQL)

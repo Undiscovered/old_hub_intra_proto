@@ -35,12 +35,15 @@
         <div class="panel-body">
             <div class="col-lg-10">
                 <paper-toolbar>
-                    [[ if .Project.Image ]]
-                    <img src="[[ .Project.Image ]]">
+                    <span class="title">[[ .Project.Name ]]</span>
+                    <span class="flex"></span>
+                    [[ if .Project.Website ]]
+                    <a href="[[ .Project.Website ]]" style="margin-right: 1%" target="_blank"><span
+                            class="fa fa-2x fa-globe white"></span></a>
                     [[ end ]]
-                    <div style="font-size: 1.4em">
-                        [[ .Project.Name ]]
-                    </div>
+                    [[ if .Project.Repository ]]
+                    <a href="[[ .Project.Repository ]]" target="_blank"><span class="fa fa-2x fa-github white"></span></a>
+                    [[ end ]]
                 </paper-toolbar>
                 <div class="project-info">
                     <div class="table-responsive">
@@ -48,37 +51,36 @@
                             <thead>
                             <tr>
                                 <td>Status</td>
-
+                                [[ if .Project.Manager ]]
+                                <td>Manager</td>
+                                [[ end ]]
                                 [[ if .Project.Themes ]]
                                 <td>Thèmes</td>
                                 [[ end ]]
-
                                 [[ if .Project.Technos ]]
                                 <td>Technos</td>
-                                [[ end ]]
-
-                                [[ if .Project.Repository ]]
-                                <td>Dépôt</td>
-                                [[ end ]]
-                                [[ if .Project.Website ]]
-                                <td>Site</td>
                                 [[ end ]]
                             </tr>
                             </thead>
                             <tr>
                                 <td>[[ i18n $.Lang .Project.Status.Name ]]</td>
                                 <td>
-                                    [[ range $element := .Project.Themes ]]
-                                    <span class="label label-[[ randLabel ]]">[[ $element.Name ]]</span>
-                                    [[ end ]]
+                                    <a href="/users/[[ .Project.Manager.Login ]]">[[ .Project.Manager.Login ]]</a>
                                 </td>
+                                [[ if .Project.Themes ]]
                                 <td>
                                     [[ range $element := .Project.Themes ]]
                                     <span class="label label-[[ randLabel ]]">[[ $element.Name ]]</span>
                                     [[ end ]]
                                 </td>
-                                <td><a href="[[ .Project.Repository ]]"> [[ .Project.Repository ]]</a></td>
-                                <td><a href="[[ .Project.Website ]]">[[ .Project.Website ]]</a></td>
+                                [[ end ]]
+                                [[ if .Project.Technos ]]
+                                <td>
+                                    [[ range $element := .Project.Technos ]]
+                                    <span class="label label-[[ randLabel ]]">[[ $element.Name ]]</span>
+                                    [[ end ]]
+                                </td>
+                                [[ end ]]
                             </tr>
                         </table>
                     </div>
@@ -101,9 +103,13 @@
                 </paper-toolbar>
                 <ul class="list-group">
                     [[ range $element := .Project.Members ]]
-                    <li class="list-group-item">
+                    <li class="list-group-item text-center">
                         <img onerror="errorImage(this)" class="size" src="[[ $element.Picture ]]">
-                        <a href="/users/[[ $element.Login ]]"> [[ $element.Name ]]</a> - [[ $element.Promotion.Name ]]
+
+                        <div>
+                            <a href="/users/[[ $element.Login ]]"> [[ $element.Name ]]</a> [[ $element.Promotion.Name]]
+                        </div>
+
                     </li>
                     [[ end ]]
                 </ul>
