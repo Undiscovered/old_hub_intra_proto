@@ -40,11 +40,16 @@ body.padding {
     color: #F44336;
 }
 
-.padding-left {
-
-}
-
 .project-info {
     padding-left: 1%;
+    margin-bottom: 1%;
+}
+
+.link-top > ul {
+    margin-top: 1%;
+}
+
+.link-top > a {
+    font-size: 1.1em !important;
     margin-bottom: 1%;
 }

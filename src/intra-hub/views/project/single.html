@@ -11,13 +11,13 @@
 
 <div class="container-fluid">
     <div class="panel panel-default">
-        <div class="panel-heading">
+        <div class="panel-heading link-top">
             <a href="/projects?page=1&limit=15">
                 <span class="fa fa-chevron-left"> Liste des projets</span>
             </a>
             [[ if .UserLogged.IsManager ]]
             <a href="/projects/edit/[[ .Project.Id ]]" class="pull-right">
-                <span class="fa fa-pencil">Editer</span>
+                <span class="fa fa-pencil"> Editer</span>
             </a>
             [[ end ]]
             <ul class="nav nav-tabs">
@@ -33,79 +33,82 @@
             </ul>
         </div>
         <div class="panel-body">
-            <paper-toolbar>
-                [[ if .Project.Image ]]
-                <img src="[[ .Project.Image ]]">
-                [[ end ]]
-                <div style="font-size: 1.4em">
-                    [[ .Project.Name ]]
-                </div>
-            </paper-toolbar>
-
-            <!-- -->
-            <div class="project-info">
-
-                <div class="project-status">
-                    <h5>Status</h5>
-                    <p id="status">[[ i18n $.Lang .Project.Status.Name ]]</p>
-                </div>
-
-                <div class="project-desc">
-                    <h5>Description</h5>
-                    <p id="short-description">[[ .Project.ShortDescription ]]</p>
-                    <p id="description">[[ .Project.CompleteDescription ]]</p>
-                </div>
-
-                [[ if .Project.Themes ]]
-                <div class="project-topic">
-                    <h5>Thèmes</h5>
-                    [[ range $element := .Project.Themes ]]
-                    <span class="label label-[[ randLabel ]]">[[ $element.Name ]]</span>
+            <div class="col-lg-10">
+                <paper-toolbar>
+                    [[ if .Project.Image ]]
+                    <img src="[[ .Project.Image ]]">
                     [[ end ]]
-                </div>
-                [[ end ]]
+                    <div style="font-size: 1.4em">
+                        [[ .Project.Name ]]
+                    </div>
+                </paper-toolbar>
+                <div class="project-info">
+                    <div class="table-responsive">
+                        <table class="table table-condensed">
+                            <thead>
+                            <tr>
+                                <td>Status</td>
 
-                [[ if .Project.Technos ]]
-                <div class="project-techno">
-                    <h5>Technos</h5>
-                    [[ range $element := .Project.Technos ]]
-                    <span class="label label-[[ randLabel ]]">[[ $element.Name ]]</span>
-                    [[ end ]]
-                </div>
-                [[ end ]]
+                                [[ if .Project.Themes ]]
+                                <td>Thèmes</td>
+                                [[ end ]]
 
-                [[ if .Project.Repository ]]
-                <div class="project-repo">
-                    <h5>Dépôt</h5>
-                    <a href="[[ .Project.Repository ]]">[[ .Project.Repository ]]</a>
-                </div>
-                [[ end ]]
+                                [[ if .Project.Technos ]]
+                                <td>Technos</td>
+                                [[ end ]]
 
-                [[ if .Project.Website ]]
-                <div class="project-site">
-                    <h5>Site</h5>
-                    <a href="[[ .Project.Website ]]">[[ .Project.Website ]]</a>
-                </div>
-                [[ end ]]
+                                [[ if .Project.Repository ]]
+                                <td>Dépôt</td>
+                                [[ end ]]
+                                [[ if .Project.Website ]]
+                                <td>Site</td>
+                                [[ end ]]
+                            </tr>
+                            </thead>
+                            <tr>
+                                <td>[[ i18n $.Lang .Project.Status.Name ]]</td>
+                                <td>
+                                    [[ range $element := .Project.Themes ]]
+                                    <span class="label label-[[ randLabel ]]">[[ $element.Name ]]</span>
+                                    [[ end ]]
+                                </td>
+                                <td>
+                                    [[ range $element := .Project.Themes ]]
+                                    <span class="label label-[[ randLabel ]]">[[ $element.Name ]]</span>
+                                    [[ end ]]
+                                </td>
+                                <td><a href="[[ .Project.Repository ]]"> [[ .Project.Repository ]]</a></td>
+                                <td><a href="[[ .Project.Website ]]">[[ .Project.Website ]]</a></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="project-desc">
+                        <h5>Description</h5>
 
+                        <p id="short-description">[[ .Project.ShortDescription ]]</p>
+
+                        <p id="description">[[ .Project.CompleteDescription ]]</p>
+                    </div>
+                </div>
             </div>
-            <!-- -->
 
-            [[ if .Project.Members ]]
-            <paper-toolbar>
-                <div style="font-size: 1.4em">
-                    Membres
-                </div>
-            </paper-toolbar>
-            <ul class="list-group">
-                [[ range $element := .Project.Members ]]
-                <li class="list-group-item">
-                    <img onerror="errorImage(this)" class="size" src="[[ $element.Picture ]]">
-                    <a href="/users/[[ $element.Login ]]"> [[ $element.Name ]]</a> - [[ $element.Promotion.Name ]]
-                </li>
+            <div class="col-lg-2">
+                [[ if .Project.Members ]]
+                <paper-toolbar>
+                    <div style="font-size: 1.4em">
+                        Membres
+                    </div>
+                </paper-toolbar>
+                <ul class="list-group">
+                    [[ range $element := .Project.Members ]]
+                    <li class="list-group-item">
+                        <img onerror="errorImage(this)" class="size" src="[[ $element.Picture ]]">
+                        <a href="/users/[[ $element.Login ]]"> [[ $element.Name ]]</a> - [[ $element.Promotion.Name ]]
+                    </li>
+                    [[ end ]]
+                </ul>
                 [[ end ]]
-            </ul>
-            [[ end ]]
+            </div>
         </div>
     </div>
 </div>
