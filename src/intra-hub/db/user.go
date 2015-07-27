@@ -142,7 +142,7 @@ func GetEveryUserProjectsByValidation(pedagogicallyValidation tribool.Tribool) (
 
 func ValidatePedagogicallyUser(userID int, projectID int, pedagogicallyValidation tribool.Tribool) error {
 	_, err := QueryUserProject().Filter("user_id", userID).Filter("project_id", projectID).
-		Update(orm.Params{"pedagogically_validated": pedagogicallyValidation})
+		Update(orm.Params{"pedagogically_validated": int(pedagogicallyValidation)})
 	return err
 }
 
