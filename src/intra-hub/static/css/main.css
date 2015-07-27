@@ -40,9 +40,11 @@ body.padding {
     color: #F44336;
 }
 
-.title {
-    font-size: 1.4em;
+.project-title {
+    font-size: 2.5em !important;
+    margin-left: 1% !important;
 }
+
 .project-info {
     padding-left: 1%;
     margin-bottom: 1%;
