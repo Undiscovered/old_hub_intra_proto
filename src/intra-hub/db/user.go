@@ -154,6 +154,12 @@ func GetEveryUserProjectsByValidation(pedagogicallyValidation tribool.Tribool) (
 	return
 }
 
+// Example requests constructed:
+// UPDATE `user_projects` SET `pedagogically_validated` = CASE
+// WHEN `user_id` = 16475 AND `project_id` = 3 THEN 2
+// WHEN `user_id` = 20438 AND `project_id` = 1 THEN 2
+// END
+// WHERE (`user_id` = 16475 AND `project_id` = 3) OR (`user_id` = 20438 AND `project_id` = 1)
 func PedagogicallyValidation(userIDs, projectIDs, validation []interface{}) error {
 	rawSQL := "UPDATE `user_projects` SET `pedagogically_validated` = CASE\n"
 	valueArray := make([]interface{}, 0, len(userIDs)+len(projectIDs)+len(validation))
@@ -161,11 +167,14 @@ func PedagogicallyValidation(userIDs, projectIDs, validation []interface{}) erro
 		rawSQL += fmt.Sprintf("WHEN `user_id` = ? AND `project_id` = ? THEN ?\n")
 		valueArray = append(valueArray, userIDs[i], projectIDs[i], validation[i])
 	}
-	questionMarks := getQuestionMarks(len(userIDs))
-	questionMarks = questionMarks[:len(questionMarks)-2]
-	rawSQL += fmt.Sprintf("END\nWHERE `user_id` IN (%v) AND `project_id` IN (%v)", questionMarks, questionMarks)
-	valueArray = append(valueArray, userIDs...)
-	valueArray = append(valueArray, projectIDs...)
+	rawSQL += "END\nWHERE "
+	for i := range userIDs {
+		rawSQL += "(`user_id` = ? AND `project_id` = ?)"
+		valueArray = append(valueArray, userIDs[i], projectIDs[i])
+		if i+1 < len(userIDs) {
+			rawSQL += " OR\n"
+		}
+	}
 	_, err := orm.NewOrm().Raw(rawSQL, valueArray...).Exec()
 	return err
 }
