@@ -197,7 +197,6 @@ func EditAndGetProject(project *models.Project) (*models.Project, error) {
 		"completeDescription": project.CompleteDescription,
 		"repository":          project.Repository,
 		"website":             project.Website,
-		"image":               project.Image,
 		"updated":             now,
 		"status_id":           status.Id,
 	}

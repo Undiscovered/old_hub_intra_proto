@@ -42,7 +42,8 @@
                             class="fa fa-2x fa-globe white"></span></a>
                     [[ end ]]
                     [[ if .Project.Repository ]]
-                    <a href="[[ .Project.Repository ]]" target="_blank"><span class="fa fa-2x fa-github white"></span></a>
+                    <a href="[[ .Project.Repository ]]" target="_blank"><span
+                            class="fa fa-2x fa-github white"></span></a>
                     [[ end ]]
                 </paper-toolbar>
                 <div class="project-info">
@@ -103,11 +104,13 @@
                 </paper-toolbar>
                 <ul class="list-group">
                     [[ range $element := .Project.Members ]]
-                    <li class="list-group-item text-center">
+                    <li class="list-group-item text-center"
+                        title="[[ $element.Promotion.Name ]]" data-toggle="tooltip"
+                        data-placement="bottom">
                         <img onerror="errorImage(this)" class="size" src="[[ $element.Picture ]]">
 
                         <div>
-                            <a href="/users/[[ $element.Login ]]"> [[ $element.Name ]]</a> [[ $element.Promotion.Name]]
+                            <a href="/users/[[ $element.Login ]]"> [[ $element.Name ]]</a>
                         </div>
 
                     </li>

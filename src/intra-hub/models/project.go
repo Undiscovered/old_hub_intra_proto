@@ -19,7 +19,6 @@ type Project struct {
 	CompleteDescription string         `json:"completeDescription" orm:"null;type(text)" form:"completeDescription" csv:"-"`
 	Repository          string         `json:"repository" form:"repository" csv:"repository"`
 	Website             string         `json:"website" form:"website" csv:"website"`
-	Image               string         `json:"image" form:"image" csv:"-"`
 	Status              *ProjectStatus `json:"status" orm:"rel(fk)"`
 	Manager             *User          `json:"manager" orm:"null;rel(fk)"`
 	History             []*HistoryItem `json:"history" orm:"null;rel(m2m)" csv:"-"`
