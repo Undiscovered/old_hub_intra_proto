@@ -5,7 +5,6 @@ import (
 
 	"github.com/astaxie/beego/orm"
 
-	"github.com/astaxie/beego"
 	"time"
 )
 
@@ -93,7 +92,6 @@ func GetProjectsPaginated(page, limit int, queryFilter map[string]interface{}) (
 			return
 		}
 	}
-	beego.Warn(projects[0].Technos)
 	itemPaginated = &models.ItemPaginated{
 		Items:          projects,
 		ItemCount:      len(projects),

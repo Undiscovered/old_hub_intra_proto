@@ -285,7 +285,7 @@
         var student = $('#student').val() ? $('#student').val() : null;
 
         if (cities === null && promotions === null && name === null && managers === null &&
-                status === null && student === null && !force && technos !== null && themes !== null) {
+                status === null && student === null && !force && technos === null && themes === null) {
             return;
         }
         var baseUrl = String.format('{0}{1}?page={2}&limit={3}', window.location.origin, window.location.pathname, page, limit);
@@ -309,10 +309,10 @@
             baseUrl += String.format('&student={0}', student);
         }
         if (themes !== null) {
-            baseUrl += String.format('&themes={0}', themes.join());
+            baseUrl += String.format('&themes={0}', encodeURIComponent(themes.join()));
         }
         if (technos !== null) {
-            baseUrl += String.format('&technos={0}', technos.join());
+            baseUrl += String.format('&technos={0}', encodeURIComponent(technos.join()));
         }
         window.location.href = baseUrl;
     }
