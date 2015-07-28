@@ -1,12 +1,12 @@
 package mail
 
 const (
-	templateHeader = `Hello {{ .User.Login }},<br/><br/>`
+	templateHeader = `Bonjour {{ .User.Login }},<br/><br/>`
 	templateFooter = `<br/><br/>Innovation Hub`
 
 	subjectUserCreated  = "Innovation Hub - Bienvenue {{ .User.Login }}"
-	templateUserCreated = templateHeader + `Activate your account <a href="{{ .Link }}">here</a>.` + templateFooter
+	templateUserCreated = templateHeader + `Set ton mot de passe <a href="{{ .Link }}">ici</a>.` + templateFooter
 
-	subjectForgotPassword  = "Innovation Hub - Password reset"
-	templateForgotPassword = templateHeader + `Your password has been reset. Set it again <a href="{{ .Link }}">here</a>.` + templateFooter
+	subjectForgotPassword  = "Innovation Hub - Mot de passe reset"
+	templateForgotPassword = templateHeader + `Votre mot de passe a été reset. Réassigner le <a href="{{ .Link }}">ici</a>.` + templateFooter
 )
