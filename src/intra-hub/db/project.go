@@ -171,6 +171,12 @@ func EditComment(comment *models.Comment) error {
 	return err
 }
 
+func GetCommentByID(id int) (*models.Comment, error) {
+	comment := &models.Comment{}
+	err := QueryComments().Filter("Id", id).RelatedSel().One(comment)
+	return comment, err
+}
+
 func loadProjectInfo(project *models.Project) (*models.Project, error) {
 	o := orm.NewOrm()
 	if _, err := o.LoadRelated(project, "Members"); err != nil {

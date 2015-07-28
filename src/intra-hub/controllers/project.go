@@ -266,6 +266,15 @@ func (c *ProjectController) EditComment() {
 		beego.Error(err)
 		return
 	}
+	commentDB, err := db.GetCommentByID(comment.Id)
+	if err != nil {
+		beego.Error(err)
+		return
+	}
+	if commentDB.Author.Id != c.user.Id {
+		beego.Error("Cant edit")
+		return
+	}
 	if err := db.EditComment(comment); err != nil {
 		beego.Error(err)
 		return

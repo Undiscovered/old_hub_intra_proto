@@ -42,10 +42,12 @@
                     <div>
                         [[ datefr $element.Created ]]
                         <span class="btn-group btn-group-xs">
+                            [[ if eq $.UserLogged.Id $element.Author.Id ]]
                             <button class="btn btn-warning" data-toggle="modal" data-target="#commentModal"
                                     onclick="openCommentModal('[[ $element.Id ]]')">
                                 <span class="fa fa-pencil color-black"></span>
                             </button>
+                            [[ end ]]
                         </span>
                     </div>
                 </div>
