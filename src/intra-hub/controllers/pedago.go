@@ -30,7 +30,7 @@ func (c *PedagoController) ValidateProjectView() {
 	userProjects, err := db.GetEveryUserProjectsByValidation(validation)
 	if err != nil {
 		beego.Error(err)
-		c.Redirect("/home", 301)
+		c.Redirect("/", 301)
 		return
 	}
 	c.Data["UserProjects"] = userProjects

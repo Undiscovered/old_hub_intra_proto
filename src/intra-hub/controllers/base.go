@@ -90,7 +90,7 @@ func (c *BaseController) RequireAdmin() {
 	if !c.user.IsAdmin() {
 		c.flash.Data["error"] = "forbidden"
 		c.flash.Store(&c.Controller)
-		c.Redirect("/home", 303)
+		c.Redirect("/", 303)
 	}
 }
 
@@ -99,7 +99,7 @@ func (c *BaseController) RequireManager() {
 	if !c.user.IsManager() {
 		c.flash.Data["error"] = "forbidden"
 		c.flash.Store(&c.Controller)
-		c.Redirect("/home", 303)
+		c.Redirect("/", 303)
 	}
 }
 
@@ -108,7 +108,7 @@ func (c *BaseController) RequirePedago() {
 	if !c.user.IsPedago() {
 		c.flash.Data["error"] = "forbidden"
 		c.flash.Store(&c.Controller)
-		c.Redirect("/home", 303)
+		c.Redirect("/", 303)
 	}
 }
 func (c *BaseController) TranslateSlice(slice []string) []string {
@@ -116,13 +116,4 @@ func (c *BaseController) TranslateSlice(slice []string) []string {
 		slice[i] = i18n.Tr(c.currentLanguage, s)
 	}
 	return slice
-}
-
-func (c *BaseController) UploadFile(inputName, outputName string) error {
-	//    file ,_, err := c.GetFile(inputName)
-	//    if err != nil {
-	//        return err
-	//    }
-	//    c.C
-	return nil
 }

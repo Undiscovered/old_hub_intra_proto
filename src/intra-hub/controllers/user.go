@@ -63,7 +63,7 @@ func (c *UserController) SingleView() {
 	user, err := db.GetUserByLogin(c.GetString(":id", ""))
 	if err != nil {
 		beego.Error(err)
-		c.Redirect("/home", 301)
+		c.Redirect("/", 301)
 		return
 	}
 	c.getUserInfo(user)
@@ -82,6 +82,10 @@ func (c *UserController) MeView() {
 
 func (c *UserController) LoginView() {
 	c.TplNames = "login.html"
+	if c.isLogged {
+		c.Redirect("/", 301)
+		return
+	}
 }
 
 func (c *UserController) EditView() {
@@ -90,30 +94,30 @@ func (c *UserController) EditView() {
 	user, err := db.GetUserByLogin(c.GetString(":login", ""))
 	if err != nil {
 		beego.Error(err)
-		c.Redirect("/home", 301)
+		c.Redirect("/", 301)
 	}
 	if c.user.Login != user.Login && !c.user.IsManager() {
-		c.Redirect("/home", 301)
+		c.Redirect("/", 301)
 	}
 	cities, err := db.GetEveryCities()
 	if err != nil {
 		beego.Error(err)
-		c.Redirect("/home", 301)
+		c.Redirect("/", 301)
 	}
 	skills, err := db.GetEverySkills()
 	if err != nil {
 		beego.Error(err)
-		c.Redirect("/home", 301)
+		c.Redirect("/", 301)
 	}
 	groups, err := db.GetEveryGroups()
 	if err != nil {
 		beego.Error(err)
-		c.Redirect("/home", 301)
+		c.Redirect("/", 301)
 	}
 	themes, err := db.GetEveryThemes()
 	if err != nil {
 		beego.Error(err)
-		c.Redirect("/home", 301)
+		c.Redirect("/", 301)
 	}
 	c.Data["User"] = user
 	c.Data["Edit"] = user.Login == c.user.Login
@@ -127,7 +131,7 @@ func (c *UserController) EditView() {
 func (c *UserController) Login() {
 	user := &models.User{}
 	if c.isLogged {
-		c.Redirect("/home", 301)
+		c.Redirect("/", 301)
 		return
 	}
 	c.ParseForm(user)
@@ -145,7 +149,7 @@ func (c *UserController) Login() {
 		return
 	}
 	c.SetUser(user)
-	c.Redirect("/home", 301)
+	c.Redirect("/", 301)
 }
 
 func (c *UserController) Logout() {
@@ -219,7 +223,7 @@ func (c *UserController) ActivateUser() {
 		return
 	}
 	c.SetUser(user)
-	c.Redirect("/home", 301)
+	c.Redirect("/", 301)
 }
 
 func (c *UserController) AddUser() {
@@ -274,7 +278,7 @@ func (c *UserController) EditUser() {
 		return
 	}
 	if c.user.Login != user.Login && !c.user.IsManager() {
-		c.Redirect("/home", 301)
+		c.Redirect("/", 301)
 	}
 	userDB, err := db.GetUserByLogin(user.Login)
 	if err != nil {
