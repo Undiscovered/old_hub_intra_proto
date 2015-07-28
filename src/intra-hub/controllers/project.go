@@ -234,7 +234,7 @@ func (c *ProjectController) AddComment() {
 		c.Redirect("/projects?page=1&limit=15", 301)
 		return
 	}
-	defer c.Redirect("/projects/"+project.Name+"/comments", 301)
+	defer c.Redirect("/projects/"+strconv.FormatInt(int64(project.Id), 10)+"/comments", 301)
 	comment := &models.Comment{}
 	if err := c.ParseForm(comment); err != nil {
 		beego.Error(err)

@@ -37,15 +37,14 @@
                 <!-- Left part -->
                 <div class="col-md-2 text-center" style="background: #eeeeee;">
                     <img onerror="errorImage(this)" class="size" src="[[ $element.Author.Picture ]]">
+
                     <div>[[ $element.Author.Login ]]</div>
                     <div>[[ datefr $element.Created ]]</div>
                 </div>
                 <!-- End Left part -->
 
                 <!-- Right part -->
-                <div class="col-md-10" style="white-space: pre-line">
-                [[ $element.Message ]]
-                </div>
+                <p class="col-md-10 comment">[[ $element.Message ]]</p>
                 <!-- End Right part -->
 
             </div>
@@ -56,7 +55,8 @@
                 </div>
                 <form method="post" action="/projects/[[ .Project.Id ]]/comments" class="col-md-10">
                     <input type="hidden" name="projectId" value="[[ .Project.Id ]]">
-                    <textarea class="form-control" placeholder="Entrez votre message..." rows="3" name="message"></textarea>
+                    <textarea class="form-control" placeholder="Entrez votre message..." rows="3"
+                              name="message"></textarea>
 
                     <div class="pull-right" style="margin: 5px;">
                         <button class="btn btn-primary " type="submit">Envoyer</button>
@@ -68,4 +68,17 @@
 </div>
 
 </body>
+<script>
+    function start() {
+        var converter = new showdown.Converter();
+        $('.comment').each(function () {
+            var element = $(this);
+            var text = element.text();
+            var html = converter.makeHtml(text);
+            element.html(html);
+        });
+    }
+    $('document').ready(start);
+
+</script>
 </html>

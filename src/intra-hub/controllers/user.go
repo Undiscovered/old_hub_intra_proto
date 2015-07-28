@@ -1,19 +1,20 @@
 package controllers
 
 import (
+	"encoding/json"
 	"fmt"
+	"strconv"
+	"strings"
+
 	"intra-hub/db"
+	"intra-hub/jsonutils"
 	"intra-hub/models"
 	"intra-hub/services/mail"
 
-	"encoding/json"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/validation"
 	"github.com/bitly/go-simplejson"
 	"github.com/jmcvetta/randutil"
-	"intra-hub/jsonutils"
-	"strconv"
-	"strings"
 )
 
 type UserController struct {
