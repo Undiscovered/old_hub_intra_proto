@@ -72,7 +72,7 @@
                                 <select id="promotions" class="form-control" multiple="multiple">
                                     <option></option>
                                     [[ range $element := .Promotions ]]
-                                    <option value="[[ $element.Name ]]">[[ $element.Name ]]</option>
+                                    <option value="[[ $element.Name ]]">[[ html2str $element.Name ]]</option>
                                     [[ end ]]
                                 </select>
                             </td>
@@ -80,7 +80,7 @@
                                 <select id="cities" class="form-control" multiple="multiple">
                                     <option></option>
                                     [[ range $element := .Cities ]]
-                                    <option value="[[ $element.Name ]]">[[ $element.Name ]]</option>
+                                    <option value="[[ $element.Name ]]">[[ html2str $element.Name ]]</option>
                                     [[ end ]]
                                 </select>
                             </td>
@@ -90,7 +90,7 @@
                                     <option></option>
                                     [[ range $element := .Managers ]]
                                     <option value="[[ $element.Login ]]">
-                                        [[ $element.FirstName ]] [[ $element.LastName ]]
+                                        [[ $element.FirstName ]] [[ html2str $element.LastName ]]
                                     </option>
                                     [[ end ]]
                                 </select>
@@ -141,12 +141,12 @@
                             </td>
                             <td>
                                 [[ range $techno := $element.Technos ]]
-                                <span class="label label-[[ randLabel ]]">[[ $techno.Name ]]</span>
+                                <span class="label label-[[ randLabel ]]">[[ html2str $techno.Name ]]</span>
                                 [[ end]]
                             </td>
                             <td>
                                 [[ range $theme := $element.Themes ]]
-                                <span class="label label-[[ randLabel ]]">[[ $theme.Name ]]</span>
+                                <span class="label label-[[ randLabel ]]">[[ html2str $theme.Name ]]</span>
                                 [[ end]]
 
                             </td>

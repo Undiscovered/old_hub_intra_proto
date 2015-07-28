@@ -69,7 +69,7 @@
                                 <select id="promotions" class="form-control" multiple="multiple">
                                     <option></option>
                                     [[ range $element := .Promotions ]]
-                                    <option value="[[ $element.Name ]]">[[ $element.Name ]]</option>
+                                    <option value="[[ $element.Name ]]">[[ html2str $element.Name ]]</option>
                                     [[ end ]]
                                 </select>
                             </td>
@@ -77,7 +77,7 @@
                                 <select id="cities" class="form-control" multiple="multiple">
                                     <option></option>
                                     [[ range $element := .Cities ]]
-                                    <option value="[[ $element.Name ]]">[[ $element.Name ]]</option>
+                                    <option value="[[ $element.Name ]]">[[ html2str $element.Name ]]</option>
                                     [[ end ]]
                                 </select>
                             </td>
@@ -85,7 +85,7 @@
                                 <select id="skills" class="form-control" multiple="multiple">
                                     <option></option>
                                     [[ range $element := .Skills ]]
-                                    <option value="[[ $element.Name ]]">[[ $element.Name ]]</option>
+                                    <option value="[[ $element.Name ]]">[[ html2str $element.Name ]]</option>
                                     [[ end ]]
                                 </select>
                             </td>
@@ -93,7 +93,7 @@
                                 <select id="themes" class="form-control" multiple="multiple">
                                     <option></option>
                                     [[ range $element := .Themes ]]
-                                    <option value="[[ $element.Name ]]">[[ $element.Name ]]</option>
+                                    <option value="[[ $element.Name ]]">[[ html2str $element.Name ]]</option>
                                     [[ end ]]
                                 </select>
                             </td>
@@ -102,15 +102,15 @@
                         <tr>
                             <td><img onerror="errorImage(this)" class="img-responsive size"
                                      src="[[ $element.Picture ]]"></td>
-                            <td><a href="/users/[[ $element.Login ]]">[[ $element.Login ]]</a></td>
-                            <td>[[ $element.Name ]]</td>
-                            <td>[[ $element.Email ]]</td>
+                            <td><a href="/users/[[ $element.Login ]]">[[ html2str $element.Login ]]</a></td>
+                            <td>[[ html2str $element.Name ]]</td>
+                            <td>[[ html2str $element.Email ]]</td>
                             <td>[[ $element.Promotion.Name ]]</td>
                             <td>[[ $element.City.Name ]]</td>
                             <td>
                                 [[ range $skill := $element.Skills ]]
                                 <div>
-                                    <span style="color: #2196F3">[[ $skill.Name ]]</span>
+                                    <span style="color: #2196F3">[[ html2str $skill.Name ]]</span>
                                     <star-rating max="3" showEmpty="false" rating="[[ $skill.Level ]]"></star-rating>
                                 </div>
                                 [[ end]]
@@ -118,7 +118,7 @@
                             <td>
                                 [[ range $theme := $element.Themes ]]
                                 <div>
-                                    <span style="color: #2196F3">[[ $theme.Name ]]</span>
+                                    <span style="color: #2196F3">[[ html2str $theme.Name ]]</span>
                                     <star-rating max="3" showEmpty="false" rating="[[ $theme.Level ]]"></star-rating>
                                 </div>
                                 [[ end]]

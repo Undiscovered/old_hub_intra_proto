@@ -21,7 +21,7 @@
             </a>
             <ul class="nav nav-tabs">
                 <li role="presentation" class="active">
-                    <a href="/projects/[[ .Project.Id ]]">[[ .Project.Name ]]</a>
+                    <a href="/projects/[[ .Project.Id ]]">[[ html2str .Project.Name ]]</a>
                 </li>
                 <li role="presentation">
                     <a href="/projects/[[ .Project.Id ]]/comments" role="button" data-toggle="modal">
@@ -67,20 +67,20 @@
                                 <td>[[ i18n $.Lang .Project.Status.Name ]]</td>
                                 [[ if .Project.Manager ]]
                                 <td>
-                                    <a href="/users/[[ .Project.Manager.Login ]]">[[ .Project.Manager.Login ]]</a>
+                                    <a href="/users/[[ html2str .Project.Manager.Login ]]">[[ html2str .Project.Manager.Login ]]</a>
                                 </td>
                                 [[ end ]]
                                 [[ if .Project.Themes ]]
                                 <td>
                                     [[ range $element := .Project.Themes ]]
-                                    <span class="label label-[[ randLabel ]]">[[ $element.Name ]]</span>
+                                    <span class="label label-[[ randLabel ]]">[[ html2str $element.Name ]]</span>
                                     [[ end ]]
                                 </td>
                                 [[ end ]]
                                 [[ if .Project.Technos ]]
                                 <td>
                                     [[ range $element := .Project.Technos ]]
-                                    <span class="label label-[[ randLabel ]]">[[ $element.Name ]]</span>
+                                    <span class="label label-[[ randLabel ]]">[[ html2str $element.Name ]]</span>
                                     [[ end ]]
                                 </td>
                                 [[ end ]]
@@ -90,9 +90,9 @@
                     <div class="project-desc">
                         <h5>Description</h5>
 
-                        <p id="short-description">[[ .Project.ShortDescription ]]</p>
+                        <p id="short-description">[[ html2str .Project.ShortDescription ]]</p>
 
-                        <p id="description">[[ .Project.CompleteDescription ]]</p>
+                        <p id="description">[[ html2str .Project.CompleteDescription ]]</p>
                     </div>
                 </div>
             </div>
@@ -109,10 +109,10 @@
                     <li class="list-group-item text-center"
                         title="[[ $element.Promotion.Name ]]" data-toggle="tooltip"
                         data-placement="bottom">
-                        <img onerror="errorImage(this)" class="size" src="[[ $element.Picture ]]">
+                        <img onerror="errorImage(this)" class="size" src="[[ html2str $element.Picture ]]">
 
                         <div>
-                            <a href="/users/[[ $element.Login ]]"> [[ $element.Name ]]</a>
+                            <a href="/users/[[ $element.Login ]]"> [[ html2str $element.Name ]]</a>
                         </div>
 
                     </li>

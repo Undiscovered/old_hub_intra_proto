@@ -34,14 +34,14 @@
                     [[ range $element := .Managers ]]
                     <tr>
                         <td><img onerror="errorImage(this)" class="img-responsive size" src="[[ $element.Picture ]]"></td>
-                        <td><a href="/users/[[ $element.Login ]]">[[ $element.Login ]]</a></td>
-                        <td>[[ $element.Name ]]</td>
-                        <td><a href="mailto:[[ $element.Email ]]">[[ $element.Email ]]</a></td>
+                        <td><a href="/users/[[ $element.Login ]]">[[ html2str $element.Login ]]</a></td>
+                        <td>[[ html2str $element.Name ]]</td>
+                        <td><a href="mailto:[[ $element.Email ]]">[[ html2str $element.Email ]]</a></td>
                         <td>[[ $element.Promotion.Name ]]</td>
                         <td>[[ $element.DaysWorked ]]</td>
                         <td>[[ $element.City.Name ]]</td>
                         [[ if $.UserLogged.IsManager ]]
-                        <td>[[ $element.PhoneNumber ]]</td>
+                        <td>[[ html2str $element.PhoneNumber ]]</td>
                         <td> [[ len $element.ProjectsManaged ]]</td>
                         [[ end ]]
                     </tr>
