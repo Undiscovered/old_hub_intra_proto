@@ -10,15 +10,14 @@
 <div class="container-fluid">
     [[ if .flash.error ]]
     <div class="alert alert-danger alert-dismissible" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
-                aria-hidden="true">&times;</span></button>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         [[ .flash.error ]]
     </div>
     [[ end ]]
 
     <div class="panel panel-default">
         <div class="panel-heading">
-            Editer le projet
+            Éditer le projet
         </div>
         <div class="panel-body">
             <form method="post" action="/projects/edit">
@@ -26,28 +25,23 @@
 
                 <div class="form-group">
                     <label for="name">Nom</label>
-                    <input class="form-control" placeholder="Name" id="name" name="name" type="text"
-                           value="[[ .Project.Name ]]" required="">
+                    <input class="form-control" placeholder="Name" id="name" name="name" type="text" value="[[ .Project.Name ]]" required="">
                 </div>
                 <div class="form-group">
                     <label for="shortDescription">Description</label>
-                    <input class="form-control" id="shortDescription" placeholder="Description" type="text"
-                           name="shortDescription" value="[[ .Project.ShortDescription ]]" required="">
+                    <input class="form-control" id="shortDescription" placeholder="Description" type="text" name="shortDescription" value="[[ .Project.ShortDescription ]]" required="">
                 </div>
                 <div class="form-group">
                     <label for="completeDescription">Description détaillée</label>
-                    <textarea class="form-control" id="completeDescription" rows="8" placeholder="Description détaillée"
-                              name="completeDescription" required="">[[ .Project.CompleteDescription ]]</textarea>
+                    <textarea class="form-control" id="completeDescription" rows="8" placeholder="Description détaillée" name="completeDescription" required="">[[ .Project.CompleteDescription ]]</textarea>
                 </div>
                 <div class="form-group">
                     <label for="website">Social</label>
-                    <input class="form-control" id="website" placeholder="Social" type="text"
-                           value="[[ .Project.Website ]]" name="website">
+                    <input class="form-control" id="website" placeholder="Social" type="text" value="[[ .Project.Website ]]" name="website">
                 </div>
                 <div class="form-group">
                     <label for="shortDescription">Dépôt</label>
-                    <input class="form-control" id="repository" placeholder="Dépôt" type="text"
-                           value="[[ .Project.Repository ]]" name="repository">
+                    <input class="form-control" id="repository" placeholder="Dépôt" type="text" value="[[ .Project.Repository ]]" name="repository">
                 </div>
                 <div class="form-group">
                     <label for="managerLogin">Assigner un manager</label>
@@ -89,8 +83,7 @@
                     <select id="technos" class="form-control" multiple="true">
                         <option></option>
                         [[ range $element := .Technos ]]
-                        <option [[ if $.Project.HasTechno $element.Id ]] selected="selected" [[ end ]]
-                                value="[[ $element.Id ]]">[[ $element.Name ]]
+                        <option [[ if $.Project.HasTechno $element.Id ]] selected="selected" [[ end ]] value="[[ $element.Id ]]">[[ $element.Name ]]
                         </option>
                         [[ end ]]
                     </select>
@@ -103,18 +96,16 @@
                         [[ range $element := $.Project.Members ]]
                         <li id="[[ $element.Id ]]" class="list-group-item">
                             <div>
-                                <img onerror="errorImage(this)" class="img-responsive size"
-                                     src="[[ $element.Picture ]]">
+                                <img onerror="errorImage(this)" class="img-responsive size" src="[[ $element.Picture ]]">
                                 [[ $element.Login ]]
-                                <span onclick="deleteLogin('[[ $element.Login ]]', '[[ $element.Id ]]')"
-                                      class="pull-right glyphicon glyphicon-remove red clickable"></span>
+                                <span onclick="deleteLogin('[[ $element.Login ]]', '[[ $element.Id ]]')" class="pull-right glyphicon glyphicon-remove red clickable"></span>
                             </div>
                         </li>
                         [[ end ]]
                     </ul>
                 </div>
 
-                <button class="btn btn-primary" type="submit">Editer le projet</button>
+                <button class="btn btn-primary" type="submit">Éditer le projet</button>
             </form>
         </div>
     </div>
