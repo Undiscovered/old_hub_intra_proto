@@ -18,6 +18,7 @@ import (
 	"github.com/eknkc/dateformat"
 	_ "github.com/go-sql-driver/mysql"
 	"math/rand"
+	"regexp"
 	"strconv"
 )
 
@@ -105,11 +106,25 @@ func init() {
 		locale, _ := time.LoadLocation("Europe/Paris")
 		return dateformat.FormatLocale(val.In(locale), dateFormat, dateformat.French)
 	}
+	// This func is compatible with markdown.
+	html2str := func(html string) string {
+		src := string(html)
+		re, _ := regexp.Compile("\\<[\\S\\s]+?\\>")
+		src = re.ReplaceAllStringFunc(src, strings.ToLower)
+		re, _ = regexp.Compile("\\<style[\\S\\s]+?\\</style\\>")
+		src = re.ReplaceAllString(src, "")
+		re, _ = regexp.Compile("\\<script[\\S\\s]+?\\</script\\>")
+		src = re.ReplaceAllString(src, "")
+		re, _ = regexp.Compile("\\<[\\S\\s]+?\\>")
+		src = re.ReplaceAllString(src, "\n")
+		return strings.TrimSpace(src)
+	}
 	beego.AddFuncMap("incr", incr)
 	beego.AddFuncMap("decr", decr)
 	beego.AddFuncMap("randLabel", randomizeLabel)
 	beego.AddFuncMap("toJSON", toJSON)
 	beego.AddFuncMap("datefr", datefr)
+	beego.AddFuncMap("myhtml2str", html2str)
 
 }
 
