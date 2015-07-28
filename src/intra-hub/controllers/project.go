@@ -37,6 +37,8 @@ func (c *ProjectController) ListView() {
 	queryFilter["status"] = strings.Split(c.GetString("status", ""), ",")
 	queryFilter["student"] = c.GetString("student", "")
 	queryFilter["name"] = c.GetString("name", "")
+	queryFilter["technos"] = strings.Split(c.GetString("technos", ""), ",")
+	queryFilter["themes"] = strings.Split(c.GetString("themes", ""), ",")
 	page, err := c.GetInt("page", 1)
 	limit, err := c.GetInt("limit", 25)
 	if page <= 0 {
@@ -67,11 +69,23 @@ func (c *ProjectController) ListView() {
 		handleError(err)
 		return
 	}
+	technos, err := db.GetEverySkills()
+	if err != nil {
+		handleError(err)
+		return
+	}
+	themes, err := db.GetEveryThemes()
+	if err != nil {
+		handleError(err)
+		return
+	}
 	c.Data["Status"] = models.EveryProjectStatus
 	c.Data["Managers"] = managers
 	c.Data["Cities"] = cities
 	c.Data["Promotions"] = promotions
 	c.Data["Limit"] = limit
+	c.Data["Technos"] = technos
+	c.Data["Themes"] = themes
 	c.Data["PaginatedItems"] = paginatedItems
 	c.Data["HasNextPage"] = paginatedItems.CurrentPage+1 <= paginatedItems.TotalPageCount
 	c.Data["HasPreviousPage"] = paginatedItems.CurrentPage != 1

@@ -3,9 +3,9 @@ package db
 import (
 	"intra-hub/models"
 
-	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 
+	"github.com/astaxie/beego"
 	"time"
 )
 
@@ -38,7 +38,6 @@ func GetProjectsPaginated(page, limit int, queryFilter map[string]interface{}) (
 				continue
 			}
 		}
-		beego.Warn(key, value)
 		switch key {
 		case "promotions":
 			q = q.SetCond(orm.NewCondition().And("Members__User__Promotion__Name__in", value))
@@ -51,6 +50,10 @@ func GetProjectsPaginated(page, limit int, queryFilter map[string]interface{}) (
 			q = q.SetCond(orm.NewCondition().And("Manager__Login__in", value))
 		case "status":
 			q = q.SetCond(orm.NewCondition().And("Status__Name__in", value))
+		case "technos":
+			q = q.SetCond(orm.NewCondition().And("Technos__Skill__Name__in", value))
+		case "themes":
+			q = q.SetCond(orm.NewCondition().And("Themes__Theme__Name__in", value))
 		case "name":
 			q = q.SetCond(orm.NewCondition().And("Name__icontains", value))
 		}
@@ -80,10 +83,17 @@ func GetProjectsPaginated(page, limit int, queryFilter map[string]interface{}) (
 		if _, err = o.LoadRelated(project, "Members"); err != nil {
 			return
 		}
+		if _, err = o.LoadRelated(project, "Technos"); err != nil {
+			return
+		}
+		if _, err = o.LoadRelated(project, "Themes"); err != nil {
+			return
+		}
 		if err = loadEveryInfoOfUsers(project.Members); err != nil {
 			return
 		}
 	}
+	beego.Warn(projects[0].Technos)
 	itemPaginated = &models.ItemPaginated{
 		Items:          projects,
 		ItemCount:      len(projects),

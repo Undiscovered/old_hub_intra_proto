@@ -13,7 +13,8 @@
             <h4 class="link-top">
                 [[ len .PaginatedItems.Items ]] projets / [[ .PaginatedItems.TotalItemCount ]]
                 <a target="_blank" style="padding-left: 1%"
-                   href="https://www.youtube.com/playlist?list=PL2kiJNV_NtRHMadeXwv1vNS8Y1JKrqq10">... accéder au panthéon des projets</a>
+                   href="https://www.youtube.com/playlist?list=PL2kiJNV_NtRHMadeXwv1vNS8Y1JKrqq10">... accéder au
+                    panthéon des projets</a>
             </h4>
         </div>
         <div class="panel-body">
@@ -61,6 +62,8 @@
                             <td>Membres</td>
                             <td>Manageur</td>
                             <td>Statut</td>
+                            <td>Technos</td>
+                            <td>Thèmes</td>
                         </tr>
                         </thead>
                         <tr>
@@ -101,6 +104,25 @@
                                     [[ end ]]
                                 </select>
                             </td>
+                            <td>
+                                <select id="technos" class="form-control" multiple="multiple">
+                                    <option></option>
+                                    [[ range $element := .Technos ]]
+                                    <option value="[[ $element.Name ]]">[[ i18n $.Lang $element.Name ]]
+                                    </option>
+                                    [[ end ]]
+                                </select>
+                            </td>
+                            <td>
+                                <select id="themes" class="form-control" multiple="multiple">
+                                    <option></option>
+                                    [[ range $element := .Themes ]]
+                                    <option value="[[ $element.Name ]]">[[ i18n $.Lang $element.Name ]]
+                                    </option>
+                                    [[ end ]]
+                                </select>
+                            </td>
+
                         </tr>
                         [[ range $element := .PaginatedItems.Items ]]
 
@@ -116,6 +138,17 @@
                             </td>
                             <td>
                                 [[ i18n $.Lang $element.Status.Name ]]
+                            </td>
+                            <td>
+                                [[ range $techno := $element.Technos ]]
+                                <span class="label label-[[ randLabel ]]">[[ $techno.Name ]]</span>
+                                [[ end]]
+                            </td>
+                            <td>
+                                [[ range $theme := $element.Themes ]]
+                                <span class="label label-[[ randLabel ]]">[[ $theme.Name ]]</span>
+                                [[ end]]
+
                             </td>
                         </tr>
                         [[ end ]]
@@ -169,22 +202,29 @@
         $('#student').val(getParameterByName('student'));
 
         var promoSelector = $('#promotions').select2({
-            placeholder: 'Promotions',
+            placeholder: 'Promotion',
             tags: true
         });
         var citiesSelector = $('#cities').select2({
-            placeholder: 'Villes',
+            placeholder: 'Ville',
             tags: true
         });
         var managersSelector = $('#managers').select2({
-            placeholder: 'Manageurs',
+            placeholder: 'Manageur',
             tags: true
         });
         var statusSelector = $('#status').select2({
-            placeholder: 'Statuts',
+            placeholder: 'Statut',
             tags: true
         });
-
+        var themesSelector = $('#themes').select2({
+            placeholder: 'Theme',
+            tags: true
+        });
+        var technosSelector = $('#technos').select2({
+            placeholder: 'Techno',
+            tags: true
+        });
         getParameterByName('promotions').split(',').forEach(function (promo) {
             if (promo) {
                 promoSelector.append(new Option(promo, promo, true, true));
@@ -193,6 +233,16 @@
         getParameterByName('cities').split(',').forEach(function (city) {
             if (city) {
                 citiesSelector.append(new Option(city, city, true, true));
+            }
+        });
+        getParameterByName('technos').split(',').forEach(function (techno) {
+            if (techno) {
+                technosSelector.append(new Option(techno, techno, true, true));
+            }
+        });
+        getParameterByName('themes').split(',').forEach(function (theme) {
+            if (theme) {
+                themesSelector.append(new Option(theme, theme, true, true));
             }
         });
         var statuses = {};
@@ -214,6 +264,8 @@
                 managersSelector.append(new Option(managers[manager], manager, true, true));
             }
         });
+        themesSelector.trigger('change');
+        technosSelector.trigger('change');
         promoSelector.trigger('change');
         citiesSelector.trigger('change');
         statusSelector.trigger('change');
@@ -228,10 +280,12 @@
         var name = $('#name').val() ? $('#name').val() : null;
         var managers = $('#managers').val();
         var status = $('#status').val();
+        var technos = $('#technos').val();
+        var themes = $('#themes').val();
         var student = $('#student').val() ? $('#student').val() : null;
 
         if (cities === null && promotions === null && name === null && managers === null &&
-                status === null && student === null && !force) {
+                status === null && student === null && !force && technos !== null && themes !== null) {
             return;
         }
         var baseUrl = String.format('{0}{1}?page={2}&limit={3}', window.location.origin, window.location.pathname, page, limit);
@@ -253,6 +307,12 @@
         }
         if (student !== null) {
             baseUrl += String.format('&student={0}', student);
+        }
+        if (themes !== null) {
+            baseUrl += String.format('&themes={0}', themes.join());
+        }
+        if (technos !== null) {
+            baseUrl += String.format('&technos={0}', technos.join());
         }
         window.location.href = baseUrl;
     }

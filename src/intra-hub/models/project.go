@@ -24,7 +24,7 @@ type Project struct {
 	History             []*HistoryItem `json:"history" orm:"null;rel(m2m)" csv:"-"`
 	Members             []*User        `json:"members" orm:"null;reverse(many);rel_through(intra-hub/models.UserProjects)" csv:"-"`
 	Themes              []*Theme       `json:"themes" orm:"null;rel(m2m)" csv:"-"`
-	Technos             []*Skill       `json:"themes" orm:"null;rel(m2m)" csv:"-"`
+	Technos             []*Skill       `json:"techos" orm:"null;rel(m2m)" csv:"-"`
 	Comments            []*Comment     `json:"comments" orm:"null;rel(m2m)" csv:"-"`
 	Created             time.Time      `json:"created" orm:"auto_now_add;type(datetime)" csv:"creation"`
 	Updated             time.Time      `json:"updated" orm:"auto_now;type(datetime)" csv:"mise a jour"`
@@ -71,6 +71,26 @@ func (p *Project) Promotions() (s string) {
 	}
 	for promo := range m {
 		s += promo + ", "
+	}
+	if len(s) > 2 {
+		s = s[:len(s)-2]
+	}
+	return
+}
+
+func (p *Project) GetTechnos() (s string) {
+	for _, t := range p.Technos {
+		s += t.Name + ", "
+	}
+	if len(s) > 2 {
+		s = s[:len(s)-2]
+	}
+	return
+}
+
+func (p *Project) GetThemes() (s string) {
+	for _, t := range p.Themes {
+		s += t.Name + ", "
 	}
 	if len(s) > 2 {
 		s = s[:len(s)-2]
