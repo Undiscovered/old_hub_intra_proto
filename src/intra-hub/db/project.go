@@ -10,11 +10,15 @@ import (
 
 const (
 	ProjectsTable = "project"
-	CommentsTable = "comments"
+	CommentsTable = "comment"
 )
 
 func QueryProjects() orm.QuerySeter {
 	return orm.NewOrm().QueryTable(ProjectsTable)
+}
+
+func QueryComments() orm.QuerySeter {
+	return orm.NewOrm().QueryTable(CommentsTable)
 }
 
 func CheckProjectExists(name string) bool {
@@ -156,6 +160,14 @@ func AddCommentToProject(comment *models.Comment, project *models.Project) error
 	}
 	comment.Id = int(id)
 	_, err = o.QueryM2M(project, "Comments").Add(comment)
+	return err
+}
+
+func EditComment(comment *models.Comment) error {
+	_, err := QueryComments().Filter("Id", comment.Id).Update(orm.Params{
+		"updated": time.Now(),
+		"message": comment.Message,
+	})
 	return err
 }
 

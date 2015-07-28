@@ -39,12 +39,20 @@
                     <img onerror="errorImage(this)" class="size" src="[[ $element.Author.Picture ]]">
 
                     <div>[[ $element.Author.Login ]]</div>
-                    <div>[[ datefr $element.Created ]]</div>
+                    <div>
+                        [[ datefr $element.Created ]]
+                        <span class="btn-group btn-group-xs">
+                            <button class="btn btn-warning" data-toggle="modal" data-target="#commentModal"
+                                    onclick="openCommentModal('[[ $element.Id ]]')">
+                                <span class="fa fa-pencil color-black"></span>
+                            </button>
+                        </span>
+                    </div>
                 </div>
                 <!-- End Left part -->
 
                 <!-- Right part -->
-                <p class="col-md-10 comment">[[ myhtml2str $element.Message ]]</p>
+                <p class="col-md-10 comment" id="comment-[[ $element.Id ]]">[[ myhtml2str $element.Message ]]</p>
                 <!-- End Right part -->
 
             </div>
@@ -55,8 +63,9 @@
                 </div>
                 <form method="post" action="/projects/[[ .Project.Id ]]/comments" class="col-md-10">
                     <input type="hidden" name="projectId" value="[[ .Project.Id ]]">
-                    <textarea class="form-control" placeholder="Entrez votre message..." rows="3"
-                              name="message"></textarea>
+                    <textarea class="form-control" placeholder="Entrez votre message..."
+                              autocomplete="on" spellcheck="true"
+                              rows="3" name="message"></textarea>
 
                     <div class="pull-right" style="margin: 5px;">
                         <button class="btn btn-primary " type="submit">Envoyer</button>
@@ -67,8 +76,39 @@
     </div>
 </div>
 
+<div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form action="/projects/comments/edit" method="post">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Éditer le commentaire</h4>
+                </div>
+                <div class="modal-body form-group">
+                    <input id="comment-edit-id" type="hidden" name="id">
+                    <label for="comment-edit-name">Message</label>
+                <textarea id="comment-edit-name" class="form-control" placeholder="Entrez votre message..." rows="3"
+                          autocomplete="on" spellcheck="true" name="message"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                    <button type="submit" class="btn btn-primary">Éditer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 </body>
 <script>
+
+    function openCommentModal(id) {
+        var converter = new showdown.Converter();
+        $('#comment-edit-name').html($('#comment-' + id).text());
+        $('#comment-edit-id').val(id)
+    }
+
     function start() {
         var converter = new showdown.Converter();
         $('.comment').each(function () {

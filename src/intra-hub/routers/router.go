@@ -38,8 +38,8 @@ func init() {
 	beego.Router("/projects/checkname", &controllers.ProjectController{}, "get:CheckName")
 	beego.Router("/projects/add", &controllers.ProjectController{}, "get:AddView;post:Add")
 	beego.Router("/projects/edit", &controllers.ProjectController{}, "post:Edit")
-	beego.Router("/projects/comments", &controllers.ProjectController{}, "post:AddComment")
 	beego.Router("/projects/edit/:nameOrId", &controllers.ProjectController{}, "get:EditView")
+	beego.Router("/projects/comments/edit", &controllers.ProjectController{}, "post:EditComment")
 	beego.Router("/projects/:nameOrId", &controllers.ProjectController{}, "get:SingleView")
 	beego.Router("/projects/:nameOrId/comments", &controllers.ProjectController{}, "get:CommentView;post:AddComment")
 

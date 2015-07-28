@@ -213,3 +213,7 @@ a.off {
 
 .list-group-item{
 }
+
+textarea{
+    resize: vertical !important;
+}

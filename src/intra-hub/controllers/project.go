@@ -258,6 +258,21 @@ func (c *ProjectController) AddComment() {
 	db.AddCommentToProject(comment, project)
 }
 
+func (c *ProjectController) EditComment() {
+	c.RequireManager()
+	c.EnableRender = false
+	comment := &models.Comment{}
+	if err := c.ParseForm(comment); err != nil {
+		beego.Error(err)
+		return
+	}
+	if err := db.EditComment(comment); err != nil {
+		beego.Error(err)
+		return
+	}
+	c.Redirect(c.Ctx.Input.Request.Referer(), 301)
+}
+
 func (c *ProjectController) CheckName() {
 	c.EnableRender = false
 	if ok := db.CheckProjectExists(c.GetString("name")); ok {

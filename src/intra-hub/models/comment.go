@@ -10,7 +10,7 @@ func init() {
 }
 
 type Comment struct {
-	Id      int
+	Id      int       `form:"id"`
 	Message string    `json:"message" form:"message" orm:"null;type(text)"`
 	Author  *User     `orm:"rel(fk)"`
 	Created time.Time `json:"created" orm:"auto_now_add;type(datetime)"`
