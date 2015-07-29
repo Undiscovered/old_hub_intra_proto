@@ -1,7 +1,6 @@
 package tasks
 
 import (
-	"errors"
 	"fmt"
 	"os/exec"
 
@@ -18,24 +17,21 @@ const (
 type DatabaseCheck struct {
 }
 
-func (dc *DatabaseCheck) isConnected() bool {
+func (dc *DatabaseCheck) isConnected() error {
 	cmd := exec.Command("pidof", "mysql")
 	out, err := cmd.Output()
 	if err != nil {
-		return false
+		return err
 	}
 	if string(out) != "" {
-		return true
+		return nil
 	}
-	return false
+	return fmt.Errorf("Can't connect to database")
 }
 
 func (dc *DatabaseCheck) Check() error {
-	if dc.isConnected() {
-		return nil
-	} else {
-		return errors.New("can't connect database")
-	}
+	err := dc.isConnected()
+	return err
 }
 
 type SizeCheck struct {
