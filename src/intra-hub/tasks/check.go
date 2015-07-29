@@ -26,6 +26,14 @@ func (dc *DatabaseCheck) isConnected() error {
 	if string(out) != "" {
 		return nil
 	}
+	cmd = exec.Command("pidof", "mysqld")
+	out, err = cmd.Output()
+	if err != nil {
+		return err
+	}
+	if string(out) != "" {
+		return nil
+	}
 	return fmt.Errorf("Can't connect to database")
 }
 
