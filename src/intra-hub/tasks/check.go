@@ -5,8 +5,9 @@ import (
 	"os/exec"
 
 	"github.com/astaxie/beego/toolbox"
-	"github.com/canthefason/kite/systeminfo"
+	"github.com/calmh/du"
 	"github.com/pyk/byten"
+	"os"
 )
 
 const (
@@ -40,12 +41,12 @@ type SizeCheck struct {
 }
 
 func (dc *SizeCheck) Check() error {
-	info, err := systeminfo.New()
+	info, err := du.Get(os.Getenv("$HOME"))
 	if err != nil {
 		return err
 	}
 	return fmt.Errorf("Disk Total: %s - Disk Usage: %s - Disk Remaining: %s",
-		byten.Size(int64(info.DiskTotal)), byten.Size(int64(info.DiskUsage)), byten.Size(int64(info.DiskTotal-info.DiskUsage)))
+		byten.Size(info.TotalBytes), byten.Size(info.TotalBytes-info.FreeBytes), byten.Size(info.FreeBytes))
 }
 
 func init() {
