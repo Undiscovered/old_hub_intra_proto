@@ -8,8 +8,14 @@ import (
 	"intra-hub/confperso"
 	"intra-hub/models"
 
+	"archive/zip"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/utils"
+	"io/ioutil"
+	"os"
+	"path"
+	"strings"
+	"time"
 )
 
 const (
@@ -83,4 +89,51 @@ func sendMail(to string, subject, body string) {
 	if err := email.Send(); err != nil {
 		beego.Warn("MAIL ERROR", err)
 	}
+}
+
+func SendBackupEmail(filepath string) error {
+	config := `{"username":"` + confperso.EmailUsername + `","password":"` + confperso.EmailPassword + `","host":"` +
+		confperso.EmailHost + `","port":` + confperso.EmailHostPort + `}`
+	email := utils.NewEMail(config)
+	email.Subject = "Backup - " + time.Now().Format(time.RFC3339)
+	email.To = []string{confperso.EmailUsername}
+	email.From = confperso.EmailUsername
+	fileName := path.Base(filepath)
+	zipName := path.Dir(filepath) + "/" + strings.TrimSuffix(fileName, path.Ext(fileName)) + ".zip"
+	zipFile, err := os.Create(zipName)
+	if err != nil {
+		return err
+	}
+	w := zip.NewWriter(zipFile)
+	file, err := os.Open(filepath)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	f, err := w.Create(fileName)
+	if err != nil {
+		return err
+	}
+	sqlFile, err := ioutil.ReadFile(filepath)
+	if err != nil {
+		return err
+	}
+	if _, err := f.Write(sqlFile); err != nil {
+		return err
+	}
+	if err := w.Close(); err != nil {
+		return err
+	}
+	zipFile.Close()
+	if zipFile, err = os.Open(zipName); err != nil {
+		return err
+	}
+	if _, err := email.Attach(zipFile, path.Base(zipName), "application/zip"); err != nil {
+		return err
+	}
+	if err := email.Send(); err != nil {
+		return err
+	}
+	beego.Warn(filepath, fileName, zipName)
+	return nil
 }

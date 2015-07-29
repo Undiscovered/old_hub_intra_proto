@@ -8,6 +8,7 @@ import (
 	"intra-hub/confperso"
 
 	"github.com/astaxie/beego/toolbox"
+	"intra-hub/services/mail"
 )
 
 const (
@@ -21,8 +22,10 @@ func backup() error {
 	outputFileName := outputDirectoryName + "/" + fileName
 	// generates something like mysqldump -u root --p="password" intra_hub > /Users/Vincent/backup/2015-07-29T13:58:36+02:00.sql
 	cmd := "mysqldump -u " + confperso.Username + " --password=\"" + confperso.Password + "\" " + confperso.DatabaseName + " > " + outputFileName
-	_, err := exec.Command("bash", "-c", cmd).CombinedOutput()
-	return err
+	if _, err := exec.Command("bash", "-c", cmd).CombinedOutput(); err != nil {
+		return err
+	}
+	return mail.SendBackupEmail(outputFileName)
 }
 
 func init() {
