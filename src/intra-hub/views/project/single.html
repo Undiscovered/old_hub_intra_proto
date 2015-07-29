@@ -125,15 +125,7 @@
 </div>
 </body>
 
-<script>
-    function start() {
-        var converter = new showdown.Converter();
-        var descSelector = $('#description');
-        var text = descSelector.text();
-        var html = converter.makeHtml(text);
-        descSelector.html(html);
-    }
-    $('document').ready(start);
+[[ template "layouts/include-js.html" ]]
+<script>$(document).ready(startSingleProject);</script>
 
-</script>
 </html>

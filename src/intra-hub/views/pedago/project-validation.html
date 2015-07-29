@@ -56,7 +56,8 @@
                             <td><a href="/users/[[ $element.User.Login ]]">[[ html2str $element.User.Login ]]</a></td>
                             <input type="hidden" name="projectIds" value="[[ $element.Project.Id ]]">
                             <td>[[ $element.User.Promotion.Name ]]</td>
-                            <td><a href="/projects/[[ $element.Project.Id ]]">[[ html2str $element.Project.Name ]]</a></td>
+                            <td><a href="/projects/[[ $element.Project.Id ]]">[[ html2str $element.Project.Name ]]</a>
+                            </td>
                             <td>
                                 <select id="validation-select" class="form-control" name="validation">
                                     <option value="1" [[ if eq $element.PedagogicallyValidated 1 ]] selected="selected"
@@ -83,31 +84,6 @@
         </div>
     </div>
 </div>
+<script>$('document').ready(switchValidationTabs());</script>
 </body>
-<script>
-    function validateProjects() {
-        var form = document.getElementById('form');
-        form.action = '/pedago/validate';
-        form.submit();
-        window.location.reload();
-    }
-
-    function switchTabs() {
-        var path = window.location.pathname;
-        var indeterminate = $('#indeterminate');
-        var refused = $('#refused');
-        var validated = $('#validated');
-        indeterminate.removeClass('active');
-        refused.removeClass('active');
-        validated.removeClass('active');
-        if (~path.indexOf('indeterminate') !== 0) {
-            indeterminate.addClass('active');
-        } else if (~path.indexOf('refused') !== 0) {
-            refused.addClass('active');
-        } else {
-            validated.addClass('active');
-        }
-    }
-    $('document').ready(switchTabs());
-</script>
 </html>

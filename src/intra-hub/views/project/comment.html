@@ -101,26 +101,9 @@
         </div>
     </div>
 </div>
+[[ template "layouts/include-js.html" ]]
 
+<script>$(document).ready(startCommentProject);</script>
 </body>
-<script>
 
-    function openCommentModal(id) {
-        var converter = new showdown.Converter();
-        $('#comment-edit-name').html($('#comment-' + id).text());
-        $('#comment-edit-id').val(id)
-    }
-
-    function start() {
-        var converter = new showdown.Converter();
-        $('.comment').each(function () {
-            var element = $(this);
-            var text = element.text();
-            var html = converter.makeHtml(text);
-            element.html(html);
-        });
-    }
-    $('document').ready(start);
-
-</script>
 </html>
