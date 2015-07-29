@@ -19,18 +19,12 @@ type DatabaseCheck struct {
 
 func (dc *DatabaseCheck) isConnected() error {
 	cmd := exec.Command("pidof", "mysql")
-	out, err := cmd.Output()
-	if err != nil {
-		return err
-	}
+	out, _ := cmd.Output()
 	if string(out) != "" {
 		return nil
 	}
 	cmd = exec.Command("pidof", "mysqld")
-	out, err = cmd.Output()
-	if err != nil {
-		return err
-	}
+	out, _ = cmd.Output()
 	if string(out) != "" {
 		return nil
 	}
