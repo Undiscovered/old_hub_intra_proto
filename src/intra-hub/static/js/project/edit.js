@@ -1,7 +1,9 @@
+$(document).ready(startEditProject);
+
 function startEditProject() {
-    var members = JSON.parse("[[ toJSON .Project.Members ]]");
-    var themes = JSON.parse("[[ toJSON .Project.Themes ]]");
-    var technos = JSON.parse("[[ toJSON .Project.Technos ]]");
+    var members = getMembers();
+    var themes = getThemes();
+    var technos = getTechnos();
     members.forEach(function (member) {
         addMember(member.id);
     });

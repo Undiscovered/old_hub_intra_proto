@@ -1,3 +1,5 @@
+$(document).ready(startListStudent);
+
 function startListStudent() {
     $('#name').val(getParameterByName('name'));
     $('#login').val(getParameterByName('login'));

@@ -1,3 +1,5 @@
+$('document').ready(switchValidationTabs());
+
 function validateProjects() {
     var form = document.getElementById('form');
     form.action = '/pedago/validate';

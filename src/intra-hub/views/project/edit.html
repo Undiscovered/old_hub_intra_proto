@@ -121,6 +121,19 @@
     </div>
 </div>
 [[ template "layouts/include-js.html" ]]
-<script>$(document).ready(startEditProject);</script>
+
+<script>
+    // Theses functions need to be here as they are populated from the backend :(
+    function getMembers() {
+        return JSON.parse("[[ toJSON .Project.Members ]]");
+    }
+    function getThemes() {
+        return JSON.parse("[[ toJSON .Project.Themes ]]");
+    }
+    function getTechnos() {
+        return JSON.parse("[[ toJSON .Project.Technos ]]");
+    }
+</script>
+<script src="/static/js/project/edit.js"></script>
 </body>
 </html>

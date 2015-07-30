@@ -1,3 +1,5 @@
+$(document).ready(startSingleProject);
+
 function startSingleProject() {
     var converter = new showdown.Converter();
     var descSelector = $('#description');

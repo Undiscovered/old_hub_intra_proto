@@ -1,3 +1,5 @@
+$(document).ready(startAddProject);
+
 function startAddProject() {
     var themesSelect = $('#themes');
     themesSelect.select2({

@@ -1,3 +1,5 @@
+$(document).ready(startCommentProject);
+
 function openCommentModal(id) {
     var converter = new showdown.Converter();
     $('#comment-edit-name').html($('#comment-' + id).text());

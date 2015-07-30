@@ -1,3 +1,5 @@
+$(document).ready(startListProject);
+
 function startListProject() {
     $('#name').val(getParameterByName('name'));
     $('#student').val(getParameterByName('student'));
