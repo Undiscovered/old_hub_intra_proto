@@ -8,4 +8,4 @@ sudo mv -v intra-hub.tar.gz /var/www/beego
 cd /var/www/beego
 sudo tar -xvf intra-hub.tar.gz
 sudo rm -v intra-hub.tar.gz
-sudo supervisorct restart intra
+sudo supervisorctl restart intra
