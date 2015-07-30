@@ -85,9 +85,13 @@
     }
 
     function appendSkill(skill) {
-        $('#list-skills').append('<li class="list-group-item" id="' + skill.id + '"><span class="label label-' + randomizeLabel() +
+        $('#list-skills').append('<li class="list-group-item" id="' + skill.id + '"><span id="skill-'+skill.id+'" class="label label-' + randomizeLabel() +
                 ' s-1x" >' + skill.name + '</span>' +
                 '<span class="pull-right"><span class="btn-group btn-group-xs">' +
+                '<button class="btn btn-warning" data-toggle="modal" data-target="#skillModal"' +
+                'onclick="openSkillModal(' + skill.id + ')">' +
+                '<span class="fa fa-pencil color-black"></span>' +
+                '</button> ' +
                 '<button class="btn btn-danger" onclick=deleteSkill(' + skill.id + ')><span class="fa fa-remove color-white"></span></button>' +
                 '<span/><span/></li> ');
     }

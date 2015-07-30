@@ -85,9 +85,13 @@
     }
 
     function appendTheme(theme) {
-        $('#list').append('<li class="list-group-item" id="' + theme.id + '"><span class="label label-' + randomizeLabel() +
+        $('#list').append('<li class="list-group-item" id="' + theme.id + '"><span id="theme-'+theme.id+'"class="label label-' + randomizeLabel() +
                 ' s-1x" >' + theme.name + '</span>' +
                 '<span class="pull-right"><span class="btn-group btn-group-xs">' +
+                '<button class="btn btn-warning" data-toggle="modal" data-target="#themeModal"' +
+                'onclick="openThemeModal(' + theme.id + ')">' +
+                '<span class="fa fa-pencil color-black"></span>' +
+                '</button> ' +
                 '<button class="btn btn-danger" onclick=deleteTheme(' + theme.id + ')><span class="fa fa-remove color-white"></span></button>' +
                 '<span/><span/></li> ');
     }
