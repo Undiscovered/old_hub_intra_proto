@@ -80,5 +80,5 @@ crashlytics-build.properties
 
 
 src/intra-hub/intra-hub
-src/intra-hub/logs/test.log*
+src/intra-hub/logs/*.log
 src/intra-hub/static/bower_components
