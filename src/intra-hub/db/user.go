@@ -24,6 +24,9 @@ func getQuestionMarksFromSlice(s []string) (questionMarks string) {
 	for range s {
 		questionMarks += "?, "
 	}
+	if questionMarks != "" {
+		return questionMarks[:len(questionMarks)-2]
+	}
 	return
 }
 
@@ -76,12 +79,18 @@ func CheckUserCredentials(user *models.User) (*models.User, error) {
 
 func SearchUsers(query string) (usersFound []*models.User, err error) {
 	query = "%" + query + "%"
-	rawSql := `SELECT id, picture, first_name, last_name, login FROM user WHERE
-    first_name LIKE ? OR
-    last_name LIKE ? OR
-    login LIKE ? OR
-    CONCAT(first_name, ' ', last_name) LIKE ? LIMIT 15`
-	_, err = orm.NewOrm().Raw(rawSql, query, query, query, query).QueryRows(&usersFound)
+	qb, err := orm.NewQueryBuilder("mysql")
+	if err != nil {
+		return nil, err
+	}
+	qb.Select("id", "picture", "first_name", "last_name", "login").
+		From("user").
+		Where("first_name LIKE ?").
+		Or("last_name LIKE ?").
+		Or("login LIKE ?").
+		Or("CONCAT(first_name, ' ', last_name) LIKE ?").
+		Limit(15)
+	_, err = orm.NewOrm().Raw(qb.String(), query, query, query, query).QueryRows(&usersFound)
 	return
 }
 
@@ -200,11 +209,7 @@ func GetUsersPaginated(page, limit int, queryFilter map[string]interface{}) (*mo
 				queryHelper = append(queryHelper, "")
 				continue
 			}
-			questionMarks := getQuestionMarksFromSlice(s)
-			if questionMarks != "" {
-				questionMarks = questionMarks[:len(questionMarks)-2]
-			}
-			queryHelper = append(queryHelper, fmt.Sprintf("OR (user.promotion_id IN (%s))", questionMarks))
+			queryHelper = append(queryHelper, fmt.Sprintf("OR (user.promotion_id IN (%s))", getQuestionMarksFromSlice(s)))
 			promotionsIDs := make([]int, len(s))
 			for i, ss := range s {
 				promotionsIDs[i] = cache.Promotions[ss].Id
@@ -216,11 +221,7 @@ func GetUsersPaginated(page, limit int, queryFilter map[string]interface{}) (*mo
 				queryHelper = append(queryHelper, "")
 				continue
 			}
-			questionMarks := getQuestionMarksFromSlice(s)
-			if questionMarks != "" {
-				questionMarks = questionMarks[:len(questionMarks)-2]
-			}
-			queryHelper = append(queryHelper, fmt.Sprintf("OR (user.city_id IN (%s))", questionMarks))
+			queryHelper = append(queryHelper, fmt.Sprintf("OR (user.city_id IN (%s))", getQuestionMarksFromSlice(s)))
 			citiesIDs := make([]int, len(s))
 			for i, ss := range s {
 				citiesIDs[i] = cache.Cities[ss].Id
@@ -232,11 +233,7 @@ func GetUsersPaginated(page, limit int, queryFilter map[string]interface{}) (*mo
 				queryHelper = append(queryHelper, "")
 				continue
 			}
-			questionMarks := getQuestionMarksFromSlice(s)
-			if questionMarks != "" {
-				questionMarks = questionMarks[:len(questionMarks)-2]
-			}
-			queryHelper = append(queryHelper, fmt.Sprintf("OR (user_skills.user_id = user.id AND user_skills.skill_id IN (%s))", questionMarks))
+			queryHelper = append(queryHelper, fmt.Sprintf("OR (user_skills.user_id = user.id AND user_skills.skill_id IN (%s))", getQuestionMarksFromSlice(s)))
 			skillIDs := make([]int, len(s))
 			for i, ss := range s {
 				beego.Warn(ss)
@@ -249,11 +246,7 @@ func GetUsersPaginated(page, limit int, queryFilter map[string]interface{}) (*mo
 				queryHelper = append(queryHelper, "")
 				continue
 			}
-			questionMarks := getQuestionMarksFromSlice(s)
-			if questionMarks != "" {
-				questionMarks = questionMarks[:len(questionMarks)-2]
-			}
-			queryHelper = append(queryHelper, fmt.Sprintf("OR (user_themes.user_id = user.id AND user_themes.theme_id IN (%s))", questionMarks))
+			queryHelper = append(queryHelper, fmt.Sprintf("OR (user_themes.user_id = user.id AND user_themes.theme_id IN (%s))", getQuestionMarksFromSlice(s)))
 			themeIDs := make([]int, len(s))
 			for i, ss := range s {
 				themeIDs[i] = cache.Themes[ss].Id
@@ -298,8 +291,8 @@ CONCAT(user.first_name, ' ', user.last_name) LIKE ?`)
 	o := orm.NewOrm()
 	raw := fmt.Sprintf(`SELECT
 user.id, user.login, user.first_name, user.last_name, user.email, user.picture, user.promotion_id, user.city_id,
-user_skills.user_id AS skills_user_id,
-user_themes.user_id AS themes_user_id,
+user_skills.user_id,
+user_themes.user_id,
 user_projects.user_id
 FROM user
 LEFT JOIN user_skills ON user_skills.user_id = user.id

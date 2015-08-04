@@ -12,3 +12,9 @@ type UserThemes struct {
 	Theme *Theme `orm:"rel(fk)"`
 	Level int
 }
+
+func (u *UserThemes) TableIndex() [][]string {
+	return [][]string{
+		[]string{"Id", "User"},
+	}
+}

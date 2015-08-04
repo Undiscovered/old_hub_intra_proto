@@ -12,3 +12,9 @@ type UserSkills struct {
 	Skill *Skill `orm:"rel(fk)"`
 	Level int
 }
+
+func (u *UserSkills) TableIndex() [][]string {
+	return [][]string{
+		[]string{"Id", "User"},
+	}
+}
