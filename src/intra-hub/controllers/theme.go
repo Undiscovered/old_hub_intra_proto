@@ -15,10 +15,11 @@ type ThemeController struct {
 }
 
 func (c *ThemeController) Post() {
-	if !c.user.IsManager() {
+	if c.user == nil || !c.user.IsManager() {
 		jsonErr := simplejson.New()
 		jsonErr.Set("error", "forbidden")
 		c.Data["json"] = jsonErr
+		c.Ctx.Output.SetStatus(403)
 		c.ServeJson()
 		return
 	}
@@ -28,6 +29,7 @@ func (c *ThemeController) Post() {
 		jsonErr := simplejson.New()
 		jsonErr.Set("error", err)
 		c.Data["json"] = jsonErr
+		c.Ctx.Output.SetStatus(400)
 		c.ServeJson()
 		return
 	}
@@ -37,6 +39,7 @@ func (c *ThemeController) Post() {
 		jsonErr := simplejson.New()
 		jsonErr.Set("error", err.Error())
 		c.Data["json"] = jsonErr
+		c.Ctx.Output.SetStatus(400)
 		c.ServeJson()
 		return
 	}
@@ -45,10 +48,11 @@ func (c *ThemeController) Post() {
 }
 
 func (c *ThemeController) Put() {
-	if !c.user.IsManager() {
+	if c.user == nil || !c.user.IsManager() {
 		jsonErr := simplejson.New()
 		jsonErr.Set("error", "forbidden")
 		c.Data["json"] = jsonErr
+		c.Ctx.Output.SetStatus(403)
 		c.ServeJson()
 		return
 	}
@@ -58,6 +62,7 @@ func (c *ThemeController) Put() {
 		jsonErr := simplejson.New()
 		jsonErr.Set("error", err)
 		c.Data["json"] = jsonErr
+		c.Ctx.Output.SetStatus(400)
 		c.ServeJson()
 		return
 	}
@@ -67,6 +72,7 @@ func (c *ThemeController) Put() {
 		jsonErr := simplejson.New()
 		jsonErr.Set("error", err.Error())
 		c.Data["json"] = jsonErr
+		c.Ctx.Output.SetStatus(400)
 		c.ServeJson()
 		return
 	}
@@ -75,10 +81,11 @@ func (c *ThemeController) Put() {
 }
 
 func (c *ThemeController) Delete() {
-	if !c.user.IsManager() {
+	if c.user == nil || !c.user.IsManager() {
 		jsonErr := simplejson.New()
 		jsonErr.Set("error", "forbidden")
 		c.Data["json"] = jsonErr
+		c.Ctx.Output.SetStatus(403)
 		c.ServeJson()
 		return
 	}
@@ -88,6 +95,7 @@ func (c *ThemeController) Delete() {
 		jsonErr := simplejson.New()
 		jsonErr.Set("error", err.Error())
 		c.Data["json"] = jsonErr
+		c.Ctx.Output.SetStatus(400)
 		c.ServeJson()
 		return
 	}
@@ -96,6 +104,7 @@ func (c *ThemeController) Delete() {
 		jsonErr := simplejson.New()
 		jsonErr.Set("error", err.Error())
 		c.Data["json"] = jsonErr
+		c.Ctx.Output.SetStatus(400)
 		c.ServeJson()
 		return
 	}

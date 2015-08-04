@@ -1,7 +1,3 @@
-/**
- * Created by Vincent on 08/06/15.
- */
-
 function Http() {
     this.Get = function (url) {
         return $.ajax({

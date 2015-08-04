@@ -15,10 +15,11 @@ type SkillController struct {
 }
 
 func (c *SkillController) Post() {
-	if !c.user.IsManager() {
+	if c.user == nil || !c.user.IsManager() {
 		jsonErr := simplejson.New()
 		jsonErr.Set("error", "forbidden")
 		c.Data["json"] = jsonErr
+		c.Ctx.Output.SetStatus(403)
 		c.ServeJson()
 		return
 	}
@@ -28,6 +29,7 @@ func (c *SkillController) Post() {
 		jsonErr := simplejson.New()
 		jsonErr.Set("error", err)
 		c.Data["json"] = jsonErr
+		c.Ctx.Output.SetStatus(400)
 		c.ServeJson()
 		return
 	}
@@ -37,6 +39,7 @@ func (c *SkillController) Post() {
 		jsonErr := simplejson.New()
 		jsonErr.Set("error", err.Error())
 		c.Data["json"] = jsonErr
+		c.Ctx.Output.SetStatus(400)
 		c.ServeJson()
 		return
 	}
@@ -45,11 +48,12 @@ func (c *SkillController) Post() {
 }
 
 func (c *SkillController) Put() {
-	if !c.user.IsManager() {
+	if c.user == nil || !c.user.IsManager() {
 		jsonErr := simplejson.New()
 		jsonErr.Set("error", "forbidden")
 		c.Data["json"] = jsonErr
 		c.ServeJson()
+		c.Ctx.Output.SetStatus(403)
 		return
 	}
 	skill := &models.Skill{}
@@ -67,6 +71,7 @@ func (c *SkillController) Put() {
 		jsonErr := simplejson.New()
 		jsonErr.Set("error", err.Error())
 		c.Data["json"] = jsonErr
+		c.Ctx.Output.SetStatus(400)
 		c.ServeJson()
 		return
 	}
@@ -74,10 +79,11 @@ func (c *SkillController) Put() {
 	c.ServeJson()
 }
 func (c *SkillController) Delete() {
-	if !c.user.IsManager() {
+	if c.user == nil || !c.user.IsManager() {
 		jsonErr := simplejson.New()
 		jsonErr.Set("error", "forbidden")
 		c.Data["json"] = jsonErr
+		c.Ctx.Output.SetStatus(403)
 		c.ServeJson()
 		return
 	}
@@ -87,6 +93,7 @@ func (c *SkillController) Delete() {
 		jsonErr := simplejson.New()
 		jsonErr.Set("error", err.Error())
 		c.Data["json"] = jsonErr
+		c.Ctx.Output.SetStatus(400)
 		c.ServeJson()
 		return
 	}
@@ -95,6 +102,7 @@ func (c *SkillController) Delete() {
 		jsonErr := simplejson.New()
 		jsonErr.Set("error", err.Error())
 		c.Data["json"] = jsonErr
+		c.Ctx.Output.SetStatus(400)
 		c.ServeJson()
 		return
 	}
